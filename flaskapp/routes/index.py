@@ -14,9 +14,13 @@ def getRouter(app):
 
     @app.route('/fetch', methods=['POST'])
     def fetch():
-        json = request.get_json(silent=True)
-        
-        print(json)
-        print(json["login"] or '')
-        print(json["password"] or '')
-        return '{"qwe": 123}'
+        try:
+            json = request.get_json(silent=True)
+            print(json)
+            print(json["login"] or '')
+            print(json["password"] or '')
+            print(json["arr"] or '')
+            return '{"qwe": 123}'
+        except Exception as e:
+            print("Unexpected error:", e)
+            abort(400)
