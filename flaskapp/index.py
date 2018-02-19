@@ -17,26 +17,21 @@ from werkzeug.utils import find_modules, import_string
 
 from flaskapp.routes.index import getRouter
 
-def create_app(config=None):
-    app = Flask('flaskapp')
+app = Flask(__name__)
+app.config.update(dict(
+    DATABASE=os.path.join(app.root_path, 'flaskapp.db'),
+    DEBUG=True,
+    SECRET_KEY=b'_5#y2L"F4Q8z\n\xec]/',
+    USERNAME='admin',
+    PASSWORD='default'
+))
+app.config.from_envvar('FLASAPP_SETTINGS', silent=True)
 
-    app.config.update(dict(
-        DATABASE=os.path.join(app.root_path, 'flaskapp.db'),
-        DEBUG=True,
-        SECRET_KEY=b'_5#y2L"F4Q8z\n\xec]/',
-        USERNAME='admin',
-        PASSWORD='default'
-    ))
-    app.config.update(config or {})
-    app.config.from_envvar('FLASAPP_SETTINGS', silent=True)
+# register_blueprints(app)
+# register_cli(app)
+# register_teardowns(app)
 
-    # register_blueprints(app)
-    # register_cli(app)
-    # register_teardowns(app)
-
-    getRouter(app)
-
-    return app
+getRouter(app)
 
 
 # def register_blueprints(app):
