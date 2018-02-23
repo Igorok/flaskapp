@@ -12,6 +12,7 @@
 
 import os
 from flask import Flask, g
+from flask_sqlalchemy import SQLAlchemy
 from werkzeug.utils import find_modules, import_string
 
 import flask

@@ -1,0 +1,17 @@
+Virtualenv directory
+
+create venv
+cd ~/work/<project_name>
+mkdir venv && echo "Virtualenv directory" > venv/README
+git add venv && echo "/venv/" >> .gitignore && git add -f .gitignore
+virtualenv --no-site-packages --prompt="(<project_name>)" <venv_name>
+
+activate 
+source ~/venv/<venv_name>/bin/activate
+
+deactivate
+
+install packages
+source ~/venv/<venv_name>/bin/activate
+pip install <something>
+easy_install <something>

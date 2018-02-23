@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# export FLASK_APP="flaskapp.index:create_app()"
+# export FLASK_APP="flaskapp.index"
 # flask run
 
 from setuptools import setup, find_packages
