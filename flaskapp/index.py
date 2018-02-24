@@ -11,17 +11,14 @@
 """
 
 import os
-from flask import Flask, g
-from flask_sqlalchemy import SQLAlchemy
+from flask import Flask
 from werkzeug.utils import find_modules, import_string
+from flaskapp.blueprints.web.index import web
 
 from flaskapp.config import config
-import flask
-print('version', flask.__version__)
-
-import flaskapp.routes.index
 
 app = Flask(__name__)
+app.register_blueprint(web)
 app.config.update(dict(
     DATABASE=os.path.join(app.root_path, 'flaskapp.db'),
     DEBUG=True,

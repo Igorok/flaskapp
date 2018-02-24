@@ -1,4 +1,4 @@
-from flaskapp.models.index import connect_db
+from flaskapp.blueprints.web.models.index import connect_db
 
 class User():
     ROLE_USER = 0
@@ -18,8 +18,6 @@ class User():
             self.email == None
         ): 
             raise Exception('Login, email and password are required')
-        
-        print(self.login, self.password, self.email, self.role);
 
         connection = connect_db()
         with connection.cursor() as cursor:
