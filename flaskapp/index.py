@@ -15,46 +15,26 @@ from flask import Flask, g
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.utils import find_modules, import_string
 
+from flaskapp.config import config
 import flask
 print('version', flask.__version__)
 
-# from flaskr.blueprints.flaskr import init_db
+import flaskapp.routes.index
 
-from flaskapp.models.index import init_db, get_models
-from flaskapp.routes.index import get_router
-
-def register_cli(app):
-    @app.cli.command('initdb')
-    def initdb_command():
-        """Creates the database tables."""
-        init_db()
-        print('Initialized the database.')
-
-
-def register_teardowns(app):
-    @app.teardown_appcontext
-    def close_db(error):
-        """Closes the database again at the end of the request."""
-        if hasattr(g, 'sqlite_db'):
-            g.sqlite_db.close()
-
-            
 app = Flask(__name__)
 app.config.update(dict(
     DATABASE=os.path.join(app.root_path, 'flaskapp.db'),
     DEBUG=True,
     SECRET_KEY=b'_5#y2L"F4Q8z\n\xec]/',
     USERNAME='admin',
-    PASSWORD='default'
+    PASSWORD='default',
+    MYSQL_USER=config['MYSQL']['MYSQL_USER'],
+    MYSQL_PASSWORD=config['MYSQL']['MYSQL_PASSWORD'],
+    MYSQL_DB=config['MYSQL']['MYSQL_DB'],
+    MYSQL_HOST=config['MYSQL']['MYSQL_HOST'],
 ))
 app.config.from_envvar('FLASAPP_SETTINGS', silent=True)
 
-# register_blueprints(app)
-register_cli(app)
-register_teardowns(app)
-
-get_models(app)
-get_router(app)
 
 
 

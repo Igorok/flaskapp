@@ -23,4 +23,5 @@ htmlcov
 __pycache__
 node_modules/
 venv/
+.vscode/
 
