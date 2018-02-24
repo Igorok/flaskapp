@@ -4,6 +4,7 @@ config = {
         'MYSQL_PASSWORD': '123',
         'MYSQL_DB': 'flaskapp',
         'MYSQL_HOST': 'localhost',
-    }
+    },
+    'SALT': 'aSd123'
 
 }

@@ -37,18 +37,36 @@ def fetch():
         fetch_def = fetch_list[1]
 
         if not hasattr(action, fetch_class):
-            raise Exception('Method not found')
+            raise Exception('404')
 
         f_act = getattr(action, fetch_class)()
 
         if not hasattr(f_act, fetch_def):
-            raise Exception('Method not found')
+            raise Exception('404')
 
         f_def = getattr(f_act, fetch_def)
 
         data = f_def(**json)
 
-        return jsonify(data = data, status_code = 200)
+        # https://google.github.io/styleguide/jsoncstyleguide.xml?showone=Property_Ordering_Example#Property_Ordering_Example
+        return jsonify(data = data)
     except Exception as e:
-        print("Unexpected error:", repr(e))
-        abort(jsonify(message=repr(e), status_code=400))
+        err_dict = {
+            'code': 400, 
+            'message': 'Bad Request'
+        }
+        err_str = str(e)
+
+        if err_str == '404':
+            err_dict['code'] = 404
+            err_dict['message'] = 'Not found'
+        elif err_str == '403':
+            err_dict['code'] = 403
+            err_dict['message'] = 'Forbidden'
+        else:
+            err_dict['message'] = err_str
+
+
+        print("Unexpected error:", str(e))
+        # https://google.github.io/styleguide/jsoncstyleguide.xml?showone=error.code#error.code
+        abort(jsonify(error = err_dict))

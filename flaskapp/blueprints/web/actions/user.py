@@ -4,10 +4,15 @@ from flaskapp.blueprints.web.models.user import User
 class ActionUser:
     def add_user(self, *args, **kwargs):
         u = User(**kwargs)
-        __u_dict = u.add_user()
-        return __u_dict
+        u_dict = u.add_user()
+        return u_dict
 
     def get_user_list(self, *args, **kwargs):
         u = User()
-        __u_list = u.get_user_list()
-        return __u_list
+        u_list = u.get_user_list()
+        return u_list
+
+    def authenticate(self, *args, **kwargs):
+        u = User()
+        u_dict = u.authenticate(**kwargs)
+        return u_dict

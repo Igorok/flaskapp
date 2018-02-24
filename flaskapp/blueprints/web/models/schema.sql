@@ -1,58 +1,79 @@
 drop table if exists user;
-create table user (
-    'id' integer primary key autoincrement,
-    'login' text not null,
-    'password' text not null,
-    'role' text not null
-);
+CREATE TABLE `user` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `login` varchar(128) DEFAULT NULL,
+  `password` varchar(128) DEFAULT NULL,
+  `email` varchar(128) DEFAULT NULL,
+  `role` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+drop table if exists token;
+CREATE TABLE `token` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `type` varchar(45) DEFAULT NULL,
+  `date` datetime DEFAULT NULL,
+  `token` varchar(128) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `user_type` (`user_id`,`type`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8
+
+
 
 drop table if exists blog;
-create table blog (
-    'id' integer primary key autoincrement,
-    'user_id' integer not null,
-    'title' text not null,
-    'text' text not null,
-    'date' datetime not null
-);
-
+CREATE TABLE `blog` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `title` varchar(128) DEFAULT NULL,
+  `text` text,
+  `date` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 drop table if exists article;
-create table article (
-    'id' integer primary key autoincrement,
-    'user_id' integer not null,
-    'blog_id' integer not null,
-    'title' text not null,
-    'text' text not null,
-    'date' datetime not null
-);
+CREATE TABLE `article` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `blog_id` int(11) NOT NULL,
+  `title` varchar(128) DEFAULT NULL,
+  `text` text,
+  `date` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 drop table if exists comment;
-create table comment (
-    'id' integer primary key autoincrement,
-    'user_id' integer not null,
-    'article_id' integer not null,
-    'text' text not null,
-    'date' datetime not null
-);
+CREATE TABLE `comment` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `article_id` int(11) NOT NULL,
+  `text` text,
+  `date` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 drop table if exists chat;
-create table chat (
-    'id' integer primary key autoincrement,
-    'type' text not null
-);
+CREATE TABLE `chat` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `type` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 
 drop table if exists chat_and_user;
-create table chat_and_user (
-    'id' integer primary key autoincrement,
-    'user_id' integer not null,
-    'chat_id' integer not null
-);
+CREATE TABLE `chat_and_user` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `chat_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 drop table if exists chat_message;
-create table chat_message (
-    'id' integer primary key autoincrement,
-    'user_id' integer not null,
-    'chat_id' integer not null,
-    'text' text not null
-);
+CREATE TABLE `chat_message` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `chat_id` int(11) NOT NULL,
+  `text` text,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
