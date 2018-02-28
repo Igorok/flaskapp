@@ -1,9 +1,16 @@
 config = {
+    'DB': 'POSTGRES',
     'MYSQL': {
-        'MYSQL_USER': 'root',
-        'MYSQL_PASSWORD': '123',
-        'MYSQL_DB': 'flaskapp',
-        'MYSQL_HOST': 'localhost',
+        'USER': 'root',
+        'PASSWORD': '123',
+        'DB': 'flaskapp',
+        'HOST': 'localhost',
+    },
+    'POSTGRES': {
+        'USER': 'postgres',
+        'PASSWORD': '123',
+        'DB': 'flaskapp',
+        'HOST': 'localhost',
     },
     'SALT': 'aSd123'
 

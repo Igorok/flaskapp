@@ -1,4 +1,4 @@
-drop table if exists user;
+drop table if exists `user`;
 CREATE TABLE `user` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `login` varchar(128) DEFAULT NULL,
@@ -8,7 +8,7 @@ CREATE TABLE `user` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-drop table if exists token;
+drop table if exists `token`;
 CREATE TABLE `token` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
@@ -21,7 +21,7 @@ CREATE TABLE `token` (
 
 
 
-drop table if exists blog;
+drop table if exists `blog`;
 CREATE TABLE `blog` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
@@ -31,7 +31,7 @@ CREATE TABLE `blog` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-drop table if exists article;
+drop table if exists `article`;
 CREATE TABLE `article` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
@@ -42,7 +42,7 @@ CREATE TABLE `article` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-drop table if exists comment;
+drop table if exists `comment`;
 CREATE TABLE `comment` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
@@ -52,7 +52,7 @@ CREATE TABLE `comment` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-drop table if exists chat;
+drop table if exists `chat`;
 CREATE TABLE `chat` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `type` varchar(45) DEFAULT NULL,
@@ -60,7 +60,7 @@ CREATE TABLE `chat` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
-drop table if exists chat_and_user;
+drop table if exists `chat_and_user`;
 CREATE TABLE `chat_and_user` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
@@ -68,7 +68,7 @@ CREATE TABLE `chat_and_user` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-drop table if exists chat_message;
+drop table if exists `chat_message`;
 CREATE TABLE `chat_message` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,

@@ -14,6 +14,7 @@ setup(
         'flask',
         'flaskapp',
         'PyMySQL',
+        'psycopg2-binary',
     ],
     setup_requires=[
         'pytest-runner',

@@ -2,11 +2,11 @@ from flask import Blueprint, render_template, abort
 from jinja2 import TemplateNotFound
 
 web = Blueprint(
-                'web', 
-                __name__,
-                template_folder = 'templates',
-                static_folder = 'static'
-            )
+        'web', 
+        __name__,
+        template_folder = 'templates',
+        static_folder = 'static'
+    )
 
 from flask import request, session, g, redirect, url_for, abort, \
     render_template, flash, current_app, jsonify

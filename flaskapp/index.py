@@ -16,6 +16,7 @@ from werkzeug.utils import find_modules, import_string
 from flaskapp.blueprints.web.index import web
 
 from flaskapp.config import config
+db_type = config['DB']
 
 app = Flask(__name__)
 app.register_blueprint(web)
@@ -25,10 +26,10 @@ app.config.update(dict(
     SECRET_KEY=b'_5#y2L"F4Q8z\n\xec]/',
     USERNAME='admin',
     PASSWORD='default',
-    MYSQL_USER=config['MYSQL']['MYSQL_USER'],
-    MYSQL_PASSWORD=config['MYSQL']['MYSQL_PASSWORD'],
-    MYSQL_DB=config['MYSQL']['MYSQL_DB'],
-    MYSQL_HOST=config['MYSQL']['MYSQL_HOST'],
+    DB_USER=config[db_type]['USER'],
+    DB_PASSWORD=config[db_type]['PASSWORD'],
+    DB_DB=config[db_type]['DB'],
+    DB_HOST=config[db_type]['HOST'],
 ))
 app.config.from_envvar('FLASAPP_SETTINGS', silent=True)
 
