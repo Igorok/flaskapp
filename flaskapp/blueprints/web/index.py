@@ -1,12 +1,17 @@
 from flask import Blueprint, render_template, abort
 from jinja2 import TemplateNotFound
 
+import graphene
+
+
 web = Blueprint(
         'web', 
         __name__,
         template_folder = 'templates',
-        static_folder = 'static'
+        static_folder = 'static',
+        static_url_path='/static/web'
     )
+
 
 from flask import request, session, g, redirect, url_for, abort, \
     render_template, flash, current_app, jsonify
@@ -14,6 +19,17 @@ from flask import request, session, g, redirect, url_for, abort, \
 from flaskapp.blueprints.web.actions.index import Action
 
 action = Action()
+
+
+
+
+
+
+
+
+
+
+
 
 @web.route('/')
 def index():
@@ -69,4 +85,84 @@ def fetch():
 
         print("Unexpected error:", str(e))
         # https://google.github.io/styleguide/jsoncstyleguide.xml?showone=error.code#error.code
+        abort(jsonify(error = err_dict))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# schema
+class Patron(graphene.ObjectType):
+    id = graphene.ID()
+    name = graphene.String()
+    age = graphene.Int()
+    qwe = graphene.String()
+    asd = graphene.String()
+
+# assign values to query
+class Query(graphene.ObjectType):
+
+    patron = graphene.Field(Patron, id=graphene.String())
+
+
+    def resolve_patron(self, info, id):
+        print('resolve_patron', id)
+
+        return Patron(
+            id = 1, 
+            name = 'Syrus', 
+            age = 27,
+            qwe = 'qwe',
+            asd = 'asd',
+        )
+
+# request
+query = '''
+    query something($id: String!){
+      patron (id: $id) {
+        id
+        name
+        age
+        asd
+      }
+    }
+'''
+
+# init query
+schema = graphene.Schema(query=Query)
+
+@web.route('/graphql', methods=['POST'])
+def graphql():
+    try:
+        json = request.get_json(silent=True)
+
+
+
+        print('graphql', json['variables'])
+
+
+
+        # execute
+        result = schema.execute(query, variable_values=json['variables'])
+        print(result.data['patron'])
+
+        return jsonify(data = result.data)
+
+
+    except Exception as e:
+        print("Unexpected error:", str(e))
+
+        err_dict = {
+            'code': 400, 
+            'message': 'Bad Request'
+        }
         abort(jsonify(error = err_dict))

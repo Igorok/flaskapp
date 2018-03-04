@@ -15,6 +15,7 @@ setup(
         'flaskapp',
         'PyMySQL',
         'psycopg2-binary',
+        'graphene',
     ],
     setup_requires=[
         'pytest-runner',
