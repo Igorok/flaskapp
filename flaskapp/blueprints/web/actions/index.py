@@ -1,4 +1,4 @@
-from flaskapp.blueprints.web.models.user import User
+from flaskapp.blueprints.web.models.user import UserModel
 from flaskapp.blueprints.web.actions.user import ActionUser
 
 

@@ -4,29 +4,29 @@ import {api, graphql} from '../helpers/action'
 import {Alert, MathCaptcha} from '../helpers/component'
 
 
-class AuthComp extends React.Component {
+class LoginComp extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            captcha: null,
+        };
+    }
     componentDidMount() {
-        this.props.dispatch(graphql({
-            type: 'USER_LIST',
-            id: '100500',
-        }));
-
-
         if (this.props.isAuthenticated) return window.location = '/';
     }
+
     formSubmit (e) {
         e.preventDefault();	
 
         if (! this.state.captcha) {
             return this.props.dispatch({
                 type: 'AUTH_ERROR',
-                error: 'Captcha is not valid!!',
+                error: 'Captcha is not valid!',
             });
         }
 
-        this.props.dispatch(api({
+        this.props.dispatch(graphql({
             type: 'AUTH',
-            fetch: 'user.getAuth',
             login: e.target.elements.loginInput.value,
             password: e.target.elements.passwordInput.value,
         }));
@@ -120,6 +120,6 @@ class AuthComp extends React.Component {
 const mapStateToProps = (state) => {
     return {...state.auth}
 }
-AuthComp = connect(mapStateToProps)(AuthComp)
+LoginComp = connect(mapStateToProps)(LoginComp)
 
-export default AuthComp
+export default LoginComp

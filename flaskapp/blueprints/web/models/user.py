@@ -4,7 +4,7 @@ from uuid import uuid4
 from flaskapp.config import config
 import time
 
-class User():
+class UserModel ():
     ROLE_USER = 0
     ROLE_ADMIN = 1
     TABLE = 'user'
@@ -91,7 +91,7 @@ class User():
         u_list = map(list_to_dict(sql_rows), u_list)
         return u_list or []
 
-    def authenticate(self, **kwargs):
+    def authenticate(self, *args, **kwargs):
         if (
             not 'login' in kwargs or
             not 'password' in kwargs
@@ -115,7 +115,7 @@ class User():
 
         found_user = cursor.fetchone()
 
-        if (auth_user == None):
+        if (found_user == None):
             connection.close()
             raise Exception('Wrong login or password')
 

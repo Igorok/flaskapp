@@ -1,8 +1,5 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import _ from 'lodash';
-import xss from 'xss';
-
 import 'jquery';
 
 /**

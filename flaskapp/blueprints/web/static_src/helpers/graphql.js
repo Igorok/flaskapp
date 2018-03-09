@@ -20,28 +20,29 @@ const USER_LIST = (opts) => {
     return JSON.stringify(q);
 };
 
-const USER_AUTH = (opts) => {
+const AUTH = (opts) => {
     let q = {
-        query: compress(`{
-            query userlist($id: Int) {
-                users (id: $id) {
-                    user {
-                        id
-                        login
-                        email
-                        role
-                    }
+        query: compress(`
+            query auth($login: String, $password: String) {
+                auth (login: $login, password: $password) {
+                    id
+                    login
+                    token
                 }
             }
-        }`),
+        `),
         variables: {
-            id: opts.id
+            login: opts.login,
+            password: opts.password,
         },
     }
     return JSON.stringify(q);
 };
 
 export const query = {
+    AUTH: AUTH,
+
+
     USER_LIST: USER_LIST,
 }
 

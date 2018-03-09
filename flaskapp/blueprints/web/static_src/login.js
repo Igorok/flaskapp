@@ -6,9 +6,9 @@ import 'bootstrap/dist/css/bootstrap.css';
 import './styles/index.scss'
 
 import {layout} from './helpers/component'
-import AuthComp from './auth/AuthComp'
+import LoginComp from './auth/LoginComp'
 
-import auth from './auth/AuthRed'
+import auth from './auth/LoginRed'
 
 import {configureStore} from './helpers/configureStore'
 
@@ -16,10 +16,7 @@ let store = configureStore({
 	auth: auth,
 });
 
-import './helpers/graphql'
-
-
-let Comp = layout(AuthComp);
+let Comp = layout(LoginComp);
 render(
 	<Provider store={store}>
 		<Comp />

@@ -98,19 +98,27 @@ export const graphql = (opts) => {
                 return r.json();
             })
             .then((r) => {
-                console.log('r', r);
-
                 if (status == 403) {
-                    throw new Error(status);
-                } else if (status != 200) {
+                    throw new Error(403);
+                }
+                else if (status != 200) {
                     throw new Error(r);
-                } else {
-                    
-                    r = {data: r, type: type + '_SUCCESS'}; 
+                }
+                else if (r.error) {
+                    if (r.error.code == 403) {
+                        throw new Error(403);
+                    } else {
+                        throw new Error(r.error.message);
+                    }
+                }
+                else {
+                    r = {data: r.data, type: type + '_SUCCESS'}; 
                     return dispatch(r);
                 }
             })
             .catch((e) => {
+                console.log('error', e);
+
                 if (e.message && e.message.toString() === '403') {
                     localStorage.removeItem('user');
                     return window.location = '/login'

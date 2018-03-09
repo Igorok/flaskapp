@@ -26,41 +26,11 @@ action = Action()
 
 @web.route('/')
 def index():
-    # query = '''
-    #     query somethingasdasd {
-    #         patron {
-    #             id
-    #             name
-    #             age
-    #         }
-    #     }
-    # '''
-    # result = schema.execute(query)
-
-    # print('patron data', result.data)
-
-    # query = '''
-    #     query somethingasdasd ($id: Int) {
-    #         patronlist (id: $id) {
-    #             id
-    #             patrons {
-    #                 id
-    #                 name
-    #                 age
-    #             }
-    #         }
-    #     }
-    # '''
-
-    # patronlist = schema.execute(query, variable_values=dict(id = 9))
-
-    # print(
-    #     'patronlist data', 
-    #     patronlist.errors,
-    #     patronlist.data
-    # )
-
     return render_template('index.html', entries={})
+
+@web.route('/login')
+def login():
+    return render_template('login.html', entries={})
 
 @web.route('/hello')
 def hello():
@@ -132,28 +102,17 @@ def fetch():
 def graphql():
     try:
         json = request.get_json(silent=True)
-
-
-        
-
-
-
-
-
-        # print('json', json)
-
         result = schema.execute(json['query'], variable_values=json['variables'])
 
-        print('result.data', result.errors, result.data)
+        if (result.errors != None):
+            raise Exception(result.errors[0])
 
         return jsonify(data = result.data or {})
 
-
     except Exception as e:
         print("Unexpected error:", str(e))
-
         err_dict = {
             'code': 400,
-            'message': 'Bad Request'
+            'message': str(e)
         }
         abort(jsonify(error = err_dict))
