@@ -1,6 +1,6 @@
 import {polyfill} from 'es6-promise';
 import fetch from 'isomorphic-fetch';
-import {schemas} from './graphql'
+import {query} from './graphql'
 // import {push} from 'react-router-redux';
 
 /**
@@ -84,7 +84,7 @@ export const graphql = (opts) => {
 
         let param = {
             method: 'POST', 
-            body: schemas[type](opts),
+            body: query[type](opts),
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
@@ -98,11 +98,14 @@ export const graphql = (opts) => {
                 return r.json();
             })
             .then((r) => {
+                console.log('r', r);
+
                 if (status == 403) {
                     throw new Error(status);
                 } else if (status != 200) {
                     throw new Error(r);
                 } else {
+                    
                     r = {data: r, type: type + '_SUCCESS'}; 
                     return dispatch(r);
                 }

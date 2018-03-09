@@ -9,7 +9,7 @@ class ActionUser:
 
     def get_user_list(self, *args, **kwargs):
         u = User()
-        u_list = u.get_user_list()
+        u_list = u.list()
         return u_list
 
     def authenticate(self, *args, **kwargs):

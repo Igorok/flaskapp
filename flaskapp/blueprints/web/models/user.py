@@ -74,7 +74,7 @@ class User():
             role=self.role,
         )
 
-    def get_user_list(self):
+    def list(self):
         connection = connect_postgres()
         cursor = connection.cursor()
 

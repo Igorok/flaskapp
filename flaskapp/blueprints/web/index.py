@@ -5,7 +5,7 @@ import graphene
 
 
 web = Blueprint(
-        'web', 
+        'web',
         __name__,
         template_folder = 'templates',
         static_folder = 'static',
@@ -17,22 +17,49 @@ from flask import request, session, g, redirect, url_for, abort, \
     render_template, flash, current_app, jsonify
 
 from flaskapp.blueprints.web.actions.index import Action
+from flaskapp.blueprints.web.graphql.query import schema
 
 action = Action()
 
 
 
 
-
-
-
-
-
-
-
-
 @web.route('/')
 def index():
+    # query = '''
+    #     query somethingasdasd {
+    #         patron {
+    #             id
+    #             name
+    #             age
+    #         }
+    #     }
+    # '''
+    # result = schema.execute(query)
+
+    # print('patron data', result.data)
+
+    # query = '''
+    #     query somethingasdasd ($id: Int) {
+    #         patronlist (id: $id) {
+    #             id
+    #             patrons {
+    #                 id
+    #                 name
+    #                 age
+    #             }
+    #         }
+    #     }
+    # '''
+
+    # patronlist = schema.execute(query, variable_values=dict(id = 9))
+
+    # print(
+    #     'patronlist data', 
+    #     patronlist.errors,
+    #     patronlist.data
+    # )
+
     return render_template('index.html', entries={})
 
 @web.route('/hello')
@@ -68,7 +95,7 @@ def fetch():
         return jsonify(data = data)
     except Exception as e:
         err_dict = {
-            'code': 400, 
+            'code': 400,
             'message': 'Bad Request'
         }
         err_str = str(e)
@@ -100,45 +127,6 @@ def fetch():
 
 
 
-# schema
-class Patron(graphene.ObjectType):
-    id = graphene.ID()
-    name = graphene.String()
-    age = graphene.Int()
-    qwe = graphene.String()
-    asd = graphene.String()
-
-# assign values to query
-class Query(graphene.ObjectType):
-
-    patron = graphene.Field(Patron, id=graphene.String())
-
-
-    def resolve_patron(self, info, id):
-        print('resolve_patron', id)
-
-        return Patron(
-            id = 1, 
-            name = 'Syrus', 
-            age = 27,
-            qwe = 'qwe',
-            asd = 'asd',
-        )
-
-# request
-query = '''
-    query something($id: String!){
-      patron (id: $id) {
-        id
-        name
-        age
-        asd
-      }
-    }
-'''
-
-# init query
-schema = graphene.Schema(query=Query)
 
 @web.route('/graphql', methods=['POST'])
 def graphql():
@@ -146,23 +134,26 @@ def graphql():
         json = request.get_json(silent=True)
 
 
-
-        print('graphql', json['variables'])
-
+        
 
 
-        # execute
-        result = schema.execute(query, variable_values=json['variables'])
-        print(result.data['patron'])
 
-        return jsonify(data = result.data)
+
+
+        # print('json', json)
+
+        result = schema.execute(json['query'], variable_values=json['variables'])
+
+        print('result.data', result.errors, result.data)
+
+        return jsonify(data = result.data or {})
 
 
     except Exception as e:
         print("Unexpected error:", str(e))
 
         err_dict = {
-            'code': 400, 
+            'code': 400,
             'message': 'Bad Request'
         }
         abort(jsonify(error = err_dict))
