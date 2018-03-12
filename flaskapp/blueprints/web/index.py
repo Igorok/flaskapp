@@ -22,21 +22,6 @@ from flaskapp.blueprints.web.graphql.query import schema
 action = Action()
 
 
-
-
-@web.route('/')
-def index():
-    return render_template('index.html', entries={})
-
-@web.route('/login')
-def login():
-    return render_template('login.html', entries={})
-
-@web.route('/hello')
-def hello():
-    u_list = action.user().get_user_list()
-    return render_template('hello.html', u_list=u_list)
-
 @web.route('/fetch', methods=['POST'])
 def fetch():
     try:
@@ -116,3 +101,24 @@ def graphql():
             'message': str(e)
         }
         abort(jsonify(error = err_dict))
+
+
+
+
+# GET routes
+@web.route('/')
+def index():
+    return render_template('view.html', scripts=["about"])
+
+@web.route('/profile')
+def profile():
+    return render_template('view.html', scripts=["profile"])
+
+@web.route('/login')
+def login():
+    return render_template('view.html', scripts=["login"])
+
+@web.route('/hello')
+def hello():
+    u_list = action.user().get_user_list()
+    return render_template('hello.html', u_list=u_list)

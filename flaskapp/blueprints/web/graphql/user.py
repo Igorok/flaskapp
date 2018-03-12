@@ -5,7 +5,6 @@ class UserGraph (graphene.ObjectType):
     login = graphene.String()
     email = graphene.String()
     role = graphene.String()
-    token = graphene.String()
 
 
 class UserListGraph (graphene.ObjectType):
@@ -15,6 +14,6 @@ class UserListGraph (graphene.ObjectType):
 class AuthGraph (graphene.ObjectType):
     id = graphene.ID()
     login = graphene.String()
-    token = graphene.String()
     email = graphene.String()
     role = graphene.String()
+    token = graphene.String()

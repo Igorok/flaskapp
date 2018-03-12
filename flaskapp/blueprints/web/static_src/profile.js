@@ -6,17 +6,19 @@ import 'bootstrap/dist/css/bootstrap.css';
 import './styles/index.scss'
 
 import {layout} from './helpers/component'
-import LoginComp from './auth/LoginComp'
+import ProfileComp from './profile/ProfileComp'
 
 import auth from './auth/LoginRed'
+import profile from './profile/ProfileRed'
 
 import {configureStore} from './helpers/configureStore'
 
 let store = configureStore({
 	auth: auth,
+	profile: profile,
 });
 
-let Comp = layout({comp: LoginComp});
+let Comp = layout({comp: ProfileComp, forAuth: true});
 render(
 	<Provider store={store}>
 		<Comp />

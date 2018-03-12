@@ -12,6 +12,7 @@ config = {
         'DB': 'flaskapp',
         'HOST': 'localhost',
     },
-    'SALT': 'aSd123'
+    'SALT': 'aSd123',
+    'TOKEN_LIFETIME': 7,
 
 }

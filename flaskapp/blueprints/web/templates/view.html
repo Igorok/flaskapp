@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+{% block body %}
+    <div class="container">
+        <div id="root"></div>
+    </div>
+
+    <script src="/static/web/js/common.js"></script>
+
+    {% if scripts %}
+        {% for script in scripts %}
+            <script src="/static/web/js/{{ script }}.js"></script>
+        {% endfor %}
+    {% endif %}
+
+{% endblock %}

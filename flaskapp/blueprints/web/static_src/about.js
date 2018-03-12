@@ -6,7 +6,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 import './styles/index.scss'
 
 import {layout} from './helpers/component'
-import LoginComp from './auth/LoginComp'
+import AboutComp from './about/AboutComp'
 
 import auth from './auth/LoginRed'
 
@@ -16,7 +16,7 @@ let store = configureStore({
 	auth: auth,
 });
 
-let Comp = layout({comp: LoginComp});
+let Comp = layout({comp: AboutComp});
 render(
 	<Provider store={store}>
 		<Comp />

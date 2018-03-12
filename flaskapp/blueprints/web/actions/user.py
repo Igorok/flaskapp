@@ -10,6 +10,9 @@ class ActionUser:
     def get_user_list(self, *args, **kwargs):
         u = UserModel()
         u_list = u.list()
+
+        print("t", t)
+
         return u_list
 
     def authenticate(self, *args, **kwargs):

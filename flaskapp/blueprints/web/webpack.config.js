@@ -36,6 +36,8 @@ let plugins = [
 module.exports = {
     entry: {
         login: path.resolve(__dirname, 'static_src/login.js'),
+        about: path.resolve(__dirname, 'static_src/about.js'),
+        profile: path.resolve(__dirname, 'static_src/profile.js'),
 
 
         // registration: path.resolve(__dirname, 'src/registration.js'),

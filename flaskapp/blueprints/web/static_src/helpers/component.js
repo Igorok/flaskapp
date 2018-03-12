@@ -25,7 +25,7 @@ export class Alert extends React.Component {
 }
 
 export class SideNav extends React.Component {
-    render () {		
+    render () {
         let profileItem = null;
         let userItem = null;
         let chatItem = null;
@@ -44,16 +44,16 @@ export class SideNav extends React.Component {
             chatItem = <li role="presentation">
                 <a href="/chat-list"><span className="glyphicon glyphicon-envelope"></span>&nbsp;&nbsp;Chats</a>
             </li>
-        }		
+        }
 
         return <ul className="nav nav-pills nav-stacked">
-            {profileItem}
             <li role="presentation">
                 <a href="/"><span className="glyphicon glyphicon-exclamation-sign"></span>&nbsp;&nbsp;About</a>
             </li>
             <li role="presentation">
                 <a href="/blog-list"><span className="glyphicon glyphicon-bookmark"></span>&nbsp;&nbsp;Blogs</a>
             </li>
+            {profileItem}
             {userItem}
             {chatItem}
             
@@ -124,10 +124,13 @@ export class MathCaptcha extends React.Component {
 
 /**
  * function to render layout
- * @param {Class} Component - React.Component that need to render 
- * @param {Boolean} forAuthenticated - this component only for authenticated users
+ * @param {Class} opts.comp - React.Component that need to render 
+ * @param {Boolean} opts.forAuth - this component only for authenticated users
  */
-export function layout (Component, forAuthenticated = false) {
+export function layout (opts) {
+    let Component = opts.comp;
+    let forAuthenticated = opts.forAuthenticated;
+
     class Layout extends React.Component {
         componentWillMount() {
             this.checkAuth(this.props.auth)
