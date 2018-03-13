@@ -11,31 +11,29 @@ let initState = {
 	error: null,
 };
 const profile = (state = initState, action) => {
+    let data = null;
+    
+
 	switch (action.type) {
-		case 'GET_PROFILE_SEND':
+		case 'PROFILE_SEND':
 			let sendState = {...state};
 			sendState.status = 'send';
 			return sendState;
-		case 'GET_PROFILE_SUCCESS':
+        case 'PROFILE_SUCCESS':
+            data = {...action.data.profile};
 			return {
-				_id: action.data._id,
-				login: action.data.login,
-				email: action.data.email,
-				friends: action.data.friends ?
-					action.data.friends.length : 
-					0,
-				friendRequests: action.data.friendRequests ?
-					action.data.friendRequests.length :
-					0,
-				selfFriendRequests: action.data.selfFriendRequests ?
-					action.data.selfFriendRequests.length :
-					0,
-				countChats: action.data.countChats || 0,
-				countBlogs: action.data.countBlogs || 0,
+				_id: data._id,
+				login: data.login,
+				email: data.email,
+				friends: data.friends || 0,
+				friendRequests: data.friendRequests || 0,
+				selfFriendRequests: data.selfFriendRequests || 0,
+				countChats: data.countChats || 0,
+				countBlogs: data.countBlogs || 0,
 				status: 'success',
 				error: null,
 			};
-		case 'GET_PROFILE_ERROR':
+		case 'PROFILE_ERROR':
 			let errorState = {...state};
 			errorState.status = 'error';
 			errorState.error = action.error;

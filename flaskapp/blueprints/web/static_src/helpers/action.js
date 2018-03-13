@@ -76,6 +76,7 @@ export const graphql = (opts) => {
         sendOpts.type = type + '_SEND';
         dispatch(sendOpts);
 
+        opts.device = 'web';
         let user = localStorage.getItem('user');
         if (user) {
             user = JSON.parse(user);

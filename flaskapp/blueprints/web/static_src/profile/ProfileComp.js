@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
-import {api} from '../helpers/action'
+import {api, graphql} from '../helpers/action'
 import {Alert} from '../helpers/component'
 
 
@@ -172,12 +172,17 @@ class ProfileComp extends React.Component {
     // 	}));
     // }
 
+    componentWillMount () {
+    	this.props.dispatch(graphql({
+    		type: 'PROFILE',
+    	}));
+    }
+
     
     componentWillReceiveProps (newProps) {
         if (newProps.profile.status === 'edit_success') {
-            newProps.dispatch(api({
-                type: 'GET_PROFILE',
-                fetch: 'user.getCurrentProfile',
+            newProps.dispatch(graphql({
+                type: 'PROFILE',
             }));
         }
     }

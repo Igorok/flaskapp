@@ -2,7 +2,7 @@ from flaskapp.blueprints.web.models.index import connect_postgres, list_to_dict
 from hashlib import sha256
 from uuid import uuid4
 from flaskapp.config import config
-from datetime import time, datetime, timedelta
+from datetime import datetime, timedelta
 
 class UserModel ():
     ROLE_USER = 0
@@ -138,7 +138,7 @@ class UserModel ():
         # update token of user
         auth_type = kwargs['type'] if 'type' in kwargs else 'web'
         auth_token = uuid4().hex
-        auth_date = time().strftime('%Y-%m-%d %H:%M:%S')
+        auth_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
         sql_update = '''insert into {0} ("user_id", "type", "date", "token")
             values (%s, %s, %s, %s)
@@ -160,7 +160,7 @@ class UserModel ():
     """
     get user by his token
     :param token: - current token after authentification
-    :param type: - type of device, web or mobile
+    :param device: - type of device, web or mobile
     return user entity
     """
     def getUserByToken (self, *args, **kwargs):
@@ -169,7 +169,7 @@ class UserModel ():
 
         # get token for web or mobile
         tokenVal = kwargs['token']
-        tokenType = kwargs['type'] if 'type' in kwargs else 'web'
+        tokenType = kwargs['device'] if 'device' in kwargs else 'web'
         tokenRows = ['token', 'user_id', 'date', self.TABLE_TOKEN]
         tokenQuery = 'select {0}, {1}, {2} from {3} where token = %s and "type" = %s'.format(*tokenRows)
 
@@ -191,14 +191,13 @@ class UserModel ():
         # check that token is actual
         dateNow = datetime.now()
         dateEnd = tokenDict['date'] + timedelta(days = config['TOKEN_LIFETIME'])
+        
         if dateNow > dateEnd:
             raise Exception(403)
         
         # get user by user_id from token table
         userRows = ['id', 'login', 'email', 'role', self.TABLE]
         userQuery = 'select "{0}", "{1}", "{2}", "{3}" from "{4}" where "id" = %s'.format(*userRows)
-
-        print('userQuery', userQuery, tokenDict['user_id'])
         
         cursor.execute(userQuery, [tokenDict['user_id']])
         userFound = cursor.fetchone()
@@ -217,9 +216,27 @@ class UserModel ():
 
 
 
+    """
+    get user profile
+    :param token: - current token of user
+    :param device: - type of device, web or mobile
+    return profile of user
+    """
 
+    def getUserProfile (self, *args, **kwargs):
+        if (not 'token' in kwargs):
+            raise Exception('User not found')
+        
+        # get token for web or mobile
+        tokenVal = kwargs['token']
+        tokenType = kwargs['device'] if 'device' in kwargs else 'web'
 
+        profile_dict = self.getUserByToken(token = tokenVal, device = tokenType)
 
+        profile_dict['friends'] = 0
+        profile_dict['friendRequests'] = 0
+        profile_dict['selfFriendRequests'] = 0
+        profile_dict['countChats'] = 0
+        profile_dict['countBlogs'] = 0
 
-    def getMyProfile (self):
-        pass
+        return profile_dict

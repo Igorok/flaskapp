@@ -23,8 +23,8 @@ const USER_LIST = (opts) => {
 const AUTH = (opts) => {
     let q = {
         query: compress(`
-            query auth($login: String, $password: String) {
-                auth (login: $login, password: $password) {
+            query auth($login: String, $password: String, $device: String) {
+                auth (login: $login, password: $password, device: $device) {
                     id
                     login
                     token
@@ -34,13 +34,42 @@ const AUTH = (opts) => {
         variables: {
             login: opts.login,
             password: opts.password,
+            device: opts.device,
         },
     }
     return JSON.stringify(q);
 };
 
+const PROFILE = (opts) => {
+    let q = {
+        query: compress(`
+            query profile ($token: String, $device: String) {
+                profile (token: $token, device: $device) {
+                    id
+                    login
+                    email
+                    friends
+                    friendRequests
+                    selfFriendRequests
+                    countChats
+                    countBlogs
+                }
+            }
+        `),
+        variables: {
+            token: opts.token,
+            device: opts.device,
+        },
+    }
+    return JSON.stringify(q);
+};
+
+
+
+
 export const query = {
     AUTH: AUTH,
+    PROFILE: PROFILE,
 
 
     USER_LIST: USER_LIST,
