@@ -1,5 +1,5 @@
 import graphene
-from flaskapp.blueprints.web.graphql.user import AuthGraph, ProfileGraph, UserGraph, UserListGraph
+from flaskapp.blueprints.web.graphql.user import AuthGraph, ProfileGraph, UserGraph, UserListGraph, EditProfileGraph
 from flaskapp.blueprints.web.models.user import UserModel
 
 
@@ -25,17 +25,22 @@ class Query(graphene.ObjectType):
         device = graphene.String()
     )
     def resolve_profile (self, info, token, device):
-        print('resolve_profile', token, device)
-
         _u = UserModel()
         _userProfile = _u.getUserProfile(token = token, device = device)
-
-        print ('_userProfile', _userProfile)
-
         return ProfileGraph(**_userProfile)
 
-
-
+    # update user profile
+    editProfile = graphene.Field(
+        EditProfileGraph,
+        token = graphene.String(),
+        device = graphene.String(),
+        login = graphene.String(),
+        email = graphene.String()
+    )
+    def resolve_editProfile (self, info, *args, **kwargs):
+        _u = UserModel()
+        _userProfile = _u.getUserProfile(**kwargs)
+        return EditProfileGraph(**_userProfile)
 
 
 

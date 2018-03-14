@@ -18,7 +18,9 @@ class ProfileGraph (graphene.ObjectType):
     countChats = graphene.Int()
     countBlogs = graphene.Int()
 
-
+class EditProfileGraph (graphene.ObjectType):
+    login = graphene.String()
+    email = graphene.String()
 
 
 

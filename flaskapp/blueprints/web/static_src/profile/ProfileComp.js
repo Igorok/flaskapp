@@ -70,8 +70,7 @@ class UserInfo extends React.Component {
     formSubmit (e) {
         e.preventDefault();
         this.props.dispatch(api({
-            type: 'EDIT_PROFILE',
-            fetch: 'user.editCurrentProfile',
+            type: 'PROFILE_EDIT',
             login: this.state.login,
             email: this.state.email,
         }));

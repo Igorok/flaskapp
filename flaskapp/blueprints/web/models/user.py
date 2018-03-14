@@ -224,14 +224,8 @@ class UserModel ():
     """
 
     def getUserProfile (self, *args, **kwargs):
-        if (not 'token' in kwargs):
-            raise Exception('User not found')
-        
-        # get token for web or mobile
-        tokenVal = kwargs['token']
-        tokenType = kwargs['device'] if 'device' in kwargs else 'web'
-
-        profile_dict = self.getUserByToken(token = tokenVal, device = tokenType)
+        # check authentication and get data of current user
+        profile_dict = self.getUserByToken(**kwargs)
 
         profile_dict['friends'] = 0
         profile_dict['friendRequests'] = 0
@@ -240,3 +234,53 @@ class UserModel ():
         profile_dict['countBlogs'] = 0
 
         return profile_dict
+
+    """
+    update user profile, at current moment possible to change only login and email
+    both parameters are required
+    :param token: - current token of user
+    :param device: - type of device, web or mobile
+    :param login: - login
+    :param email: - email
+    return new login and email
+    """
+    def editUserProfile (self, *args, **kwargs):
+        # check authentication and get data of current user
+        profile_dict = self.getUserByToken(**kwargs)
+
+        # check required params
+        if (
+            not 'login' in kwargs or 
+            not 'email' in kwargs
+        ):
+            raise Exception('Nothing to change')
+
+        login = str(kwargs['login']).strip()
+        email = str(kwargs['email']).strip()
+
+        # check that login or email was changed
+        if (
+            login == profile_dict['login'] and 
+            email == profile_dict['email']
+        ):
+            raise Exception('Nothing to change')
+
+        # check that login and email not already used for other users
+        count = self.check_unique(
+            id = profile_dict['id'],
+            login = login,
+            email = email
+        )
+
+        update_query = 'update {0} set "login" = %s, "email" = %s;'.format(self.TABLE)
+        
+        connection = connect_postgres()
+        cursor = connection.cursor()
+        cursor.execute(update_query, [login, email])
+        connection.commit()
+        connection.close()
+
+        return dict(
+            login = login,
+            email = email
+        )

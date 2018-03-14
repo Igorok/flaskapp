@@ -64,12 +64,33 @@ const PROFILE = (opts) => {
     return JSON.stringify(q);
 };
 
+const PROFILE_EDIT = (opts) => {
+    let q = {
+        query: compress(`
+            query editProfile ($token: String!, $device: String!, $login: String!, $email: String!) {
+                editProfile (token: $token, device: $device, login: $login, email: $email) {
+                    login
+                    email
+                }
+            }
+        `),
+        variables: {
+            token: opts.token,
+            device: opts.device,
+            login: opts.login,
+            email: opts.email,
+        },
+    }
+    return JSON.stringify(q);
+};
+
 
 
 
 export const query = {
     AUTH: AUTH,
     PROFILE: PROFILE,
+    PROFILE_EDIT: PROFILE_EDIT,
 
 
     USER_LIST: USER_LIST,
