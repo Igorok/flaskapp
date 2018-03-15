@@ -39,7 +39,7 @@ class Query(graphene.ObjectType):
     )
     def resolve_editProfile (self, info, *args, **kwargs):
         _u = UserModel()
-        _userProfile = _u.getUserProfile(**kwargs)
+        _userProfile = _u.editUserProfile(**kwargs)
         return EditProfileGraph(**_userProfile)
 
 

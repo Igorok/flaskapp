@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 
 import {api, graphql} from '../helpers/action'
-import {Alert} from '../helpers/component'
+import {AlertMessage} from '../helpers/component'
 
 
 class NumInfo extends React.Component {
@@ -12,7 +12,7 @@ class NumInfo extends React.Component {
                 <div className="panel panel-default">
                     <div className="panel-heading">
                         <span className="glyphicon glyphicon-bookmark"></span>&nbsp;&nbsp;
-                        <a href="/my-blog-list">My blogs</a>
+                        <a href="/my-blogs">My blogs</a>
                     </div>
                     <div className="panel-body">
                         {this.props.profile.countBlogs}
@@ -41,7 +41,7 @@ class NumInfo extends React.Component {
                 <div className="panel panel-default">
                     <div className="panel-heading">
                         <span className="glyphicon glyphicon-envelope"></span>&nbsp;&nbsp;
-                        <a href="/chat-list">My chats</a>
+                        <a href="/chats">My chats</a>
                     </div>
                     <div className="panel-body">
                         {this.props.profile.countChats}
@@ -69,7 +69,7 @@ class UserInfo extends React.Component {
 
     formSubmit (e) {
         e.preventDefault();
-        this.props.dispatch(api({
+        this.props.dispatch(graphql({
             type: 'PROFILE_EDIT',
             login: this.state.login,
             email: this.state.email,
@@ -152,7 +152,10 @@ class UserInfo extends React.Component {
                                 onChange={::this.fieldChange}
                             />
                         </div>
-                        <button type="submit" className="btn btn-default">Submit</button>
+                        <button type="submit" className="btn btn-default">
+                            <span className="glyphicon glyphicon-floppy-disk"></span>&nbsp;
+                            Submit
+                        </button>
                     </form>
                 </div>
 
@@ -164,28 +167,11 @@ class UserInfo extends React.Component {
 
 
 class ProfileComp extends React.Component {
-    // componentWillMount () {
-    // 	this.props.dispatch(api({
-    // 		type: 'GET_PROFILE',
-    // 		fetch: 'user.getCurrentProfile',
-    // 	}));
-    // }
-
     componentWillMount () {
-    	this.props.dispatch(graphql({
-    		type: 'PROFILE',
-    	}));
+        this.props.dispatch(graphql({
+            type: 'PROFILE',
+        }));
     }
-
-    
-    componentWillReceiveProps (newProps) {
-        if (newProps.profile.status === 'edit_success') {
-            newProps.dispatch(graphql({
-                type: 'PROFILE',
-            }));
-        }
-    }
-
     render () {
         let alertOpts = null;
         if (
@@ -209,7 +195,7 @@ class ProfileComp extends React.Component {
         }
         
         return <div>
-            <Alert opts={alertOpts} />
+            <AlertMessage opts={alertOpts} />
             <UserInfo profile={this.props.profile} dispatch={this.props.dispatch} />
             <NumInfo profile={this.props.profile} />
         </div>

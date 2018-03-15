@@ -1,5 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import {Alert} from 'bootstrap'
 import 'jquery';
 
 /**
@@ -7,7 +8,7 @@ import 'jquery';
  * @param {String} className - success, info, warning, danger
  * @param {String} text - the text of the message
  */
-export class Alert extends React.Component {
+export class AlertMessage extends React.Component {
     render () {
         let tpl = null;
         if (
@@ -17,6 +18,9 @@ export class Alert extends React.Component {
         ) {
             let className = "alert alert-" + this.props.opts.className;
             tpl = <div className={className} role="alert">
+                <button type="button" className="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
                 {this.props.opts.text}
             </div>
         }
@@ -39,10 +43,10 @@ export class SideNav extends React.Component {
                 </a>
             </li>
             userItem = <li role="presentation">
-                <a href="/user-list"><span className="glyphicon glyphicon-user"></span>&nbsp;&nbsp;Users</a>
+                <a href="/users"><span className="glyphicon glyphicon-user"></span>&nbsp;&nbsp;Users</a>
             </li>
             chatItem = <li role="presentation">
-                <a href="/chat-list"><span className="glyphicon glyphicon-envelope"></span>&nbsp;&nbsp;Chats</a>
+                <a href="/chats"><span className="glyphicon glyphicon-envelope"></span>&nbsp;&nbsp;Chats</a>
             </li>
         }
 
@@ -51,7 +55,7 @@ export class SideNav extends React.Component {
                 <a href="/"><span className="glyphicon glyphicon-exclamation-sign"></span>&nbsp;&nbsp;About</a>
             </li>
             <li role="presentation">
-                <a href="/blog-list"><span className="glyphicon glyphicon-bookmark"></span>&nbsp;&nbsp;Blogs</a>
+                <a href="/blogs"><span className="glyphicon glyphicon-bookmark"></span>&nbsp;&nbsp;Blogs</a>
             </li>
             {profileItem}
             {userItem}

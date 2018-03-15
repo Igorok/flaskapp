@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import {api, graphql} from '../helpers/action'
-import {Alert, MathCaptcha} from '../helpers/component'
+import {AlertMessage, MathCaptcha} from '../helpers/component'
 
 
 class LoginComp extends React.Component {
@@ -99,7 +99,7 @@ class LoginComp extends React.Component {
                                 />
                             </div>
                             <MathCaptcha cb={::this.checkCaptcha} />
-                            <Alert opts={alertOpts} />
+                            <AlertMessage opts={alertOpts} />
                             <button 
                                 type="submit" 
                                 className="btn btn-default btn-block"

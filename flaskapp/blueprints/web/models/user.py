@@ -272,11 +272,11 @@ class UserModel ():
             email = email
         )
 
-        update_query = 'update {0} set "login" = %s, "email" = %s;'.format(self.TABLE)
+        update_query = 'update "{0}" set "login" = %s, "email" = %s where "id" = %s;'.format(self.TABLE)
         
         connection = connect_postgres()
         cursor = connection.cursor()
-        cursor.execute(update_query, [login, email])
+        cursor.execute(update_query, [login, email, profile_dict['id']])
         connection.commit()
         connection.close()
 
