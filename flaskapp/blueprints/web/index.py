@@ -118,6 +118,14 @@ def profile():
 def login():
     return render_template('view.html', scripts=["login"])
 
+@web.route('/blogs')
+def blogs():
+    return render_template('view.html', scripts=["blogs"])
+
+
+
+
+
 @web.route('/hello')
 def hello():
     u_list = action.user().get_user_list()

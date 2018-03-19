@@ -84,7 +84,25 @@ const PROFILE_EDIT = (opts) => {
     return JSON.stringify(q);
 };
 
-
+const BLOG_ADD = (opts) => {
+    let q = {
+        query: compress(`
+            query addBlog ($token: String!, $device: String!, $title: String!, $text: String!) {
+                addBlog (token: $token, device: $device, title: $title, text: $text) {
+                    title
+                    text
+                }
+            }
+        `),
+        variables: {
+            token: opts.token,
+            device: opts.device,
+            title: opts.title,
+            text: opts.text,
+        },
+    }
+    return JSON.stringify(q);
+};
 
 
 export const query = {

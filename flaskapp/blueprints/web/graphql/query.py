@@ -1,6 +1,8 @@
 import graphene
-from flaskapp.blueprints.web.graphql.user import AuthGraph, ProfileGraph, UserGraph, UserListGraph, EditProfileGraph
 from flaskapp.blueprints.web.models.user import UserModel
+from flaskapp.blueprints.web.models.blog import BlogModel
+
+from flaskapp.blueprints.web.graphql.user import AuthGraph, ProfileGraph, BlogGraph, UserGraph, UserListGraph, EditProfileGraph
 
 
 
@@ -25,6 +27,9 @@ class Query(graphene.ObjectType):
         device = graphene.String()
     )
     def resolve_profile (self, info, token, device):
+        blog = BlogModel()
+        print('blog', blog)
+
         _u = UserModel()
         _userProfile = _u.getUserProfile(token = token, device = device)
         return ProfileGraph(**_userProfile)
@@ -41,6 +46,32 @@ class Query(graphene.ObjectType):
         _u = UserModel()
         _userProfile = _u.editUserProfile(**kwargs)
         return EditProfileGraph(**_userProfile)
+
+    # add new blog
+    addBlog = graphene.Field(
+        EditProfileGraph,
+        token = graphene.String(),
+        device = graphene.String(),
+        title = graphene.String(),
+        text = graphene.String()
+    )
+    def resolve_addBlog (self, info, *args, **kwargs):
+        __b = BlogModel()
+        __blog = __b.addBlog(**kwargs)
+        return BlogGraph(**__blog)
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

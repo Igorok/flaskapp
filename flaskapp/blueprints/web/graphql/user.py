@@ -22,6 +22,26 @@ class EditProfileGraph (graphene.ObjectType):
     login = graphene.String()
     email = graphene.String()
 
+class BlogGraph (graphene.ObjectType):
+    id = graphene.Int()
+    user_id = graphene.Int()
+    title = graphene.String()
+    text = graphene.String()
+    date = graphene.String()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -1,10 +1,10 @@
-from flaskapp.blueprints.web.models.index import connect_postgres, list_to_dict
+from flaskapp.blueprints.web.models.index import Model
 from hashlib import sha256
 from uuid import uuid4
 from flaskapp.config import config
 from datetime import datetime, timedelta
 
-class UserModel ():
+class UserModel (Model):
     ROLE_USER = 0
     ROLE_ADMIN = 1
     TABLE = 'user'
@@ -33,7 +33,7 @@ class UserModel ():
 
         user_id = kwargs['id'] if kwargs['id'] != None else -1
 
-        connection = connect_postgres()
+        connection = self.connect_postgres()
         cursor = connection.cursor()
 
         sql = '''select count(id) from "{0}"
@@ -65,7 +65,7 @@ class UserModel ():
             ("login", "password", "email", "role") 
             values (%s, %s, %s, %s);'''.format(self.TABLE)
         
-        connection = connect_postgres()
+        connection = self.connect_postgres()
         cursor = connection.cursor()
         cursor.execute(sql, [self.login, password, self.email, self.role])
         connection.commit()
@@ -80,7 +80,7 @@ class UserModel ():
 
     # get list of users
     def list(self):
-        connection = connect_postgres()
+        connection = self.connect_postgres()
         cursor = connection.cursor()
 
         sql_rows = ['id', 'login', 'email', 'role', self.TABLE]
@@ -93,7 +93,7 @@ class UserModel ():
         u_list = cursor.fetchall()
         connection.close()
 
-        u_list = map(list_to_dict(sql_rows), u_list)
+        u_list = map(self.list_to_dict(sql_rows), u_list)
         return u_list or []
 
 
@@ -115,7 +115,7 @@ class UserModel ():
         password = self.hash_password(kwargs['password'])        
         sql_rows = ['id', 'login', 'email', 'role', self.TABLE]
 
-        connection = connect_postgres()
+        connection = self.connect_postgres()
         cursor = connection.cursor()
         
         sql_select = '''select {0}, {1}, {2}, {3} 
@@ -132,7 +132,7 @@ class UserModel ():
             raise Exception('Wrong login or password')
 
         # conver result to dict
-        ltd_func = list_to_dict(sql_rows)
+        ltd_func = self.list_to_dict(sql_rows)
         auth_user = ltd_func(found_user)
 
         # update token of user
@@ -173,7 +173,7 @@ class UserModel ():
         tokenRows = ['token', 'user_id', 'date', self.TABLE_TOKEN]
         tokenQuery = 'select {0}, {1}, {2} from {3} where token = %s and "type" = %s'.format(*tokenRows)
 
-        connection = connect_postgres()
+        connection = self.connect_postgres()
         cursor = connection.cursor()
 
         cursor.execute(tokenQuery, [tokenVal, tokenType])
@@ -185,7 +185,7 @@ class UserModel ():
             raise Exception(403)
 
         # create a dictionary from list of values
-        ltd_func = list_to_dict(tokenRows)
+        ltd_func = self.list_to_dict(tokenRows)
         tokenDict = ltd_func(tokenFound)
 
         # check that token is actual
@@ -208,7 +208,7 @@ class UserModel ():
             raise Exception(403)
 
         # create a dictionary from list of values
-        ltd_func = list_to_dict(userRows)
+        ltd_func = self.list_to_dict(userRows)
         userDict = ltd_func(userFound)
 
         return userDict
@@ -274,7 +274,7 @@ class UserModel ():
 
         update_query = 'update "{0}" set "login" = %s, "email" = %s where "id" = %s;'.format(self.TABLE)
         
-        connection = connect_postgres()
+        connection = self.connect_postgres()
         cursor = connection.cursor()
         cursor.execute(update_query, [login, email, profile_dict['id']])
         connection.commit()
