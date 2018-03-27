@@ -13,6 +13,8 @@ web = Blueprint(
     )
 
 
+
+
 from flask import request, session, g, redirect, url_for, abort, \
     render_template, flash, current_app, jsonify
 
@@ -21,6 +23,14 @@ from flaskapp.blueprints.web.graphql.query import schema
 
 action = Action()
 
+# get params from GET route
+def getParams (keys, args):
+    params = []
+    for key in keys:
+        if (args.get(key) != None):
+            params.append({'name': key, 'val': args.get(key)})
+    
+    return params
 
 @web.route('/fetch', methods=['POST'])
 def fetch():
@@ -72,17 +82,6 @@ def fetch():
 
 
 
-
-
-
-
-
-
-
-
-
-
-
 @web.route('/graphql', methods=['POST'])
 def graphql():
     try:
@@ -105,6 +104,8 @@ def graphql():
 
 
 
+
+
 # GET routes
 @web.route('/')
 def index():
@@ -118,13 +119,18 @@ def profile():
 def login():
     return render_template('view.html', scripts=["login"])
 
-@web.route('/blogs')
-def blogs():
-    return render_template('view.html', scripts=["blogs"])
+@web.route('/blog-list')
+def blogList():
+    params = getParams(['userId', 'from', 'to'], request.args)
+    return render_template('view.html', scripts = ['blogList'], params = params)
 
-
-
-
+@web.route('/blog-edit/<blogId>')
+def blogEdit(blogId):
+    return render_template(
+        'view.html', 
+        scripts = ['blogEdit'], 
+        params = [{'name': 'blogId', 'val': blogId}]
+    )
 
 @web.route('/hello')
 def hello():

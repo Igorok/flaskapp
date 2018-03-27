@@ -1,11 +1,18 @@
 {% extends "layout.html" %}
 {% block body %}
-    <div class="container">
-        <div id="root"></div>
-    </div>
+    <div id="root"></div>
+    
+
+    {% if params %}
+        <script type="text/javascript">
+            window.localParams = {};
+            {% for param in params %}
+                window.localParams['{{param["name"]}}'] = '{{param["val"]}}';
+            {% endfor %}
+        </script>
+    {% endif %}
 
     <script src="/static/web/js/common.js"></script>
-
     {% if scripts %}
         {% for script in scripts %}
             <script src="/static/web/js/{{ script }}.js"></script>

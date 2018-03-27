@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import {Alert} from 'bootstrap'
+import {Alert, Dropdown} from 'bootstrap'
 import 'jquery';
 
 /**
@@ -124,6 +124,82 @@ export class MathCaptcha extends React.Component {
 }
 
 
+class Header extends React.Component {
+    showDropdown () {
+        $('.dropdown-toggle').dropdown('toggle');
+    }
+    render () {
+        let profileItem = null;
+        let userItem = null;
+
+        if (this.props.auth.isAuthenticated) {
+            profileItem = <ul className="nav navbar-nav navbar-right">
+                <li className="dropdown">
+                    <a 
+                        href="#" className="dropdown-toggle" data-toggle="dropdown" 
+                        role="button" aria-haspopup="true" aria-expanded="false"
+                        onClick={::this.showDropdown}
+                    >
+                        <span className="glyphicon glyphicon-home"></span>&nbsp;&nbsp;
+                        <strong>{this.props.auth.login}</strong>&nbsp;&nbsp;
+                        <span className="caret"></span>
+                    </a>
+
+                    <ul className="dropdown-menu">
+                        <li>
+                            <a href="/profile">Profile</a>
+                        </li>
+                        <li>
+                            <a href={"/blogs&userId=" + this.props.auth.id}>My blogs</a>
+                        </li>
+                        <li>
+                            <a href="/blog-edit/-1">Add blog</a>
+                        </li>
+                        <li>
+                            <a href="/friends">Friends</a>
+                        </li>
+                        <li>
+                            <a href="/chats">Chats</a>
+                        </li>
+                        
+                    </ul>
+                </li>
+            </ul>
+
+            userItem = <li role="presentation">
+                <a href="/users"><span className="glyphicon glyphicon-user"></span>&nbsp;&nbsp;Users</a>
+            </li>
+        }
+
+        return <nav className="navbar navbar-default navbar-fixed-top">
+            <div className="container">
+                <div className="navbar-header">
+                    <button type="button" className="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                        <span className="sr-only">Toggle navigation</span>
+                        <span className="icon-bar"></span>
+                        <span className="icon-bar"></span>
+                        <span className="icon-bar"></span>
+                    </button>
+                    <a className="navbar-brand" href="/">FlaskApp</a>
+                </div>
+
+                <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <ul className="nav navbar-nav">
+                        <li className="active">
+                            <a href="/"><span className="glyphicon glyphicon-exclamation-sign"></span>&nbsp;&nbsp;About</a>
+                        </li>
+                        <li >
+                            <a href="/blogs"><span className="glyphicon glyphicon-bookmark"></span>&nbsp;&nbsp;Blogs</a>
+                        </li>
+                        {userItem}
+                    </ul>
+                    {profileItem}
+                </div>
+            </div>
+        </nav>
+    }
+};
+
 
 
 /**
@@ -151,13 +227,9 @@ export function layout (opts) {
         render() {
             return (
                 <div>
-                    <div className="row">
-                        <div className="col-md-2">
-                            <SideNav auth={this.props.auth}/>
-                        </div>
-                        <div className="col-md-10">
-                            <Component />
-                        </div>
+                    <Header auth={this.props.auth} />
+                    <div className="container">
+                        <Component />
                     </div>
                 </div>
             )

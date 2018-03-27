@@ -104,6 +104,56 @@ const BLOG_ADD = (opts) => {
     return JSON.stringify(q);
 };
 
+const BLOG_GET = (opts) => {
+    let q = {
+        query: compress(`
+            query getBlog ($token: String!, $device: String!, $id: Int!) {
+                getBlog (token: $token, device: $device, id: $id) {
+                    id
+                    userId
+                    userName
+                    title
+                    text
+                    date
+                    public
+                }
+            }
+        `),
+        variables: {
+            token: opts.token,
+            device: opts.device,
+            title: opts.title,
+            text: opts.text,
+        },
+    }
+    return JSON.stringify(q);
+};
+
+const BLOG_LIST = (opts) => {
+    let q = {
+        query: compress(`
+            query blogList ($token: String!, $device: String!, $userId: Int, $from: Int, $to: Int) {
+                blogList (token: $token, device: $device, userId: $userId, from: $from, to: $to) {
+                    list {
+                        id
+                        title
+                        text
+                        userId
+                        userName
+                        date
+                    }
+                }
+            }
+        `),
+        variables: {
+            token: opts.token,
+            device: opts.device,
+            title: opts.title,
+            text: opts.text,
+        },
+    }
+    return JSON.stringify(q);
+};
 
 export const query = {
     AUTH: AUTH,

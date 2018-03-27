@@ -2,42 +2,13 @@ const fs = require('fs');
 const path = require('path');
 const webpack = require('webpack');
 
-
- 
-let plugins = [
-    new webpack.optimize.OccurrenceOrderPlugin(),
-    new webpack.NoEmitOnErrorsPlugin(),
-    new webpack.optimize.CommonsChunkPlugin({
-        name: 'common',
-        minChunks: 2,
-    }),
-    new webpack.ProvidePlugin({
-        $: "jquery",
-        jQuery: "jquery",
-        "window.jQuery": "jquery",
-        Tether: "tether",
-        "window.Tether": "tether",
-        Alert: "exports-loader?Alert!bootstrap/js/dist/alert",
-        Button: "exports-loader?Button!bootstrap/js/dist/button",
-        Carousel: "exports-loader?Carousel!bootstrap/js/dist/carousel",
-        Collapse: "exports-loader?Collapse!bootstrap/js/dist/collapse",
-        Dropdown: "exports-loader?Dropdown!bootstrap/js/dist/dropdown",
-        Modal: "exports-loader?Modal!bootstrap/js/dist/modal",
-        Popover: "exports-loader?Popover!bootstrap/js/dist/popover",
-        Scrollspy: "exports-loader?Scrollspy!bootstrap/js/dist/scrollspy",
-        Tab: "exports-loader?Tab!bootstrap/js/dist/tab",
-        Tooltip: "exports-loader?Tooltip!bootstrap/js/dist/tooltip",
-        Util: "exports-loader?Util!bootstrap/js/dist/util",
-    }),
-    new webpack.optimize.UglifyJsPlugin({
-        sourceMap: true
-      })
-]
 module.exports = {
     entry: {
         login: path.resolve(__dirname, 'static_src/login.js'),
         about: path.resolve(__dirname, 'static_src/about.js'),
         profile: path.resolve(__dirname, 'static_src/profile.js'),
+        blogList: path.resolve(__dirname, 'static_src/blogList.js'),
+        blogEdit: path.resolve(__dirname, 'static_src/blogEdit.js'),
 
 
         // registration: path.resolve(__dirname, 'src/registration.js'),
@@ -60,7 +31,7 @@ module.exports = {
     },
     output: {
         filename: '[name].js',
-        publicPath: 'static/web/js/',
+        publicPath: '/static/web/js/',
         path: path.resolve(__dirname, 'static/js/')
     },
     module: {
@@ -73,7 +44,7 @@ module.exports = {
                     {
                         loader: 'file-loader',
                         options: {
-                            publicPath: 'static/web/js/'
+                            publicPath: '/static/web/js/'
                         }
                     }
                 ],
@@ -84,7 +55,7 @@ module.exports = {
                     {
                         loader: 'file-loader',
                         options: {
-                            publicPath: 'static/web/js/'
+                            publicPath: '/static/web/js/'
                         }
                     }
                 ],

@@ -23,7 +23,8 @@ CREATE TABLE "blog" (
     "user_id" SERIAL NOT NULL,
     "title" varchar(128) DEFAULT NULL,
     "text" text,
-    "date" timestamp DEFAULT NULL
+    "date" timestamp DEFAULT NULL,
+    "public" smallint
 );
 
 drop table if exists "article";

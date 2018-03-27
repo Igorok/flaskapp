@@ -28,8 +28,6 @@ class Query(graphene.ObjectType):
     )
     def resolve_profile (self, info, token, device):
         blog = BlogModel()
-        print('blog', blog)
-
         _u = UserModel()
         _userProfile = _u.getUserProfile(token = token, device = device)
         return ProfileGraph(**_userProfile)

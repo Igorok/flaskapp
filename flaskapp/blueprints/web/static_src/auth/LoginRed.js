@@ -2,7 +2,7 @@ let user = localStorage.getItem('user');
 if (user) user = JSON.parse(user);
 
 const initState = {
-    _id: user ? user._id : null,
+    id: user ? user.id : null,
     token: user ? user.token : null,
     login: user ? user.login : null,
     isAuthenticated: !! user,
@@ -15,10 +15,10 @@ const success = (state, action) => {
     user = {...action.data.auth};
     localStorage.setItem('user', JSON.stringify(user));
     return {
-        _id: user._id,
+        id: user.id,
         token: user.token,
         login: user.login,
-        isAuthenticated: !! user,
+        isAuthenticated: (user && user.id),
         status: 'success',
         error: null,
     }
