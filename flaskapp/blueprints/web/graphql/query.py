@@ -2,8 +2,8 @@ import graphene
 from flaskapp.blueprints.web.models.user import UserModel
 from flaskapp.blueprints.web.models.blog import BlogModel
 
-from flaskapp.blueprints.web.graphql.user import AuthGraph, ProfileGraph, BlogGraph, UserGraph, UserListGraph, EditProfileGraph
-
+from flaskapp.blueprints.web.graphql.user import AuthGraph, ProfileGraph, EditProfileGraph
+from flaskapp.blueprints.web.graphql.blog import BlogGraph
 
 
 # assign values to query
@@ -45,57 +45,38 @@ class Query(graphene.ObjectType):
         _userProfile = _u.editUserProfile(**kwargs)
         return EditProfileGraph(**_userProfile)
 
-    # add new blog
-    addBlog = graphene.Field(
-        EditProfileGraph,
+    # get blog data
+    getBlog = graphene.Field(
+        BlogGraph,
         token = graphene.String(),
         device = graphene.String(),
-        title = graphene.String(),
-        text = graphene.String()
+        id = graphene.Int(),
     )
-    def resolve_addBlog (self, info, *args, **kwargs):
+    def resolve_getBlog (self, info, *args, **kwargs):
+        print(
+            '**kwargs', kwargs, 'BlogGraph', BlogGraph
+        )
         __b = BlogModel()
-        __blog = __b.addBlog(**kwargs)
+        __blog = __b.getBlog(**kwargs)
         return BlogGraph(**__blog)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    # user detail
-    user = graphene.Field(UserGraph, id=graphene.String())
-    def resolve_user(self, info, id):
-        print('user')
-
-    # use list
-    userlist = graphene.Field(UserListGraph, id=graphene.String())
-    def resolve_userlist(self, info, id):
-        _u = UserModel()
-        u_list = _u.list()
-        users = []
-        for v in u_list:
-            users.append(UserGraph(**v))
-
-        return UserListGraph (
-            users = users
+    # edit new blog
+    editBlog = graphene.Field(
+        BlogGraph,
+        token = graphene.String(),
+        device = graphene.String(),
+        id = graphene.Int(),
+        title = graphene.String(),
+        text = graphene.String(),
+        public = graphene.Boolean()
+    )
+    def resolve_editBlog (self, info, *args, **kwargs):
+        print(
+            '**kwargs', kwargs, 'BlogGraph', BlogGraph
         )
-
-
+        __b = BlogModel()
+        __blog = __b.editBlog(**kwargs)
+        return BlogGraph(**__blog)
 
 
 # init query

@@ -24,7 +24,7 @@ CREATE TABLE "blog" (
     "title" varchar(128) DEFAULT NULL,
     "text" text,
     "date" timestamp DEFAULT NULL,
-    "public" smallint
+    "public" Boolean
 );
 
 drop table if exists "article";

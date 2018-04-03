@@ -19,6 +19,7 @@
         "debug": "~2.6.3",
         "dompurify": "^1.0.1",
         "draft-js": "^0.10.5",
+        "draft-js-import-html": "^1.2.1",
         "draftjs-to-html": "^0.8.3",
         "draftjs-utils": "^0.9.3",
         "es6-promise": "^4.1.1",

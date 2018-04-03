@@ -5,8 +5,8 @@ import {AlertMessage} from '../helpers/component'
 
 import { EditorState, convertToRaw, ContentState } from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
-import { Editor } from 'react-draft-wysiwyg';
 import htmlToDraft from 'html-to-draftjs';
+import { Editor } from 'react-draft-wysiwyg';
 
 
 
@@ -18,13 +18,33 @@ class EditComp extends React.Component {
     }
 
     componentWillMount () {
-        console.log('this.state.blog', this.state.blog);
-        /*
-        this.props.dispatch(api({
-            type: 'BLOG_LIST',
-            fetch: 'blog.getBlogList',
+        if (this.state.id === -1) {
+            return;
+        }
+        
+        this.props.dispatch(graphql({
+            type: 'BLOG_GET',
+            id: this.state.id,
         }));
-        */
+
+    }
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.blogEdit.status == 'success_get') {
+            const blocksFromHTML = htmlToDraft(nextProps.blogEdit.text);
+            const content = ContentState.createFromBlockArray(
+                blocksFromHTML.contentBlocks,
+                blocksFromHTML.entityMap
+            );
+
+            this.setState({
+                title: nextProps.blogEdit.title,
+                text: nextProps.blogEdit.text,
+                public: nextProps.blogEdit.public,
+                date: nextProps.blogEdit.date,
+                editorState: EditorState.createWithContent(content),
+            });
+        }
+        
     }
 
     fieldChange (e) {
@@ -42,30 +62,44 @@ class EditComp extends React.Component {
     
     formSubmit (e) {
         e.preventDefault();
-
-        console.log(
-            'this.state', this.state,
-            draftToHtml(convertToRaw(this.state.editorState.getCurrentContent()))
-        );
-
-        // this.props.dispatch(api({
-        //     type: 'POST_EDIT',
-        //     fetch: 'blog.editMyPostDetail',
-        //     _id: this.state._id,
-        //     _bId: this.state._bId,
-        //     status: this.state.status,
-        //     name: this.state.name,
-        //     description: this.state.description,
-        // }));
+        this.props.dispatch(graphql({
+            type: 'BLOG_EDIT',
+            id: this.state.id,
+            title: this.state.title,
+            text: draftToHtml(convertToRaw(this.state.editorState.getCurrentContent())),
+            public: this.state.public,
+        }));
     }
 
-
     render () {
+        let alertOpts = null;
+    
+        if (this.props.blogEdit.status === 'error') {
+            alertOpts = {
+                className: 'danger',
+                text: this.props.blogEdit.error || 'Error, wrong blog data'
+            }
+        } else if (this.props.blogEdit.status === 'send') {
+            alertOpts = {
+                className: 'info',
+                text: 'Loading, please wait',
+            }
+        } else if (this.props.blogEdit.status === 'success_edit') {
+            alertOpts = {
+                className: 'success',
+                text: 'Blog saved successfully',
+            }
+            setTimeout(() => {
+                window.location = '/blog-edit/' + this.props.blogEdit.id;
+            }, 1000)
+        }
+
         return <div>
             <form onSubmit={::this.formSubmit} >
                 <div className="form-group">
                     <label htmlFor="title">Title</label>
                     <input 
+                        required
                         type="text" 
                         className="form-control" 
                         id="title" 
@@ -80,6 +114,15 @@ class EditComp extends React.Component {
                         editorState={this.state.editorState}
                         editorClassName="form-control"
                         onEditorStateChange={::this.onEditorStateChange}
+                        toolbar={{
+                            options: ['inline', 'list', 'fontSize', 'fontFamily', 'textAlign', 'link', 'history', 'colorPicker'],
+                            // inline: { inDropdown: true },
+                            // list: { inDropdown: true },
+                            // textAlign: { inDropdown: true },
+                            // link: { inDropdown: true },
+                            // history: { inDropdown: true },
+                            // colorPicker: { inDropdown: true },
+                        }}
                     />
 
                 </div>
@@ -94,12 +137,16 @@ class EditComp extends React.Component {
                     </label>
                 </div>
 
-                <div className="modal-footer">
+                <AlertMessage opts={alertOpts} />
+
+                <hr />
+                <div >
                     <button type="submit" className="btn btn-primary">
                         <span className='glyphicon glyphicon-floppy-disk'></span>&nbsp;
                         Save
                     </button>
                 </div>
+                <br />
             </form>
         </div>
         

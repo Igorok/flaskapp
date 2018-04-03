@@ -99,14 +99,16 @@ module.exports = {
             Tooltip: "exports-loader?Tooltip!bootstrap/js/dist/tooltip",
             Util: "exports-loader?Util!bootstrap/js/dist/util",
         }),
-        new webpack.optimize.UglifyJsPlugin({
-            sourceMap: true
-        })
+        // new webpack.optimize.UglifyJsPlugin({
+        //     sourceMap: true
+        // })
     ],
     // devtool: cfg.prod ? 'source-map' : 'cheap-module-eval-source-map',
     // watch: ! cfg.prod,
 
-    devtool: 'cheap-module-eval-source-map',
+    // devtool: 'cheap-module-eval-source-map',
+
+    devtool: 'inline-source-map',
     watch: true,
 
 

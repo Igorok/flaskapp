@@ -88,6 +88,11 @@ def graphql():
         json = request.get_json(silent=True)
         result = schema.execute(json['query'], variable_values=json['variables'])
 
+        # print(
+        #     'json', json,
+        #     'result', result
+        # )
+
         if (result.errors != None):
             raise Exception(result.errors[0])
 
@@ -131,6 +136,10 @@ def blogEdit(blogId):
         scripts = ['blogEdit'], 
         params = [{'name': 'blogId', 'val': blogId}]
     )
+
+
+
+
 
 @web.route('/hello')
 def hello():

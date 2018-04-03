@@ -84,31 +84,11 @@ const PROFILE_EDIT = (opts) => {
     return JSON.stringify(q);
 };
 
-const BLOG_ADD = (opts) => {
+const BLOG_EDIT = (opts) => {
     let q = {
         query: compress(`
-            query addBlog ($token: String!, $device: String!, $title: String!, $text: String!) {
-                addBlog (token: $token, device: $device, title: $title, text: $text) {
-                    title
-                    text
-                }
-            }
-        `),
-        variables: {
-            token: opts.token,
-            device: opts.device,
-            title: opts.title,
-            text: opts.text,
-        },
-    }
-    return JSON.stringify(q);
-};
-
-const BLOG_GET = (opts) => {
-    let q = {
-        query: compress(`
-            query getBlog ($token: String!, $device: String!, $id: Int!) {
-                getBlog (token: $token, device: $device, id: $id) {
+            query editBlog ($token: String!, $device: String!, $id: Int!, $title: String!, $text: String!, $public: Boolean) {
+                editBlog (token: $token, device: $device, id: $id, title: $title, text: $text, public: $public) {
                     id
                     userId
                     userName
@@ -122,8 +102,35 @@ const BLOG_GET = (opts) => {
         variables: {
             token: opts.token,
             device: opts.device,
+            id: opts.id,
             title: opts.title,
             text: opts.text,
+            public: opts.public,
+        },
+    }
+    return JSON.stringify(q);
+};
+
+const BLOG_GET = (opts) => {
+    let q = {
+        query: compress(`
+            query getBlog ($token: String!, $device: String!, $id: Int!) {
+                getBlog (token: $token, device: $device, id: $id) {
+                    id
+                    userId
+                    userName
+                    userEmail
+                    title
+                    text
+                    date
+                    public
+                }
+            }
+        `),
+        variables: {
+            token: opts.token,
+            device: opts.device,
+            id: opts.id,
         },
     }
     return JSON.stringify(q);
@@ -160,6 +167,8 @@ export const query = {
     PROFILE: PROFILE,
     PROFILE_EDIT: PROFILE_EDIT,
 
+    BLOG_GET: BLOG_GET,
+    BLOG_EDIT: BLOG_EDIT,
 
     USER_LIST: USER_LIST,
 }
