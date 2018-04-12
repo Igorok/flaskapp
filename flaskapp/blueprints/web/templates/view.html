@@ -2,15 +2,14 @@
 {% block body %}
     <div id="root"></div>
     
-
-    {% if params %}
-        <script type="text/javascript">
-            window.localParams = {};
+    <script type="text/javascript">
+        window.localParams = {};
+        {% if params %}
             {% for param in params %}
                 window.localParams['{{param["name"]}}'] = '{{param["val"]}}';
             {% endfor %}
-        </script>
-    {% endif %}
+        {% endif %}
+    </script>
 
     <script src="/static/web/js/common.js"></script>
     {% if scripts %}

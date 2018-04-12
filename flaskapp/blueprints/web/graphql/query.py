@@ -3,7 +3,7 @@ from flaskapp.blueprints.web.models.user import UserModel
 from flaskapp.blueprints.web.models.blog import BlogModel
 
 from flaskapp.blueprints.web.graphql.user import AuthGraph, ProfileGraph, EditProfileGraph
-from flaskapp.blueprints.web.graphql.blog import BlogGraph
+from flaskapp.blueprints.web.graphql.blog import BlogGraph, BlogListGraph
 
 
 # assign values to query
@@ -71,12 +71,31 @@ class Query(graphene.ObjectType):
         public = graphene.Boolean()
     )
     def resolve_editBlog (self, info, *args, **kwargs):
-        print(
-            '**kwargs', kwargs, 'BlogGraph', BlogGraph
-        )
         __b = BlogModel()
         __blog = __b.editBlog(**kwargs)
         return BlogGraph(**__blog)
+
+    # get blog data
+    getBlogList = graphene.Field(
+        BlogListGraph,
+        token = graphene.String(),
+        device = graphene.String(),
+        userId = graphene.Int(),
+        start = graphene.Int(),
+        perpage = graphene.Int(),
+    )
+    def resolve_getBlogList (self, info, *args, **kwargs):
+        __b = BlogModel()
+        __blog = __b.getBlogList(**kwargs)
+        blogs = []
+        for v in __blog['blogs']:
+            blogs.append(BlogGraph(**v))
+            
+        return BlogListGraph(
+            count = __blog['count'],
+            blogs = blogs,
+        )
+
 
 
 # init query

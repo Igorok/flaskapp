@@ -189,7 +189,7 @@ class Header extends React.Component {
                             <a href="/"><span className="glyphicon glyphicon-exclamation-sign"></span>&nbsp;&nbsp;About</a>
                         </li>
                         <li >
-                            <a href="/blogs"><span className="glyphicon glyphicon-bookmark"></span>&nbsp;&nbsp;Blogs</a>
+                            <a href="/blog-list"><span className="glyphicon glyphicon-bookmark"></span>&nbsp;&nbsp;Blogs</a>
                         </li>
                         {userItem}
                     </ul>
@@ -247,3 +247,146 @@ export function layout (opts) {
 
 
 
+/**
+ * check a sum of two numbers
+ * @param {Function} cb - callback to use a result of validation
+ */
+export class PaginatorLayout extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            start: this.props.param.start,
+            perpage: this.props.param.perpage,
+            count: this.props.param.count,
+            items: this.props.param.items,
+        };
+    }
+    componentWillReceiveProps (newProps) {
+        console.log('newProps', newProps);
+        this.setState({
+            start: newProps.param.start,
+            perpage: newProps.param.perpage,
+            count: newProps.param.count,
+            items: newProps.param.items,
+        });
+    }
+
+    calculate () {
+        // received params
+        const start = this.props.param.start || 0;
+        const perpage = this.props.param.perpage || 10;
+        const count = this.props.param.count || 0;
+
+        // calculate count of buttons, active button
+        const pageCount = Math.ceil(count / perpage);
+        const showBtns = 5;
+        const showStep = Math.floor(showBtns / 2);
+        const startBtn = this.props.param.start / perpage;
+        
+        let btns = [];
+
+        // number of shown buttons is showBtns
+        // left and right buttons
+        let left = null;
+        let right = null;
+
+        // left border
+        if (startBtn - showStep <= 0) {
+            left = 0;
+        } else {
+            if (startBtn == pageCount - 1) {
+                left = startBtn - 2 * showStep;
+            } else {
+                left = startBtn - showStep;
+            }
+        }
+
+        // right border
+        if (startBtn + showStep >= pageCount - 1) {
+            right = pageCount;
+        } else {
+            if (startBtn == 0) {
+                right = startBtn + 2 * showStep;
+            } else {
+                right = startBtn + showStep;
+            }
+        }
+        
+        function checkVisible (i) {
+            // check if current button located between borders
+            return i >= left && i <= right;
+        }
+
+        // window.location.origin
+        for (var i = 0; i < pageCount; i++) {
+            let btnStart = i * perpage;
+            let btnText = i + 1;
+            let btnVisible = checkVisible(i);
+            let btnActive = i * perpage == start;
+            let btnHref = window.location.origin + 
+                window.location.pathname +
+                "?perpage=" + perpage +
+                "&start=" + btnStart;
+
+            let cName = "";
+            if (btnActive) {
+                cName += "active";
+            }
+            if (! btnVisible) {
+                cName += "hidden";
+            }
+
+            btns.push(<li className = {cName} >
+                <a href = {btnHref} >
+                    {btnText}
+                </a>
+            </li>);
+        }
+
+        // move to first page
+        let firstBtnClass = startBtn - showStep <= 0 ? "disabled" : "";
+        let lastBtnClass = startBtn + showStep >= pageCount - 1 ? "disabled" : "";
+        if (pageCount == showBtns) {
+            firstBtnClass = lastBtnClass = "disabled";
+        }
+        const firstBtn = <li className = {firstBtnClass}>
+                <a href="#" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+        // move to last page
+        const lastBtn = <li className = {lastBtnClass}>
+                <a href="#" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+
+        btns.unshift(firstBtn);
+        btns.push(lastBtn);
+
+        return btns;
+    }
+
+    render () {
+        console.log('PaginatorLayout', this.props, 'state', this.state);
+        let btns = this.calculate();
+
+        return (
+            <div>
+                start: {this.state.start};
+                perpage: {this.state.perpage};
+                count: {this.state.count};
+
+                <div>
+                    {this.props.param.items}
+                </div>
+
+                <nav aria-label="Page navigation">
+                    <ul className="pagination">
+                        {btns}
+                    </ul>
+                </nav>
+            </div>
+        )
+    }
+}

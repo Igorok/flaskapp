@@ -48,6 +48,63 @@ class BlogItem (Model):
 class BlogModel (Model):
     TABLE = 'blog'
 
+    # get list of blogs
+    def getBlogList (self, *args, **kwargs):
+        start = int(kwargs['start']) if ('start' in kwargs) else 0
+        perpage = int(kwargs['perpage']) if ('perpage' in kwargs) else 20
+        userId = int(kwargs['userId']) if ('userId' in kwargs) else None
+
+        blogParam = [perpage, start]
+        countParam = []
+        blogRows = [
+            'id', 'user_id', 'title', 'text', 'date', 'public', 
+            'login', 'email', 
+            self.TABLE, UserModel.TABLE
+        ]
+        blogSql = '''select 
+            bTable.{0}, bTable.{1}, bTable.{2}, bTable.{3}, bTable.{4}, bTable.{5}, 
+            uTable.{6}, uTable.{7} from "{8}" as bTable
+            left join "{9}" as uTable
+            on bTable.user_id = uTable.id
+            '''.format(*blogRows)
+        countSql = 'select count(id) from {0} '.format(self.TABLE)
+
+        blogKeys = ['id', 'userId', 'title', 'text', 'date', 'public', 'userName', 'userEmail']
+
+        if (userId != None):
+            blogSql += ' ,user_id = %s'
+            countSql += ' ,user_id = %s'
+            blogParam = [userId] + blogParam
+            countParam = [userId] + countParam
+
+        blogSql += ' order by id desc limit %s offset %s;'
+
+        connection = self.connect_postgres()
+        cursor = connection.cursor()
+        cursor.execute(blogSql, blogParam)
+        blogData = cursor.fetchall()
+
+        cursor.execute(countSql)
+        countData = cursor.fetchone()
+        connection.close()
+
+        listResult = {
+            'count': 0,
+            'blogs': []
+        }
+        if (countData != None):
+            listResult['count'] = countData[0]
+        
+        if (blogData != None):
+            listResult['blogs'] = map(self.list_to_dict(blogKeys), blogData)
+
+        return listResult
+
+
+
+
+
+        
     # get blog item
     def getBlog (self, *args, **kwargs):
         if (not 'id' in kwargs):

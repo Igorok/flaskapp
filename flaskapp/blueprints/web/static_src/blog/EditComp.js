@@ -116,12 +116,6 @@ class EditComp extends React.Component {
                         onEditorStateChange={::this.onEditorStateChange}
                         toolbar={{
                             options: ['inline', 'list', 'fontSize', 'fontFamily', 'textAlign', 'link', 'history', 'colorPicker'],
-                            // inline: { inDropdown: true },
-                            // list: { inDropdown: true },
-                            // textAlign: { inDropdown: true },
-                            // link: { inDropdown: true },
-                            // history: { inDropdown: true },
-                            // colorPicker: { inDropdown: true },
                         }}
                     />
 

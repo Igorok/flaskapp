@@ -37,8 +37,6 @@ const blogEdit = (state = initState, action) => {
                 ...state,
             };
 
-
-
         case 'BLOG_EDIT_SEND':
             data = {...state};
             data.status = 'send';

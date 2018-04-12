@@ -126,8 +126,21 @@ def login():
 
 @web.route('/blog-list')
 def blogList():
-    params = getParams(['userId', 'from', 'to'], request.args)
-    return render_template('view.html', scripts = ['blogList'], params = params)
+    params = getParams(['userId', 'start', 'perpage'], request.args)
+    return render_template(
+        'view.html', 
+        scripts = ['blogList'],
+        params = params
+    )
+
+@web.route('/my-blog-list')
+def myBlogList():
+    params = getParams(['start', 'perpage'], request.args)
+    return render_template(
+        'view.html', 
+        scripts = ['blogList'],
+        params = params
+    )
 
 @web.route('/blog-edit/<blogId>')
 def blogEdit(blogId):

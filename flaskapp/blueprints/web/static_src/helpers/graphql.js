@@ -139,24 +139,28 @@ const BLOG_GET = (opts) => {
 const BLOG_LIST = (opts) => {
     let q = {
         query: compress(`
-            query blogList ($token: String!, $device: String!, $userId: Int, $from: Int, $to: Int) {
-                blogList (token: $token, device: $device, userId: $userId, from: $from, to: $to) {
-                    list {
+            query getBlogList ($token: String!, $device: String!, $userId: Int, $start: Int, $perpage: Int) {
+                getBlogList (token: $token, device: $device, userId: $userId, start: $start, perpage: $perpage) {
+                    blogs {
                         id
-                        title
-                        text
                         userId
                         userName
+                        userEmail
+                        title
+                        text
                         date
+                        public
                     }
+                    count
                 }
             }
         `),
         variables: {
             token: opts.token,
             device: opts.device,
-            title: opts.title,
-            text: opts.text,
+            userId: opts.userId,
+            start: opts.start,
+            perpage: opts.perpage,
         },
     }
     return JSON.stringify(q);
@@ -169,6 +173,7 @@ export const query = {
 
     BLOG_GET: BLOG_GET,
     BLOG_EDIT: BLOG_EDIT,
+    BLOG_LIST: BLOG_LIST,
 
     USER_LIST: USER_LIST,
 }

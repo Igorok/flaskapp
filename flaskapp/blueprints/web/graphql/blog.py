@@ -9,3 +9,7 @@ class BlogGraph (graphene.ObjectType):
     text = graphene.String()
     date = graphene.String()
     public = graphene.Boolean()
+
+class BlogListGraph (graphene.ObjectType):
+    blogs = graphene.List(BlogGraph)
+    count = graphene.Int()
