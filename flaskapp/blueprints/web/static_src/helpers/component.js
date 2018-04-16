@@ -246,32 +246,17 @@ export function layout (opts) {
 }
 
 
-
 /**
  * check a sum of two numbers
- * @param {Function} cb - callback to use a result of validation
+ * 
+ * @param {Integer} start - number of the sql row for request
+ * @param {Integer} perpage - number rows for the page
+ * @param {Integer} count - count of all pages
+ * @param {Array} items - components for render 
+ * @param {Function} changePage - callback with new params
  */
 export class PaginatorLayout extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            start: this.props.param.start,
-            perpage: this.props.param.perpage,
-            count: this.props.param.count,
-            items: this.props.param.items,
-        };
-    }
-    componentWillReceiveProps (newProps) {
-        console.log('newProps', newProps);
-        this.setState({
-            start: newProps.param.start,
-            perpage: newProps.param.perpage,
-            count: newProps.param.count,
-            items: newProps.param.items,
-        });
-    }
-
-    calculate () {
+    getBtns () {
         // received params
         const start = this.props.param.start || 0;
         const perpage = this.props.param.perpage || 10;
@@ -335,9 +320,16 @@ export class PaginatorLayout extends React.Component {
             if (! btnVisible) {
                 cName += "hidden";
             }
-
             btns.push(<li className = {cName} >
-                <a href = {btnHref} >
+                <a 
+                    href = {btnHref}
+                    data-start={btnStart}
+                    onClick={(e) => {
+                        e.preventDefault();
+                        history.pushState({}, "", btnHref);
+                        this.props.param.changePage(btnStart);
+                    }}
+                >
                     {btnText}
                 </a>
             </li>);
@@ -368,19 +360,12 @@ export class PaginatorLayout extends React.Component {
     }
 
     render () {
-        console.log('PaginatorLayout', this.props, 'state', this.state);
-        let btns = this.calculate();
-
+        let btns = this.getBtns();
         return (
             <div>
-                start: {this.state.start};
-                perpage: {this.state.perpage};
-                count: {this.state.count};
-
                 <div>
                     {this.props.param.items}
                 </div>
-
                 <nav aria-label="Page navigation">
                     <ul className="pagination">
                         {btns}

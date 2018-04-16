@@ -10,6 +10,7 @@ const blogList = (state = initState, action) => {
     let data = {...state};
     switch (action.type) {
         case 'BLOG_LIST_SEND':
+            data.start = action.start;
             data.status = 'send';
             return data;
         case 'BLOG_LIST_SUCCESS':
