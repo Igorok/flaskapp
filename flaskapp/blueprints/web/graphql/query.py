@@ -2,12 +2,30 @@ import graphene
 from flaskapp.blueprints.web.models.user import UserModel
 from flaskapp.blueprints.web.models.blog import BlogModel
 
-from flaskapp.blueprints.web.graphql.user import AuthGraph, ProfileGraph, EditProfileGraph
+from flaskapp.blueprints.web.graphql.user import RegGraph, AuthGraph, ProfileGraph, EditProfileGraph
 from flaskapp.blueprints.web.graphql.blog import BlogGraph, BlogListGraph
 
 
 # assign values to query
 class Query(graphene.ObjectType):
+    # authentication
+    registration = graphene.Field(
+        RegGraph, 
+        email = graphene.String(), 
+        password = graphene.String(), 
+        confirmPassword = graphene.String(), 
+        device = graphene.String()
+    )
+    def resolve_registration (self, info, email, password, confirmPassword, device):
+        _u = UserModel()
+        _reg_user = _u.registration(
+            email = email, 
+            password = password, 
+            confirmPassword=confirmPassword, 
+            device = device
+        )
+        return RegGraph(**_reg_user)
+
     # authentication
     auth = graphene.Field(
         AuthGraph, 

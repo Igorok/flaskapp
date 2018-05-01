@@ -124,6 +124,10 @@ def profile():
 def login():
     return render_template('view.html', scripts=["login"])
 
+@web.route('/registration')
+def registration():
+    return render_template('view.html', scripts=["registration"])
+    
 @web.route('/blog-list')
 def blogList():
     params = getParams(['userId', 'start', 'perpage'], request.args)

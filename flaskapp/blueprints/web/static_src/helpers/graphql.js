@@ -20,6 +20,26 @@ const USER_LIST = (opts) => {
     return JSON.stringify(q);
 };
 
+const REG = (opts) => {
+    let q = {
+        query: compress(`
+            query registration($email: String, $password: String, $confirmPassword: String, $device: String) {
+                registration (email: $email, password: $password, confirmPassword: $confirmPassword, device: $device) {
+                    login
+                    email
+                }
+            }
+        `),
+        variables: {
+            email: opts.email,
+            password: opts.password,
+            confirmPassword: opts.confirmPassword,
+            device: opts.device,
+        },
+    }
+    return JSON.stringify(q);
+};
+
 const AUTH = (opts) => {
     let q = {
         query: compress(`
@@ -167,6 +187,7 @@ const BLOG_LIST = (opts) => {
 };
 
 export const query = {
+    REG: REG,
     AUTH: AUTH,
     PROFILE: PROFILE,
     PROFILE_EDIT: PROFILE_EDIT,

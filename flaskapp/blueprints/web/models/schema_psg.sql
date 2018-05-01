@@ -1,3 +1,4 @@
+--  psql -U postgres -d flaskapp -a -f schema_psg.sql
 drop table if exists "user";
 CREATE TABLE "user" (
     "id" SERIAL PRIMARY KEY,
@@ -33,6 +34,7 @@ CREATE TABLE "article" (
     "user_id" SERIAL NOT NULL,
     "blog_id" SERIAL NOT NULL,
     "title" varchar(128) DEFAULT NULL,
+    "description" varchar(256) DEFAULT NULL,
     "text" text,
     "date" timestamp DEFAULT NULL
 );

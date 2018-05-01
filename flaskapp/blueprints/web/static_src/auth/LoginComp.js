@@ -67,7 +67,7 @@ class LoginComp extends React.Component {
         }
 
         return <div className="row">
-            <div className="col-lg-offset-4 col-lg-4">
+            <div className="col-lg-offset-3 col-lg-6">
                 <div className="panel panel-default">
                     <div className="panel-heading">
                         <h3 className="panel-title">Authentication</h3>
@@ -104,7 +104,7 @@ class LoginComp extends React.Component {
                                 type="submit" 
                                 className="btn btn-default btn-block"
                                 disabled={disabled}
-                            >Submit</button>
+                            >Login</button>
                         </form>
                         <br />
                         <p className='text-center'>

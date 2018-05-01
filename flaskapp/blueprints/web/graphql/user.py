@@ -1,5 +1,9 @@
 import graphene
 
+class RegGraph (graphene.ObjectType):
+    login = graphene.String()
+    email = graphene.String()
+
 class AuthGraph (graphene.ObjectType):
     id = graphene.ID()
     login = graphene.String()

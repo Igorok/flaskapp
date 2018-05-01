@@ -4,19 +4,33 @@ from uuid import uuid4
 from flaskapp.config import config
 from datetime import datetime, timedelta
 
-class UserModel (Model):
+class UserItem ():
     ROLE_USER = 0
     ROLE_ADMIN = 1
-    TABLE = 'user'
-    TABLE_TOKEN = 'token'
-
     # create entity of user
     def __init__(self, **kwargs):
         self.id = kwargs['id'] if 'id' in kwargs else None
         self.login = kwargs['login'] if 'login' in kwargs else None
         self.password = kwargs['password'] if 'password' in kwargs else None
+        self.confirmPassword = kwargs['confirmPassword'] if 'confirmPassword' in kwargs else None
         self.email = kwargs['email'] if 'email' in kwargs else None
         self.role = kwargs['role'] if 'role' in kwargs else self.ROLE_USER
+
+    def registrationValidate(self):
+        if (
+            self.password == None or
+            self.email == None
+        ): 
+            raise Exception('Email and password are required!')
+
+        if (self.password != self.confirmPassword):
+            raise Exception('Please confirm password!')
+
+
+
+class UserModel (Model):
+    TABLE = 'user'
+    TABLE_TOKEN = 'token'
 
     # hash password of user
     def hash_password (self, password):
@@ -51,31 +65,25 @@ class UserModel (Model):
 
 
     # add new user
-    def add_user(self):
-        if (
-            self.login == None or
-            self.password == None or
-            self.email == None
-        ): 
-            raise Exception('Login, email and password are required')
-        
-        count = self.check_unique(id = self.id, login = self.login, email = self.email)
-        password = self.hash_password(self.password)
+    def registration (self, **kwargs):
+        user = UserItem(**kwargs)
+        user.registrationValidate()
+        user.login = user.email
+        count = self.check_unique(id = user.id, login = user.login, email = user.email)
+        password = self.hash_password(user.password)
         sql = '''insert into "{0}" 
             ("login", "password", "email", "role") 
             values (%s, %s, %s, %s);'''.format(self.TABLE)
         
         connection = self.connect_postgres()
         cursor = connection.cursor()
-        cursor.execute(sql, [self.login, password, self.email, self.role])
+        cursor.execute(sql, [user.login, password, user.email, user.role])
         connection.commit()
         connection.close()
 
         return dict(
-            id=self.id,
-            login=self.login,
-            email=self.email,
-            role=self.role,
+            login=user.login,
+            email=user.email,
         )
 
     # get list of users

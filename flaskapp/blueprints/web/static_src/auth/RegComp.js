@@ -1,156 +1,141 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import {api} from '../helpers/action'
-import {AlertMessage, MathCaptcha} from '../helpers/component'
+import {graphql} from '../helpers/action'
+import {AlertMessage} from '../helpers/component'
 
-class RegComp extends React.Component {
+
+class LoginComp extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            login: '',
-            email: '',
-            password: '',
-            confPassword: '',
-        }
-    }
-    
-    componentDidMount() {
-        if (this.props.auth.isAuthenticated) return window.location = '/';
+            email: null,
+            password: null,
+            confirmPassword: null,
+        };
     }
 
-    changeField (e) {
-        let stateObj = {};
-        stateObj[e.target.id] = e.target.value;
-        this.setState(stateObj);
-    }
     formSubmit (e) {
-        e.preventDefault();
-        
-        if (! this.state.captcha) {
-            return this.props.dispatch({
+        e.preventDefault();	
+        if (
+            ! this.state.email || this.state.email.length < 1 ||
+            ! this.state.password || this.state.password.length < 1
+        ) {
+            this.props.dispatch({
                 type: 'REG_ERROR',
-                error: 'Captcha is not valid!!',
+                error: 'Email and password are required!'
             });
+            return;
+        }
+        if (this.state.password !== this.state.confirmPassword) {
+            this.props.dispatch({
+                type: 'REG_ERROR',
+                error: 'Please confirm password!'
+            });
+            return;
         }
 
-        if (this.state.password !== this.state.confPassword) {
-            return this.props.dispatch({
-                type: 'REG_ERROR',
-                error: 'Please, confirm password!',
-            });
-        }
-
-        this.props.dispatch(api({
+        this.props.dispatch(graphql({
             type: 'REG',
-            fetch: 'user.registration',
-            login: this.state.login,
             email: this.state.email,
             password: this.state.password,
+            confirmPassword: this.state.confirmPassword,
         }));
-    }
-    checkCaptcha (v) {
-        this.setState({
-            captcha: v,
-        })
     }
 
     componentDidUpdate () {
-        if (this.props.reg.status === 'success') {
+        if (this.props.registration.status === 'success') {
             setTimeout(() => {
                 return window.location = '/login';
             }, 1000);
         }
+    }
+    
+    fieldChange (e) {
+        e.preventDefault();
+        let update = {};
+        update[e.target.id] = e.target.value ? e.target.value.toString().trim() : null;
+        this.setState(update);
     }
 
     render () {
         let disabled = null,
             alertOpts = null;
     
-        if (this.props.reg.status === 'error') {
+        if (this.props.registration.status === 'error') {
             alertOpts = {
                 className: 'danger',
-                text: this.props.reg.error || 'Error, wrong login or password'
+                text: this.props.registration.error || 'Error, wrong email or password'
             }
-        } else if (this.props.reg.status === 'send') {
+        } else if (this.props.registration.status === 'send') {
             disabled = 'disabled';
             alertOpts = {
                 className: 'info',
                 text: 'Loading, please wait',
             }
-        } else if (this.props.reg.status === 'success') {
+        } else if (this.props.registration.status === 'success') {
             alertOpts = {
                 className: 'success',
-                text: 'Registered successfully, please login!',
+                text: 'Registration is successfully, please login.',
             }
         }
 
         return <div className="row">
-            <div className="col-lg-offset-4 col-lg-4">
+            <div className="col-lg-offset-3 col-lg-6">
                 <div className="panel panel-default">
                     <div className="panel-heading">
-                        <h3 className="panel-title">Authentication</h3>
+                        <h3 className="panel-title">Registration</h3>
                     </div>
                     <div className="panel-body">
                         <form onSubmit={::this.formSubmit}>
                             <div className="form-group">
-                                <label htmlFor="login">Login</label>
-                                <input 
-                                    type="text" 
-                                    className="form-control" 
-                                    id="login" 
-                                    placeholder="Login" 
-                                    defaultValue={this.state.login}
-                                    onChange={::this.changeField}
-                                    required
-                                />
-                            </div>
-                            <div className="form-group">
                                 <label htmlFor="email">Email</label>
                                 <input 
-                                    type="email" 
+                                    type="email"
+                                    required
                                     className="form-control" 
                                     id="email" 
                                     placeholder="Email" 
-                                    defaultValue={this.state.email}
-                                    onChange={::this.changeField}
-                                    required
+                                    defaultValue={this.props.registration.email}
+                                    onChange={::this.fieldChange}
+                                    disabled={disabled}
                                 />
                             </div>
                             <div className="form-group">
                                 <label htmlFor="password">Password</label>
                                 <input 
                                     type="password" 
+                                    required
                                     className="form-control" 
                                     id="password" 
                                     placeholder="Password" 
-                                    defaultValue={this.state.password}
-                                    onChange={::this.changeField}
-                                    required
+                                    defaultValue={this.props.registration.password}
+                                    onChange={::this.fieldChange}
+                                    disabled={disabled}
                                 />
                             </div>
                             <div className="form-group">
-                                <label htmlFor="confPassword">Confirm password</label>
+                                <label htmlFor="confirmPassword">Confirm password</label>
                                 <input 
-                                    type="password" 
-                                    className="form-control" 
-                                    id="confPassword" 
-                                    placeholder="Confirm password" 
-                                    defaultValue={this.state.confPassword}
-                                    onChange={::this.changeField}
+                                    type="password"
                                     required
+                                    className="form-control" 
+                                    id="confirmPassword" 
+                                    placeholder="Confirm password" 
+                                    defaultValue={this.props.registration.confirmPassword}
+                                    onChange={::this.fieldChange}
+                                    disabled={disabled}
                                 />
                             </div>
-                            <MathCaptcha cb={::this.checkCaptcha} />
                             <AlertMessage opts={alertOpts} />
                             <button 
                                 type="submit" 
                                 className="btn btn-default btn-block"
                                 disabled={disabled}
-                            >Submit</button>
+                            >Registration</button>
                         </form>
                         <br />
                         <p className='text-center'>
-                            <a href='/login'>Authorisation</a>
+                            <a href='/login'>Login</a>
                         </p>
                         
                     </div>
@@ -162,6 +147,6 @@ class RegComp extends React.Component {
 const mapStateToProps = (state) => {
     return {...state}
 }
-RegComp = connect(mapStateToProps)(RegComp)
+LoginComp = connect(mapStateToProps)(LoginComp)
 
-export default RegComp
+export default LoginComp

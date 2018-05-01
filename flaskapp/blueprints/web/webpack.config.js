@@ -4,6 +4,7 @@ const webpack = require('webpack');
 
 module.exports = {
     entry: {
+        registration: path.resolve(__dirname, 'static_src/registration.js'),
         login: path.resolve(__dirname, 'static_src/login.js'),
         about: path.resolve(__dirname, 'static_src/about.js'),
         profile: path.resolve(__dirname, 'static_src/profile.js'),
@@ -11,7 +12,7 @@ module.exports = {
         blogEdit: path.resolve(__dirname, 'static_src/blogEdit.js'),
 
 
-        // registration: path.resolve(__dirname, 'src/registration.js'),
+        
 
         // profile: path.resolve(__dirname, 'src/profile.js'),
         // about: path.resolve(__dirname, 'src/about.js'),

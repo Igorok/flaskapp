@@ -16,6 +16,7 @@ setup(
         'PyMySQL',
         'psycopg2-binary',
         'graphene',
+        'pylint',
     ],
     setup_requires=[
         'pytest-runner',

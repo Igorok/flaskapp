@@ -1,14 +1,4 @@
 # -*- coding: utf-8 -*-
-"""
-    Flaskr
-    ~~~~~~
-
-    A microblog example application written as Flask tutorial with
-    Flask and sqlite3.
-
-    :copyright: © 2010 by the Pallets team.
-    :license: BSD, see LICENSE for more details.
-"""
 
 import os
 from flask import Flask
