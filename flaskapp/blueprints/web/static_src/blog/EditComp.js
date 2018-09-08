@@ -62,6 +62,15 @@ class EditComp extends React.Component {
     
     formSubmit (e) {
         e.preventDefault();
+        let text = draftToHtml(convertToRaw(this.state.editorState.getCurrentContent()));
+
+        if (text && (text.length > 512)) {
+            return this.props.dispatch({
+                type: 'BLOG_EDIT_ERROR',
+                error: 'Text is too long!',
+            });
+        }
+
         this.props.dispatch(graphql({
             type: 'BLOG_EDIT',
             id: this.state.id,

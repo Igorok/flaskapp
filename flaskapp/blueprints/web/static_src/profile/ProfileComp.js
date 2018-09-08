@@ -12,7 +12,7 @@ class NumInfo extends React.Component {
                 <div className="panel panel-default">
                     <div className="panel-heading">
                         <span className="glyphicon glyphicon-bookmark"></span>&nbsp;&nbsp;
-                        <a href="/my-blogs">My blogs</a>
+                        <a href="/my-blog-list">My blogs</a>
                     </div>
                     <div className="panel-body">
                         {this.props.profile.countBlogs}
@@ -131,7 +131,7 @@ class UserInfo extends React.Component {
                 <div className={formClass}>
                     <form onSubmit={::this.formSubmit}>
                         <div className="form-group">
-                            <label htmlFor="login">Password</label>
+                            <label htmlFor="login">Login</label>
                             <input 
                                 type="text" 
                                 className="form-control" 

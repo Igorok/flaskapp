@@ -38,7 +38,11 @@ class BlogItem (Model):
         if (self.title == None or len(self.title) == 0):
             __wrongFields.append('title')
         
-        if (self.text == None or len(self.text) == 0):
+        if (
+            self.text == None or 
+            len(self.text) == 0 or 
+            len(self.text) > 512
+        ):
             __wrongFields.append('text')
 
         if (len(__wrongFields) > 0):

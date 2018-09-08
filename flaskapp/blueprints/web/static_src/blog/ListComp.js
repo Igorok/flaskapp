@@ -4,27 +4,6 @@ import { graphql } from '../helpers/action';
 import {forEach, chunk, map} from 'lodash';
 import {AlertMessage, PaginatorLayout} from '../helpers/component';
 
-class BlogListItem extends React.Component {
-    render () {
-        return <div className="col-md-4">
-            <div className="panel panel-default">
-                <div className="panel-heading">
-                    <h4 className="panel-title">
-                        <a href = {"/blog-detail/" + this.props.item._id}>
-                            {this.props.item.name}
-                        </a>
-                    </h4>
-                </div>
-                <div className="panel-body">
-                    <p>
-                        {this.props.item.description}
-                    </p>
-                </div>
-            </div>
-        </div>
-    }
-}
-
 class BlogListComp extends React.Component {
     constructor(props) {
         super(props);
@@ -65,9 +44,7 @@ class BlogListComp extends React.Component {
                             </h4>
                         </div>
                         <div className="panel-body">
-                            <p>
-                                {blog.text}
-                            </p>
+                            <div dangerouslySetInnerHTML={{__html: blog.text}} />
                             <p>
                                 {blog.userName}&nbsp;
                                 {blog.date}
