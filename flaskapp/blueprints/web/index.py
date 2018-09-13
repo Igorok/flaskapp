@@ -114,11 +114,17 @@ def graphql():
 # GET routes
 @web.route('/')
 def index():
-    return render_template('view.html', scripts=["about"])
+    params = [
+        {"name": "page", "val": "about"}
+    ]
+    return render_template('view.html', scripts=["about"], params=params )
 
 @web.route('/profile')
 def profile():
-    return render_template('view.html', scripts=["profile"])
+    params = [
+        {"name": "page", "val": "profile"}
+    ]
+    return render_template('view.html', scripts=["profile"], params=params)
 
 @web.route('/login')
 def login():
@@ -131,19 +137,23 @@ def registration():
 @web.route('/blog-list')
 def blogList():
     params = getParams(['userId', 'start', 'perpage'], request.args)
+    params.append({"name": "page", "val": "blog"})
     return render_template(
         'view.html', 
         scripts = ['blogList'],
-        params = params
+        params = params, 
+        page="blog"
     )
 
 @web.route('/my-blog-list')
 def myBlogList():
     params = getParams(['start', 'perpage'], request.args)
+    params.append({"name": "page", "val": "blog"})
     return render_template(
         'view.html', 
-        scripts = ['blogList'],
-        params = params
+        scripts = ['myBlogList'],
+        params = params, 
+        page="blog"
     )
 
 @web.route('/blog-edit/<blogId>')
@@ -151,7 +161,10 @@ def blogEdit(blogId):
     return render_template(
         'view.html', 
         scripts = ['blogEdit'], 
-        params = [{'name': 'blogId', 'val': blogId}]
+        params = [
+            {'name': 'blogId', 'val': blogId},
+            {"name": "page", "val": "blog"}
+        ]
     )
 
 

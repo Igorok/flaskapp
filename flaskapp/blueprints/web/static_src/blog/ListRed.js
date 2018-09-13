@@ -5,6 +5,7 @@ let initState = {
     blogs: [],
     count: 0,
     status: null,
+    error: null,
 };
 const blogList = (state = initState, action) => {
     let data = {...state};
@@ -20,6 +21,7 @@ const blogList = (state = initState, action) => {
             return data;
         case 'BLOG_LIST_ERROR':
             data.status = 'error';
+            data.error = action.error;
             return data;
         default:
             return state

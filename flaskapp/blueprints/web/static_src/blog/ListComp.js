@@ -65,8 +65,10 @@ class BlogListComp extends React.Component {
     render () {
         let alertOpts = null,
             blogs = null;
-    
-        if (this.props.blogList.status === 'error') {
+        
+        console.log('this.props', this.props);
+
+        if (this.props.blogList.status == 'error') {
             alertOpts = {
                 className: 'danger',
                 text: this.props.blogList.error
@@ -86,7 +88,7 @@ class BlogListComp extends React.Component {
             changePage: ::this.changePage,
         };
 
-        
+        console.log('alertOpts',alertOpts);
         return <div>
             <AlertMessage opts={alertOpts} />
             <PaginatorLayout param={pagerParam} />

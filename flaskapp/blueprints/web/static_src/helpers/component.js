@@ -27,44 +27,6 @@ export class AlertMessage extends React.Component {
         return tpl;
     }
 }
-
-export class SideNav extends React.Component {
-    render () {
-        let profileItem = null;
-        let userItem = null;
-        let chatItem = null;
-
-        if (this.props.auth.isAuthenticated) {
-            profileItem = <li role="presentation">
-                <a href="/profile">
-                    <span className="glyphicon glyphicon-home"></span>
-                    &nbsp;&nbsp;Profile
-                    ({this.props.auth.login})
-                </a>
-            </li>
-            userItem = <li role="presentation">
-                <a href="/users"><span className="glyphicon glyphicon-user"></span>&nbsp;&nbsp;Users</a>
-            </li>
-            chatItem = <li role="presentation">
-                <a href="/chats"><span className="glyphicon glyphicon-envelope"></span>&nbsp;&nbsp;Chats</a>
-            </li>
-        }
-
-        return <ul className="nav nav-pills nav-stacked">
-            <li role="presentation">
-                <a href="/"><span className="glyphicon glyphicon-exclamation-sign"></span>&nbsp;&nbsp;About</a>
-            </li>
-            <li role="presentation">
-                <a href="/blogs"><span className="glyphicon glyphicon-bookmark"></span>&nbsp;&nbsp;Blogs</a>
-            </li>
-            {profileItem}
-            {userItem}
-            {chatItem}
-            
-        </ul>
-    }
-}
-
 /**
  * check a sum of two numbers
  * @param {Function} cb - callback to use a result of validation
@@ -129,6 +91,9 @@ class Header extends React.Component {
         $('.dropdown-toggle').dropdown('toggle');
     }
     render () {
+
+        console.log('window.localParams.page', window.localParams.page);
+
         let profileItem = null;
         let userItem = null;
 
@@ -185,10 +150,10 @@ class Header extends React.Component {
 
                 <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                     <ul className="nav navbar-nav">
-                        <li className="active">
+                        <li className={window.localParams.page == 'about' ? 'active' : ''}>
                             <a href="/"><span className="glyphicon glyphicon-exclamation-sign"></span>&nbsp;&nbsp;About</a>
                         </li>
-                        <li >
+                        <li className={window.localParams.page == 'blog' ? 'active' : ''}>
                             <a href="/blog-list"><span className="glyphicon glyphicon-bookmark"></span>&nbsp;&nbsp;Blogs</a>
                         </li>
                         {userItem}

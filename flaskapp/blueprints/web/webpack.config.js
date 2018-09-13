@@ -9,6 +9,7 @@ module.exports = {
         about: path.resolve(__dirname, 'static_src/about.js'),
         profile: path.resolve(__dirname, 'static_src/profile.js'),
         blogList: path.resolve(__dirname, 'static_src/blogList.js'),
+        myBlogList: path.resolve(__dirname, 'static_src/myBlogList.js'),
         blogEdit: path.resolve(__dirname, 'static_src/blogEdit.js'),
 
 
