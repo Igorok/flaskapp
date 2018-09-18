@@ -159,7 +159,7 @@ const BLOG_GET = (opts) => {
 const BLOG_LIST = (opts) => {
     let q = {
         query: compress(`
-            query getBlogList ($token: String!, $device: String!, $userId: Int, $start: Int, $perpage: Int) {
+            query getBlogList ($token: String, $device: String!, $userId: Int, $start: Int, $perpage: Int) {
                 getBlogList (token: $token, device: $device, userId: $userId, start: $start, perpage: $perpage) {
                     blogs {
                         id

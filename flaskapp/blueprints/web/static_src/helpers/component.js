@@ -115,7 +115,7 @@ class Header extends React.Component {
                             <a href="/profile">Profile</a>
                         </li>
                         <li>
-                            <a href={"/blogs&userId=" + this.props.auth.id}>My blogs</a>
+                            <a href="/my-blog-list">My blogs</a>
                         </li>
                         <li>
                             <a href="/blog-edit/-1">Add blog</a>
