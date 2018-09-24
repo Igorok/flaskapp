@@ -1,7 +1,7 @@
 from flaskapp.blueprints.web.models.index import Model
 from flaskapp.blueprints.web.models.user import UserModel
 from datetime import datetime, timedelta
-
+import math
 
 class BlogItem (Model):
     id = 0
@@ -287,3 +287,51 @@ class BlogModel (Model):
             listResult['blogs'] = map(self.list_to_dict(blogKeys), blogData)
 
         return listResult
+
+
+    # make my blog public or hidden
+    def publicMyBlog (self, *args, **kwargs):
+        id = kwargs.get('id')
+        public = kwargs.get('public')
+
+        if (id == None or math.isnan(int(id))):
+            raise Exception('Blog not found')
+
+        uModel = UserModel()
+        # check authentication and get data of current user
+        profileDict = uModel.getUserByToken(**kwargs)
+
+        selectRows = ['id', 'user_id', 'public', self.TABLE]
+        selectSql = 'select "{0}", "{1}", "{2}" from "{3}" where id = %s and user_id = %s;'.format(*selectRows)
+
+        connection = self.connect_postgres()
+        cursor = connection.cursor()
+        cursor.execute(selectSql, [id, profileDict.get('id')])
+        selectItem = cursor.fetchone()
+
+        selectDict = self.list_to_dict(selectRows)(selectItem)
+
+        if (selectDict == None):
+            connection.close()
+            raise Exception('Blog not found')
+
+        if (selectDict.get("public") == public):
+            connection.close()
+            return {
+                'id': id,
+                'public': public
+            }
+
+        updateSql = '''update "{0}"
+            set "public" = %s
+            where id = %s
+            ;'''.format(self.TABLE)
+
+        cursor.execute(updateSql, [public, id])
+        connection.commit()
+        connection.close()
+
+        return {
+            'id': id,
+            'public': public
+        }

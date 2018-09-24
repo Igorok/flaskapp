@@ -134,6 +134,18 @@ class Query(graphene.ObjectType):
             blogs = blogs,
         )
 
+    # make my blog public or hidden
+    publicMyBlog = graphene.Field(
+        BlogGraph,
+        token = graphene.String(),
+        device = graphene.String(),
+        id = graphene.Int(),
+        public = graphene.Boolean(),
+    )
+    def resolve_publicMyBlog (self, info, *args, **kwargs):
+        __model = BlogModel()
+        __blog = __model.publicMyBlog(**kwargs)
+        return BlogGraph(**__blog)
 
 
 # init query
