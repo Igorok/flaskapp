@@ -16,17 +16,17 @@ class BlogListComp extends React.Component {
 
     componentWillMount () {
         this.props.dispatch(graphql({
-            type: 'BLOG_LIST',
-            start: this.props.myBlogList.start, 
-            perpage: this.props.myBlogList.perpage, 
+            type: 'MY_BLOG_LIST',
+            start: this.props.myBlogList.start,
+            perpage: this.props.myBlogList.perpage,
         }));
     }
 
     changePage (start = 0) {
         this.props.dispatch(graphql({
-            type: 'BLOG_LIST',
-            start: start, 
-            perpage: this.props.myBlogList.perpage, 
+            type: 'MY_BLOG_LIST',
+            start: start,
+            perpage: this.props.myBlogList.perpage,
         }));
     }
 
@@ -51,7 +51,7 @@ class BlogListComp extends React.Component {
                             </p>
                         </div>
                     </div>
-                </div> 
+                </div>
             });
 
             return <div className="row">{partition}</div>
@@ -60,12 +60,12 @@ class BlogListComp extends React.Component {
         return blogs;
     }
 
-    
+
 
     render () {
         let alertOpts = null,
             blogs = null;
-    
+
         if (this.props.myBlogList.status === 'error') {
             alertOpts = {
                 className: 'danger',
@@ -86,12 +86,12 @@ class BlogListComp extends React.Component {
             changePage: ::this.changePage,
         };
 
-        
+
         return <div>
             <AlertMessage opts={alertOpts} />
             <PaginatorLayout param={pagerParam} />
         </div>
-        
+
     }
 }
 const mapStateToProps = (state) => {

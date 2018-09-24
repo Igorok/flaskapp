@@ -34,13 +34,13 @@ class BlogItem (Model):
 
         if (self.userId == None):
             __wrongFields.append('userId')
-        
+
         if (self.title == None or len(self.title) == 0):
             __wrongFields.append('title')
-        
+
         if (
-            self.text == None or 
-            len(self.text) == 0 or 
+            self.text == None or
+            len(self.text) == 0 or
             len(self.text) > 512
         ):
             __wrongFields.append('text')
@@ -61,23 +61,24 @@ class BlogModel (Model):
         blogParam = [perpage, start]
         countParam = []
         blogRows = [
-            'id', 'user_id', 'title', 'text', 'date', 'public', 
-            'login', 'email', 
+            'id', 'user_id', 'title', 'text', 'date', 'public',
+            'login', 'email',
             self.TABLE, UserModel.TABLE
         ]
-        blogSql = '''select 
-            bTable.{0}, bTable.{1}, bTable.{2}, bTable.{3}, bTable.{4}, bTable.{5}, 
+        blogSql = '''select
+            bTable.{0}, bTable.{1}, bTable.{2}, bTable.{3}, bTable.{4}, bTable.{5},
             uTable.{6}, uTable.{7} from "{8}" as bTable
             left join "{9}" as uTable
             on bTable.user_id = uTable.id
+            where bTable.{5} = true
             '''.format(*blogRows)
-        countSql = 'select count(id) from {0} '.format(self.TABLE)
+        countSql = 'select count(id) from {0} where {1} = true'.format(self.TABLE, 'public')
 
         blogKeys = ['id', 'userId', 'title', 'text', 'date', 'public', 'userName', 'userEmail']
 
         if (userId != None):
-            blogSql += ' ,user_id = %s'
-            countSql += ' ,user_id = %s'
+            blogSql += ' and user_id = %s'
+            countSql += ' and user_id = %s'
             blogParam = [userId] + blogParam
             countParam = [userId] + countParam
 
@@ -98,7 +99,7 @@ class BlogModel (Model):
         }
         if (countData != None):
             listResult['count'] = countData[0]
-        
+
         if (blogData != None):
             listResult['blogs'] = map(self.list_to_dict(blogKeys), blogData)
 
@@ -108,7 +109,7 @@ class BlogModel (Model):
 
 
 
-        
+
     # get blog item
     def getBlog (self, *args, **kwargs):
         if (not 'id' in kwargs):
@@ -122,18 +123,18 @@ class BlogModel (Model):
         cursor = connection.cursor()
 
         blogRows = [
-            'id', 'user_id', 'title', 'text', 'date', 'public', 
-            'login', 'email', 
+            'id', 'user_id', 'title', 'text', 'date', 'public',
+            'login', 'email',
             self.TABLE, UserModel.TABLE
         ]
-        blogSql = '''select 
-            bTable.{0}, bTable.{1}, bTable.{2}, bTable.{3},  bTable.{4}, bTable.{5}, 
+        blogSql = '''select
+            bTable.{0}, bTable.{1}, bTable.{2}, bTable.{3},  bTable.{4}, bTable.{5},
             uTable.{6}, uTable.{7} from "{8}" as bTable
             left join "{9}" as uTable
             on bTable.user_id = uTable.id
             where bTable.{0} = %s
             ;'''.format(*blogRows)
-        
+
         cursor.execute(blogSql, [kwargs["id"]])
         blogData = cursor.fetchone()
         connection.close()
@@ -171,12 +172,12 @@ class BlogModel (Model):
         )
         blogItem.validate()
 
-        sql = '''insert into "{0}" 
-            ("title", "text", "user_id", "date") 
+        sql = '''insert into "{0}"
+            ("title", "text", "user_id", "date")
             values (%s, %s, %s, %s)
             returning "id"
             ;'''.format(self.TABLE)
-        
+
         connection = self.connect_postgres()
         cursor = connection.cursor()
         cursor.execute(sql, [blogItem.title, blogItem.text, blogItem.userId, blogItem.date])
@@ -201,7 +202,7 @@ class BlogModel (Model):
             public = kwargs['public'],
         )
         blogItem.validate()
-        
+
         if blogItem.id == -1:
             return self.addBlog(**kwargs)
 
@@ -226,13 +227,63 @@ class BlogModel (Model):
             connection.close()
             raise Exception('Nothing to update')
 
-        updateSql = '''update "{0}" 
+        updateSql = '''update "{0}"
             set "title" = %s, "text" = %s, "public" = %s, "date" = %s
             where id = %s
             ;'''.format(self.TABLE)
-        
+
         cursor.execute(updateSql, [blogItem.title, blogItem.text, blogItem.public, blogItem.date, blogItem.id])
         connection.commit()
         connection.close()
 
         return blogItem.__dict__
+
+
+    # get list of user blogs
+    def getMyBlogList (self, *args, **kwargs):
+        start = int(kwargs['start']) if ('start' in kwargs) else 0
+        perpage = int(kwargs['perpage']) if ('perpage' in kwargs) else 20
+
+        uModel = UserModel()
+        # check authentication and get data of current user
+        profileDict = uModel.getUserByToken(**kwargs)
+
+        blogParam = [profileDict.get('id'), perpage, start]
+        countParam = [profileDict.get('id')]
+        blogRows = [
+            'id', 'user_id', 'title', 'text', 'date', 'public',
+            'login', 'email',
+            self.TABLE, UserModel.TABLE
+        ]
+        blogSql = '''select
+            bTable.{0}, bTable.{1}, bTable.{2}, bTable.{3}, bTable.{4}, bTable.{5},
+            uTable.{6}, uTable.{7} from "{8}" as bTable
+            left join "{9}" as uTable
+            on bTable.user_id = uTable.id
+            where bTable.{1} = %s
+            order by bTable.{0} desc limit %s offset %s;
+            '''.format(*blogRows)
+
+        countSql = 'select count(id) from {0} where user_id = %s;'.format(self.TABLE)
+        blogKeys = ['id', 'userId', 'title', 'text', 'date', 'public', 'userName', 'userEmail']
+
+        connection = self.connect_postgres()
+        cursor = connection.cursor()
+        cursor.execute(blogSql, blogParam)
+        blogData = cursor.fetchall()
+
+        cursor.execute(countSql, countParam)
+        countData = cursor.fetchone()
+        connection.close()
+
+        listResult = {
+            'count': 0,
+            'blogs': []
+        }
+        if (countData != None):
+            listResult['count'] = countData[0]
+
+        if (blogData != None):
+            listResult['blogs'] = map(self.list_to_dict(blogKeys), blogData)
+
+        return listResult

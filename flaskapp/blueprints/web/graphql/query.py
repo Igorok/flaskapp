@@ -10,27 +10,27 @@ from flaskapp.blueprints.web.graphql.blog import BlogGraph, BlogListGraph
 class Query(graphene.ObjectType):
     # authentication
     registration = graphene.Field(
-        RegGraph, 
-        email = graphene.String(), 
-        password = graphene.String(), 
-        confirmPassword = graphene.String(), 
+        RegGraph,
+        email = graphene.String(),
+        password = graphene.String(),
+        confirmPassword = graphene.String(),
         device = graphene.String()
     )
     def resolve_registration (self, info, email, password, confirmPassword, device):
         _u = UserModel()
         _reg_user = _u.registration(
-            email = email, 
-            password = password, 
-            confirmPassword=confirmPassword, 
+            email = email,
+            password = password,
+            confirmPassword=confirmPassword,
             device = device
         )
         return RegGraph(**_reg_user)
 
     # authentication
     auth = graphene.Field(
-        AuthGraph, 
-        login = graphene.String(), 
-        password = graphene.String(), 
+        AuthGraph,
+        login = graphene.String(),
+        password = graphene.String(),
         device = graphene.String()
     )
     def resolve_auth (self, info, login, password, device):
@@ -93,7 +93,7 @@ class Query(graphene.ObjectType):
         __blog = __b.editBlog(**kwargs)
         return BlogGraph(**__blog)
 
-    # get blog data
+    # get list blog data
     getBlogList = graphene.Field(
         BlogListGraph,
         token = graphene.String(),
@@ -108,7 +108,27 @@ class Query(graphene.ObjectType):
         blogs = []
         for v in __blog['blogs']:
             blogs.append(BlogGraph(**v))
-            
+
+        return BlogListGraph(
+            count = __blog['count'],
+            blogs = blogs,
+        )
+
+    # get list blog data
+    getMyBlogList = graphene.Field(
+        BlogListGraph,
+        token = graphene.String(),
+        device = graphene.String(),
+        start = graphene.Int(),
+        perpage = graphene.Int(),
+    )
+    def resolve_getMyBlogList (self, info, *args, **kwargs):
+        __b = BlogModel()
+        __blog = __b.getMyBlogList(**kwargs)
+        blogs = []
+        for v in __blog['blogs']:
+            blogs.append(BlogGraph(**v))
+
         return BlogListGraph(
             count = __blog['count'],
             blogs = blogs,
