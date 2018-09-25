@@ -186,6 +186,55 @@ const BLOG_LIST = (opts) => {
     return JSON.stringify(q);
 };
 
+const MY_BLOG_LIST = (opts) => {
+    let q = {
+        query: compress(`
+            query getMyBlogList ($token: String!, $device: String!, $start: Int, $perpage: Int) {
+                getMyBlogList (token: $token, device: $device, start: $start, perpage: $perpage) {
+                    blogs {
+                        id
+                        userId
+                        userName
+                        userEmail
+                        title
+                        text
+                        date
+                        public
+                    }
+                    count
+                }
+            }
+        `),
+        variables: {
+            token: opts.token,
+            device: opts.device,
+            start: opts.start,
+            perpage: opts.perpage,
+        },
+    }
+    return JSON.stringify(q);
+};
+
+const MY_BLOG_PUBLIC = (opts) => {
+    let q = {
+        query: compress(`
+            query publicMyBlog ($token: String!, $device: String!, $id: Int, $public: Boolean) {
+                publicMyBlog (token: $token, device: $device, id: $id, public: $public) {
+                    id
+                    public
+                }
+            }
+        `),
+        variables: {
+            token: opts.token,
+            device: opts.device,
+            id: opts.id,
+            public: opts.public,
+        },
+    }
+    return JSON.stringify(q);
+};
+
 export const query = {
     REG: REG,
     AUTH: AUTH,
@@ -195,7 +244,8 @@ export const query = {
     BLOG_GET: BLOG_GET,
     BLOG_EDIT: BLOG_EDIT,
     BLOG_LIST: BLOG_LIST,
+	MY_BLOG_LIST: MY_BLOG_LIST,
+    MY_BLOG_PUBLIC: MY_BLOG_PUBLIC,
 
     USER_LIST: USER_LIST,
 }
-

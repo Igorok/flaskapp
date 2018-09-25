@@ -16,24 +16,58 @@ class BlogListComp extends React.Component {
 
     componentWillMount () {
         this.props.dispatch(graphql({
-            type: 'BLOG_LIST',
-            start: this.props.myBlogList.start, 
-            perpage: this.props.myBlogList.perpage, 
+            type: 'MY_BLOG_LIST',
+            start: this.props.myBlogList.start,
+            perpage: this.props.myBlogList.perpage,
         }));
     }
 
     changePage (start = 0) {
         this.props.dispatch(graphql({
-            type: 'BLOG_LIST',
-            start: start, 
-            perpage: this.props.myBlogList.perpage, 
+            type: 'MY_BLOG_LIST',
+            start: start,
+            perpage: this.props.myBlogList.perpage,
+        }));
+    }
+    /**
+     * make the blog public or hidden
+     * @param  {Number} p.id id of blog
+     * @param  {Boolean} p.public true - show blog, false - hide blog
+     */
+    publicBlog (p) {
+        this.props.dispatch(graphql({
+            type: 'MY_BLOG_PUBLIC',
+            id: p.id,
+            public: p.public
         }));
     }
 
     getBlogItems () {
+        var self = this;
         let chunkedItems = chunk(this.props.myBlogList.blogs, 3);
         let blogs = map(chunkedItems, blogs => {
             let partition = map(blogs, blog => {
+                let hideBtn = null;
+                function pubBlog (e) {
+                    e.preventDefault();
+                    return self.publicBlog({
+                        id: blog.id,
+                        public: ! blog.public
+                    });
+                }
+                if (blog.public) {
+                    hideBtn = <btn className="btn btn-default" onClick={pubBlog} data-id={blog.id}>
+                        <span className="glyphicon glyphicon-remove"></span>&nbsp;
+                        hide
+                    </btn>
+                } else {
+                    hideBtn = <btn className="btn btn-default" onClick={pubBlog} data-id={blog.id}>
+                        <span className="glyphicon glyphicon-ok"></span>&nbsp;
+                        show
+                    </btn>
+                }
+
+
                 return <div className="col-md-4">
                     <div className="panel panel-default">
                         <div className="panel-heading">
@@ -45,13 +79,29 @@ class BlogListComp extends React.Component {
                         </div>
                         <div className="panel-body">
                             <div dangerouslySetInnerHTML={{__html: blog.text}} />
+                        </div>
+                        <div className="panel-footer">
                             <p>
-                                {blog.userName}&nbsp;
+                                <span className="glyphicon glyphicon-user"></span>&nbsp;
+                                {blog.userName}
+                            </p>
+                            <p>
+                                <span className="glyphicon glyphicon-calendar"></span>&nbsp;
                                 {blog.date}
                             </p>
+                            <p>
+                                <a href={"/blog-edit/" + blog.id} className="btn btn-default">
+                                    <span className="glyphicon glyphicon-pencil"></span>&nbsp;
+                                    edit
+                                </a>
+                                &nbsp;
+                                {hideBtn}
+                            </p>
+
+
                         </div>
                     </div>
-                </div> 
+                </div>
             });
 
             return <div className="row">{partition}</div>
@@ -60,18 +110,18 @@ class BlogListComp extends React.Component {
         return blogs;
     }
 
-    
+
 
     render () {
         let alertOpts = null,
             blogs = null;
-    
+
         if (this.props.myBlogList.status === 'error') {
             alertOpts = {
                 className: 'danger',
                 text: this.props.myBlogList.error
             }
-        } else if (this.props.myBlogList.status === 'send') {
+        } else if (this.props.status === 'send') {
             alertOpts = {
                 className: 'info',
                 text: 'Loading, please wait',
@@ -86,12 +136,12 @@ class BlogListComp extends React.Component {
             changePage: ::this.changePage,
         };
 
-        
+
         return <div>
             <AlertMessage opts={alertOpts} />
             <PaginatorLayout param={pagerParam} />
         </div>
-        
+
     }
 }
 const mapStateToProps = (state) => {

@@ -12,8 +12,8 @@ export class AlertMessage extends React.Component {
     render () {
         let tpl = null;
         if (
-            this.props.opts && 
-            this.props.opts.className && 
+            this.props.opts &&
+            this.props.opts.className &&
             this.props.opts.text
         ) {
             let className = "alert alert-" + this.props.opts.className;
@@ -68,12 +68,12 @@ export class MathCaptcha extends React.Component {
             <div className='form-inline'>
                 <div className={formClass}>
                     <label htmlFor="sum" className='control-label'>
-                        {this.state.v1} + {this.state.v2} = 
+                        {this.state.v1} + {this.state.v2} =
                         &nbsp;&nbsp;
                     </label>
-                    <input 
-                        type="number" 
-                        className="form-control" 
+                    <input
+                        type="number"
+                        className="form-control"
                         id="sum"
                         placeholder="Sum"
                         onChange={::this.changeSum}
@@ -100,8 +100,8 @@ class Header extends React.Component {
         if (this.props.auth.isAuthenticated) {
             profileItem = <ul className="nav navbar-nav navbar-right">
                 <li className="dropdown">
-                    <a 
-                        href="#" className="dropdown-toggle" data-toggle="dropdown" 
+                    <a
+                        href="#" className="dropdown-toggle" data-toggle="dropdown"
                         role="button" aria-haspopup="true" aria-expanded="false"
                         onClick={::this.showDropdown}
                     >
@@ -126,7 +126,7 @@ class Header extends React.Component {
                         <li>
                             <a href="/chats">Chats</a>
                         </li>
-                        
+
                     </ul>
                 </li>
             </ul>
@@ -169,7 +169,7 @@ class Header extends React.Component {
 
 /**
  * function to render layout
- * @param {Class} opts.comp - React.Component that need to render 
+ * @param {Class} opts.comp - React.Component that need to render
  * @param {Boolean} opts.forAuth - this component only for authenticated users
  */
 export function layout (opts) {
@@ -213,11 +213,11 @@ export function layout (opts) {
 
 /**
  * check a sum of two numbers
- * 
+ *
  * @param {Integer} start - number of the sql row for request
  * @param {Integer} perpage - number rows for the page
  * @param {Integer} count - count of all pages
- * @param {Array} items - components for render 
+ * @param {Array} items - components for render
  * @param {Function} changePage - callback with new params
  */
 export class PaginatorLayout extends React.Component {
@@ -232,7 +232,7 @@ export class PaginatorLayout extends React.Component {
         const showBtns = 5;
         const showStep = Math.floor(showBtns / 2);
         const startBtn = this.props.param.start / perpage;
-        
+
         let btns = [];
 
         // number of shown buttons is showBtns
@@ -261,7 +261,7 @@ export class PaginatorLayout extends React.Component {
                 right = startBtn + showStep;
             }
         }
-        
+
         function checkVisible (i) {
             // check if current button located between borders
             return i >= left && i <= right;
@@ -273,7 +273,7 @@ export class PaginatorLayout extends React.Component {
             let btnText = i + 1;
             let btnVisible = checkVisible(i);
             let btnActive = i * perpage == start;
-            let btnHref = window.location.origin + 
+            let btnHref = window.location.origin +
                 window.location.pathname +
                 "?perpage=" + perpage +
                 "&start=" + btnStart;
@@ -286,7 +286,7 @@ export class PaginatorLayout extends React.Component {
                 cName += "hidden";
             }
             btns.push(<li className = {cName} >
-                <a 
+                <a
                     href = {btnHref}
                     data-start={btnStart}
                     onClick={(e) => {
