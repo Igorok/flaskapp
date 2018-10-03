@@ -235,6 +235,63 @@ const MY_BLOG_PUBLIC = (opts) => {
     return JSON.stringify(q);
 };
 
+
+const POST_EDIT = (opts) => {
+    let q = {
+        query: compress(`
+            query editPost ($token: String!, $device: String!, $id: Int!, $blogId: Int!, $title: String!, $description: String!, $text: String!, $public: Boolean) {
+                editPost (token: $token, device: $device, id: $id, blogId: $blogId, title: $title, description: $description, text: $text, public: $public) {
+                    id
+                    blogId
+                    title
+                    description
+                    text
+                    date
+                    public
+                    userId
+                    userName
+                }
+            }
+        `),
+        variables: {
+            token: opts.token,
+            device: opts.device,
+            id: opts.id,
+            blogId: opts.blogId,
+            title: opts.title,
+            description: opts.description,
+            text: opts.text,
+            public: opts.public,
+        },
+    }
+    return JSON.stringify(q);
+};
+
+const POST_GET = (opts) => {
+    let q = {
+        query: compress(`
+            query getBlog ($token: String!, $device: String!, $id: Int!) {
+                getBlog (token: $token, device: $device, id: $id) {
+                    id
+                    userId
+                    userName
+                    userEmail
+                    title
+                    text
+                    date
+                    public
+                }
+            }
+        `),
+        variables: {
+            token: opts.token,
+            device: opts.device,
+            id: opts.id,
+        },
+    }
+    return JSON.stringify(q);
+};
+
 export const query = {
     REG: REG,
     AUTH: AUTH,
@@ -244,8 +301,11 @@ export const query = {
     BLOG_GET: BLOG_GET,
     BLOG_EDIT: BLOG_EDIT,
     BLOG_LIST: BLOG_LIST,
-	MY_BLOG_LIST: MY_BLOG_LIST,
+    MY_BLOG_LIST: MY_BLOG_LIST,
     MY_BLOG_PUBLIC: MY_BLOG_PUBLIC,
+
+    POST_GET: POST_GET,
+    POST_EDIT: POST_EDIT,
 
     USER_LIST: USER_LIST,
 }

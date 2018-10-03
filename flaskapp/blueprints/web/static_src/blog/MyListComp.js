@@ -96,6 +96,12 @@ class BlogListComp extends React.Component {
                                 </a>
                                 &nbsp;
                                 {hideBtn}
+                                &nbsp;
+                                <a href={"/post-edit/" + blog.id + "/-1"} className="btn btn-default">
+                                    <span className="glyphicon glyphicon-plus"></span>&nbsp;
+                                    Add post
+                                </a>
+                                
                             </p>
 
 

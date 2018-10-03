@@ -28,22 +28,23 @@ CREATE TABLE "blog" (
     "public" Boolean
 );
 
-drop table if exists "article";
-CREATE TABLE "article" (
+drop table if exists "post";
+CREATE TABLE "post" (
     "id" SERIAL PRIMARY KEY,
     "user_id" SERIAL NOT NULL,
     "blog_id" SERIAL NOT NULL,
     "title" varchar(128) DEFAULT NULL,
     "description" varchar(256) DEFAULT NULL,
     "text" text,
-    "date" timestamp DEFAULT NULL
+    "date" timestamp DEFAULT NULL,
+    "public" Boolean
 );
 
 drop table if exists "comment";
 CREATE TABLE "comment" (
     "id" SERIAL PRIMARY KEY,
     "user_id" SERIAL NOT NULL,
-    "article_id" SERIAL NOT NULL,
+    "post_id" SERIAL NOT NULL,
     "text" text,
     "date" timestamp DEFAULT NULL
 );

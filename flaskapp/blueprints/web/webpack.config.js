@@ -12,6 +12,8 @@ module.exports = {
         myBlogList: path.resolve(__dirname, 'static_src/myBlogList.js'),
         blogEdit: path.resolve(__dirname, 'static_src/blogEdit.js'),
 
+        postEdit: path.resolve(__dirname, 'static_src/postEdit.js'),
+
 
         
 
