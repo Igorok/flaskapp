@@ -15,6 +15,9 @@ let postId = window.localParams.postId || '-1';
 let initState = {
     id: parseInt(postId),
     blogId: parseInt(blogId),
+    userId: 0,
+    userName: '',
+    userEmail: '',
     title: '',
     description: '',
     text: '',
@@ -22,7 +25,7 @@ let initState = {
     public: false,
 
     // technical info
-    status: null
+    status: null,
 };
 
 
@@ -40,6 +43,9 @@ const postEdit = (state = initState, action) => {
             data.status = 'success_get';
             data.id = action.data.getPost.id;
             data.blogId = action.data.getPost.blogId;
+            data.userId = action.data.getPost.userId;
+            data.userName = action.data.getPost.userName;
+            data.userEmail = action.data.getPost.userEmail;
             data.title = action.data.getPost.title;
             data.description = action.data.getPost.description;
             data.text = action.data.getPost.text;
@@ -71,6 +77,7 @@ const postEdit = (state = initState, action) => {
             data.title = action.data.editPost.title;
             data.description = action.data.editPost.description;
             data.text = action.data.editPost.text;
+            data.date = action.data.editPost.date;
             data.public = action.data.editPost.public;
             return data;
         case 'POST_EDIT_ERROR':
@@ -85,85 +92,4 @@ const postEdit = (state = initState, action) => {
     }
 }
 
-export default postEdit
-
-
-
-
-
-
-
-
-
-
-
-let blogId = window.localParams.blogId;
-let postId = window.localParams.postId || '-1';
-let initState = {
-    id: parseInt(blogId),
-    user_id: 0,
-    user_name: '',
-    title: '',
-    text: '',
-    date: '',
-    public: false,
-    status: null,
-};
-
-
-const blogEdit = (state = initState, action) => {
-    let data = null;
-
-    switch (action.type) {
-        case 'BLOG_GET_SEND':
-            return {
-                status: 'send',
-                ...state
-            };
-        case 'BLOG_GET_SUCCESS':
-            data = {...state};
-            data.status = 'success_get';
-            data.id = action.data.getBlog.id;
-            data.user_id = action.data.getBlog.userId;
-            data.user_name = action.data.getBlog.userName;
-            data.text = action.data.getBlog.text;
-            data.title = action.data.getBlog.title;
-            data.date = action.data.getBlog.date;
-            data.public = !! action.data.getBlog.public;
-            return data;
-        case 'BLOG_GET_ERROR':
-            return {
-                status: 'error',
-                error: action.error,
-                ...state,
-            };
-
-        case 'BLOG_EDIT_SEND':
-            data = {...state};
-            data.status = 'send';
-            data.id = action.id;
-            data.text = action.text;
-            data.title = action.title;
-            data.public = action.public;
-            return data;
-        case 'BLOG_EDIT_SUCCESS':
-            data = {...state};
-            data.status = 'success_edit';
-            data.id = action.data.editBlog.id;
-            data.text = action.data.editBlog.text;
-            data.title = action.data.editBlog.title;
-            data.public = action.data.editBlog.public;
-            return data;
-        case 'BLOG_EDIT_ERROR':
-            data = {...state};
-            data.status = 'error';
-            data.error = action.error;
-            return data;
-
-
-        default:
-            return state
-    }
-}
-
-export default blogEdit
+export default postEdit;

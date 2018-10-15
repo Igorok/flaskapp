@@ -7,7 +7,7 @@ import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import './styles/index.scss'
 
 import {layout} from './helpers/component'
-import EditComp from './blog/EditComp'
+import EditComp from './post/EditComp'
 
 import auth from './auth/LoginRed'
 import postEdit from './post/EditRed'

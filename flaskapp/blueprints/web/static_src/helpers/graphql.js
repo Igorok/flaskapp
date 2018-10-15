@@ -248,8 +248,6 @@ const POST_EDIT = (opts) => {
                     text
                     date
                     public
-                    userId
-                    userName
                 }
             }
         `),
@@ -270,13 +268,15 @@ const POST_EDIT = (opts) => {
 const POST_GET = (opts) => {
     let q = {
         query: compress(`
-            query getBlog ($token: String!, $device: String!, $id: Int!) {
-                getBlog (token: $token, device: $device, id: $id) {
+            query getPost ($token: String!, $device: String!, $id: Int!) {
+                getPost (token: $token, device: $device, id: $id) {
                     id
+                    blogId
                     userId
                     userName
                     userEmail
                     title
+                    description
                     text
                     date
                     public

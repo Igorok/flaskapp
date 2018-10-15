@@ -48,9 +48,9 @@ class User():
 
     def add_user(self):
         if (
-            self.login == None or
-            self.password == None or
-            self.email == None
+            self.login is None or
+            self.password is None or
+            self.email is None
         ): 
             raise Exception('Login, email and password are required')
         
@@ -100,7 +100,7 @@ class User():
             cursor.execute(sql_select, (kwargs['login'], password))
             auth_user = cursor.fetchone()
 
-        if (auth_user == None):
+        if (auth_user is None):
             connection.close()
             raise Exception('Wrong login or password')
 
