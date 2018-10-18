@@ -38,6 +38,7 @@ const postEdit = (state = initState, action) => {
                 status: 'send',
                 ...state
             };
+
         case 'POST_GET_SUCCESS':
             data = {...state};
             data.status = 'success_get';
@@ -52,6 +53,7 @@ const postEdit = (state = initState, action) => {
             data.date = action.data.getPost.date;
             data.public = !! action.data.getPost.public;
             return data;
+
         case 'POST_GET_ERROR':
             return {
                 status: 'error',
@@ -69,6 +71,7 @@ const postEdit = (state = initState, action) => {
             data.text = action.text;
             data.public = action.public;
             return data;
+
         case 'POST_EDIT_SUCCESS':
             data = {...state};
             data.status = 'success_edit';
@@ -80,6 +83,7 @@ const postEdit = (state = initState, action) => {
             data.date = action.data.editPost.date;
             data.public = action.data.editPost.public;
             return data;
+            
         case 'POST_EDIT_ERROR':
             data = {...state};
             data.status = 'error';

@@ -238,9 +238,8 @@ const MY_BLOG_PUBLIC = (opts) => {
 
 const POST_EDIT = (opts) => {
     let q = {
-        query: compress(`
-            query editPost ($token: String!, $device: String!, $id: Int!, $blogId: Int!, $title: String!, $description: String!, $text: String!, $public: Boolean) {
-                editPost (token: $token, device: $device, id: $id, blogId: $blogId, title: $title, description: $description, text: $text, public: $public) {
+        query: compress(`query editPost ($token: String!, $device: String!, $id: Int!, $blogId: Int!, $title: String!, $descript: String!, $text: String!, $public: Boolean) {
+                editPost (token: $token, device: $device, id: $id, blogId: $blogId, title: $title, descript: $descript, text: $text, public: $public) {
                     id
                     blogId
                     title
@@ -257,7 +256,7 @@ const POST_EDIT = (opts) => {
             id: opts.id,
             blogId: opts.blogId,
             title: opts.title,
-            description: opts.description,
+            descript: opts.description,
             text: opts.text,
             public: opts.public,
         },

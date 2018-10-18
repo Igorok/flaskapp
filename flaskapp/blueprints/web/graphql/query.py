@@ -1,9 +1,10 @@
 import graphene
 from flaskapp.blueprints.web.models.user import UserModel
 from flaskapp.blueprints.web.models.blog import BlogModel
+from flaskapp.blueprints.web.models.post import PostModel
 
 from flaskapp.blueprints.web.graphql.user import RegGraph, AuthGraph, ProfileGraph, EditProfileGraph
-from flaskapp.blueprints.web.graphql.blog import BlogGraph, BlogListGraph
+from flaskapp.blueprints.web.graphql.blog import BlogGraph, BlogListGraph, PostGraph, PostListGraph
 
 
 # assign values to query
@@ -146,6 +147,23 @@ class Query(graphene.ObjectType):
         __model = BlogModel()
         __blog = __model.publicMyBlog(**kwargs)
         return BlogGraph(**__blog)
+
+    # edit new post
+    editPost = graphene.Field(
+        PostGraph,
+        token = graphene.String(),
+        device = graphene.String(),
+        id = graphene.Int(),
+        blogId = graphene.Int(),
+        title = graphene.String(),
+        descript = graphene.String(),
+        text = graphene.String(),
+        public = graphene.Boolean()
+    )
+    def resolve_editPost (self, info, *args, **kwargs):
+        __p = PostModel()
+        __post = __p.editPost(**kwargs)
+        return PostGraph(**__post)
 
 
 # init query

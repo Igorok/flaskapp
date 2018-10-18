@@ -65,27 +65,15 @@ class EditComp extends React.Component {
         e.preventDefault();
         let text = draftToHtml(convertToRaw(this.state.editorState.getCurrentContent()));
 
-        console.log(
-            'this.state',
-            this.state
-        );
-        return false;
-        /*
-        if (text && (text.length > 512)) {
-            return this.props.dispatch({
-                type: 'BLOG_EDIT_ERROR',
-                error: 'Text is too long!',
-            });
-        }
-
         this.props.dispatch(graphql({
-            type: 'BLOG_EDIT',
+            type: 'POST_EDIT',
             id: this.state.id,
+            blogId: this.state.blogId,
             title: this.state.title,
-            text: draftToHtml(convertToRaw(this.state.editorState.getCurrentContent())),
+            description: this.state.description,
+            text: text,
             public: this.state.public,
         }));
-        */
     }
 
     render () {
