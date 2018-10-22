@@ -1,5 +1,6 @@
 from flaskapp.blueprints.web.models.index import Model
 from flaskapp.blueprints.web.models.user import UserModel
+from flaskapp.blueprints.web.models.blog import BlogModel
 from datetime import datetime, timedelta
 import math
 
@@ -82,10 +83,10 @@ class PostModel (Model):
         postItem = PostItem(
             id = kwargs.get('id', None),
             blogId = kwargs.get('blogId', None),
+            userId = profileDict.get('id', None),
             title = kwargs.get('title', None),
             description = kwargs.get('descript', None),
             text = kwargs.get('text', None),
-            userId = profileDict.get('id', None),
             public = kwargs.get('public', None),
         )
         postItem.validate()
@@ -103,38 +104,90 @@ class PostModel (Model):
     def addPost(self, *args, **kwargs):
         postItem = PostItem(**kwargs)
 
-        blogSql = '''select "id" from "blog" 
+        blogSql = '''select "id" from "{0}" 
             where "id" = %s and "user_id" = %s
-            '''
+            '''.format(BlogModel.TABLE)
 
         connection = self.connect_postgres()
         cursor = connection.cursor()
         cursor.execute(blogSql, [postItem.blogId, postItem.userId])
-        ids = cursor.fetchone()[0]
+        idRes = cursor.fetchone()
 
-        """
-        sql = '''insert into "{0}"
-            ("title", "text", "user_id", "date")
-            values (%s, %s, %s, %s)
-            returning "id"
-            ;'''.format(self.TABLE)
+        if (idRes is None or idRes[0] is None):
+            connection.close()
+            raise Exception('Blog not found')
 
-        connection = self.connect_postgres()
-        cursor = connection.cursor()
-        cursor.execute(sql, [blogItem.title, blogItem.text, blogItem.userId, blogItem.date])
-        ids = cursor.fetchone()[0]
+        insertSql = '''insert into "{0}"
+            ("blog_id", "user_id", "title", "description", "text", "public", "date")
+            values (%s, %s, %s, %s, %s, %s, %s)
+            returning "id"'''.format(self.TABLE)
+
+        cursor.execute(insertSql, [
+            postItem.blogId,
+            postItem.userId,
+            postItem.title, 
+            postItem.description, 
+            postItem.text, 
+            postItem.public, 
+            postItem.date
+        ])
+
+        postId = cursor.fetchone()[0]
         connection.commit()
         connection.close()
-        blogItem.id = ids
-        return blogItem.__dict__
+        postItem.id = postId
+        return postItem.__dict__
 
 
-        """
+    # get my post for edit
+    def getMyPost(self, *args, **kwargs):
+        if (not 'blogId' in kwargs):
+            raise Exception('Blog not found')
 
-        return None
+        if (not 'id' in kwargs):
+            raise Exception('Post not found')
 
 
+        uModel = UserModel()
+        # check authentication and get data of current user
+        profileDict = uModel.getUserByToken(**kwargs)
 
+        postSql = '''select 
+            blog.id as blogId,
+            blog.user_id as userId,
+            post.id as id,
+            post.title as title
+            post.description as description
+            post.text as "text"
+            post.public as "public"
+            post.date as "date"
+            from blog
+            left join post
+            on blog.id = post.blog_id
+            where blog.id = %s and post.id = %s and blog.user_id = %s
+            ;'''.format(BlogModel.TABLE, self.TABLE)
+
+        cursor.execute(postSql, [kwargs["blogId"], kwargs["id"], profileDict["id"]])
+        postData = cursor.fetchone()
+        connection.close()
+
+        if (postData is None):
+            raise Exception('Blog not found')
+
+        postRows = [
+            "blogId", "userId", "id", "title", "text", "public", "date"
+        ]
+        postDict = self.list_to_dict(postRows)(postData)
+
+        if (
+            postDict is None or 
+            postDict["blogId"] is None or 
+            postDict["id"] is None
+        ):
+            raise Exception('Post not found')
+
+
+        return postDict
 
 
 
@@ -173,7 +226,7 @@ class PostModel (Model):
 
         selectDict = self.list_to_dict(selectRows)(selectItem)
 
-        if (selectDict == None or selectDict["user_id"] != profileDict["id"]):
+        if (selectDict is None or selectDict["user_id"] != profileDict["id"]):
             connection.close()
             raise Exception('Blog not found')
 

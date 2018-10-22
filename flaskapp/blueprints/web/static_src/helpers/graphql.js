@@ -264,11 +264,11 @@ const POST_EDIT = (opts) => {
     return JSON.stringify(q);
 };
 
-const POST_GET = (opts) => {
+const MY_POST_GET = (opts) => {
     let q = {
         query: compress(`
-            query getPost ($token: String!, $device: String!, $id: Int!) {
-                getPost (token: $token, device: $device, id: $id) {
+            query getMyPost ($token: String!, $device: String!, $id: Int!, $blogId: Int!) {
+                getMyPost (token: $token, device: $device, id: $id, blogId: $blogId) {
                     id
                     blogId
                     userId
@@ -303,7 +303,7 @@ export const query = {
     MY_BLOG_LIST: MY_BLOG_LIST,
     MY_BLOG_PUBLIC: MY_BLOG_PUBLIC,
 
-    POST_GET: POST_GET,
+    MY_POST_GET: MY_POST_GET,
     POST_EDIT: POST_EDIT,
 
     USER_LIST: USER_LIST,

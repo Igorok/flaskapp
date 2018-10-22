@@ -164,6 +164,19 @@ class Query(graphene.ObjectType):
         __p = PostModel()
         __post = __p.editPost(**kwargs)
         return PostGraph(**__post)
+    
+    # get my post
+    getMyPost = graphene.Field(
+        PostGraph,
+        token = graphene.String(),
+        device = graphene.String(),
+        id = graphene.Int(),
+        blogId = graphene.Int()
+    )
+    def resolve_getMyPost (self, info, *args, **kwargs):
+        __p = PostModel()
+        __post = __p.getMyPost(**kwargs)
+        return PostGraph(**__post)
 
 
 # init query

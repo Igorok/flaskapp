@@ -32,14 +32,14 @@ class BlogItem (Model):
     def validate (self, **kwargs):
         __wrongFields = []
 
-        if (self.userId == None):
+        if (self.userId is None):
             __wrongFields.append('userId')
 
-        if (self.title == None or len(self.title) == 0):
+        if (self.title is None or len(self.title) == 0):
             __wrongFields.append('title')
 
         if (
-            self.text == None or
+            self.text is None or
             len(self.text) == 0 or
             len(self.text) > 512
         ):
@@ -139,7 +139,7 @@ class BlogModel (Model):
         blogData = cursor.fetchone()
         connection.close()
 
-        if (blogData == None):
+        if (blogData is None):
             raise Exception('Blog not found')
 
         blogDict = self.list_to_dict(blogRows)(blogData)
@@ -173,14 +173,20 @@ class BlogModel (Model):
         blogItem.validate()
 
         sql = '''insert into "{0}"
-            ("title", "text", "user_id", "date")
+            ("title", "text", "user_id", "public", "date")
             values (%s, %s, %s, %s)
             returning "id"
             ;'''.format(self.TABLE)
 
         connection = self.connect_postgres()
         cursor = connection.cursor()
-        cursor.execute(sql, [blogItem.title, blogItem.text, blogItem.userId, blogItem.date])
+        cursor.execute(sql, [
+            blogItem.title, 
+            blogItem.text, 
+            blogItem.userId, 
+            blogItem.public, 
+            blogItem.date
+        ])
         ids = cursor.fetchone()[0]
         connection.commit()
         connection.close()
@@ -215,7 +221,7 @@ class BlogModel (Model):
 
         selectDict = self.list_to_dict(selectRows)(selectItem)
 
-        if (selectDict == None or selectDict["user_id"] != profileDict["id"]):
+        if (selectDict is None or selectDict["user_id"] != profileDict["id"]):
             connection.close()
             raise Exception('Blog not found')
 
@@ -294,7 +300,7 @@ class BlogModel (Model):
         id = kwargs.get('id')
         public = kwargs.get('public')
 
-        if (id == None or math.isnan(int(id))):
+        if (id is None or math.isnan(int(id))):
             raise Exception('Blog not found')
 
         uModel = UserModel()
@@ -311,7 +317,7 @@ class BlogModel (Model):
 
         selectDict = self.list_to_dict(selectRows)(selectItem)
 
-        if (selectDict == None):
+        if (selectDict is None):
             connection.close()
             raise Exception('Blog not found')
 

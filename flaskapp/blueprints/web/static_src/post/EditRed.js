@@ -33,13 +33,13 @@ const postEdit = (state = initState, action) => {
     let data = null;
 
     switch (action.type) {
-        case 'POST_GET_SEND':
+        case 'MY_POST_GET_SEND':
             return {
                 status: 'send',
                 ...state
             };
 
-        case 'POST_GET_SUCCESS':
+        case 'MY_POST_GET_SUCCESS':
             data = {...state};
             data.status = 'success_get';
             data.id = action.data.getPost.id;
@@ -54,7 +54,7 @@ const postEdit = (state = initState, action) => {
             data.public = !! action.data.getPost.public;
             return data;
 
-        case 'POST_GET_ERROR':
+        case 'MY_POST_GET_ERROR':
             return {
                 status: 'error',
                 error: action.error,
