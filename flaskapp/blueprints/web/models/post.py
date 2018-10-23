@@ -94,10 +94,26 @@ class PostModel (Model):
         if postItem.id == -1:
             return self.addPost(**postItem.__dict__)
 
+        postRows = ("id", "title", "description", "text", "public", "date", self.TABLE)
+        postSql = '''select 
+            "{0}", "{1}", "{2}", "{3}", "{4}", "{5}" from "{6}"
+            where id = %s and blog_id = %s and user_id = %s'''.format(*postRows)
+
+        connection = self.connect_postgres()
+        cursor = connection.cursor()
+        cursor.execute(postSql, (
+            postItem.id, 
+            postItem.blogId, 
+            postItem.userId
+        ))
+        postData = cursor.fetchone()
+
+        if (postData is None):
+            connection.close()
+            raise Exception('Blog not found')
 
 
-
-
+        return postItem.__dict__
 
 
     # add new item to posts
@@ -151,15 +167,15 @@ class PostModel (Model):
         uModel = UserModel()
         # check authentication and get data of current user
         profileDict = uModel.getUserByToken(**kwargs)
-
+        
         postSql = '''select 
             blog.id as blogId,
             blog.user_id as userId,
             post.id as id,
-            post.title as title
-            post.description as description
-            post.text as "text"
-            post.public as "public"
+            post.title as title,
+            post.description as description,
+            post.text as "text",
+            post.public as "public",
             post.date as "date"
             from blog
             left join post
@@ -167,7 +183,13 @@ class PostModel (Model):
             where blog.id = %s and post.id = %s and blog.user_id = %s
             ;'''.format(BlogModel.TABLE, self.TABLE)
 
-        cursor.execute(postSql, [kwargs["blogId"], kwargs["id"], profileDict["id"]])
+        connection = self.connect_postgres()
+        cursor = connection.cursor()
+        cursor.execute(postSql, [
+            kwargs["blogId"], 
+            kwargs["id"], 
+            profileDict["id"]
+        ])
         postData = cursor.fetchone()
         connection.close()
 
@@ -175,7 +197,7 @@ class PostModel (Model):
             raise Exception('Blog not found')
 
         postRows = [
-            "blogId", "userId", "id", "title", "text", "public", "date"
+            "blogId", "userId", "id", "title", "description", "text", "public", "date"
         ]
         postDict = self.list_to_dict(postRows)(postData)
 

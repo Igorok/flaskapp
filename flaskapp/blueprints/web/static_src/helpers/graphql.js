@@ -286,6 +286,7 @@ const MY_POST_GET = (opts) => {
             token: opts.token,
             device: opts.device,
             id: opts.id,
+            blogId: opts.blogId,
         },
     }
     return JSON.stringify(q);

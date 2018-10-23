@@ -42,16 +42,16 @@ const postEdit = (state = initState, action) => {
         case 'MY_POST_GET_SUCCESS':
             data = {...state};
             data.status = 'success_get';
-            data.id = action.data.getPost.id;
-            data.blogId = action.data.getPost.blogId;
-            data.userId = action.data.getPost.userId;
-            data.userName = action.data.getPost.userName;
-            data.userEmail = action.data.getPost.userEmail;
-            data.title = action.data.getPost.title;
-            data.description = action.data.getPost.description;
-            data.text = action.data.getPost.text;
-            data.date = action.data.getPost.date;
-            data.public = !! action.data.getPost.public;
+            data.id = action.data.getMyPost.id;
+            data.blogId = action.data.getMyPost.blogId;
+            data.userId = action.data.getMyPost.userId;
+            data.userName = action.data.getMyPost.userName;
+            data.userEmail = action.data.getMyPost.userEmail;
+            data.title = action.data.getMyPost.title;
+            data.description = action.data.getMyPost.description;
+            data.text = action.data.getMyPost.text;
+            data.date = action.data.getMyPost.date;
+            data.public = !! action.data.getMyPost.public;
             return data;
 
         case 'MY_POST_GET_ERROR':

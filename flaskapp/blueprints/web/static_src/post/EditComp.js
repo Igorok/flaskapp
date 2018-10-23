@@ -23,6 +23,7 @@ class EditComp extends React.Component {
         this.props.dispatch(graphql({
             type: 'MY_POST_GET',
             id: this.state.id,
+            blogId: this.state.blogId
         }));
     }
 
