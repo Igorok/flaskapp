@@ -112,6 +112,24 @@ class PostModel (Model):
             connection.close()
             raise Exception('Blog not found')
 
+        selectDict = self.list_to_dict(postRows)(postData)
+        if (
+            postItem.title == selectDict['title'] and
+            postItem.description == selectDict['description'] and
+            postItem.text == selectDict['text'] and
+            postItem.public == selectDict['public']
+        ):
+            connection.close()
+            raise Exception('Nothing to update')
+
+        updateSql = '''update "{0}"
+            set "title" = %s, "description" = %s, "text" = %s, "public" = %s, "date" = %s
+            where id = %s
+            ;'''.format(self.TABLE)
+
+        cursor.execute(updateSql, [postItem.title, postItem.description, postItem.text, postItem.public, postItem.date, postItem.id])
+        connection.commit()
+        connection.close()
 
         return postItem.__dict__
 
@@ -212,61 +230,133 @@ class PostModel (Model):
         return postDict
 
 
+    # get my post for edit
+    def getPostList(self, *args, **kwargs):
+        if (not 'blogId' in kwargs):
+            raise Exception('Blog not found')
 
+        start = int(kwargs['start']) if ('start' in kwargs) else 0
+        perpage = int(kwargs['perpage']) if ('perpage' in kwargs) else 20
 
-
-
-
-
-
-
-
-
-    def editBlog (self, *args, **kwargs):
         uModel = UserModel()
         # check authentication and get data of current user
         profileDict = uModel.getUserByToken(**kwargs)
 
-        blogItem = BlogItem(
-            id = kwargs['id'],
-            title = kwargs['title'],
-            text = kwargs['text'],
-            userId = profileDict['id'],
-            public = kwargs['public'],
-        )
-        blogItem.validate()
+        blogRows = [
+            "blogId", "userId", "title", "text", "date", "login", BlogModel.TABLE
+        ]
+        blogSql = '''select
+            blog.id as {0}, 
+            blog.user_id as {1}, 
+            blog.title as {2}, 
+            blog.text as {3}, 
+            blog.date as {4}, 
+            user.login as {5}
+            from {6}
+            left join user
+            on blog.user_id = user.id
+            where blog.id = %s and public = true
+            ;'''.format(*blogRows)
 
-        if blogItem.id == -1:
-            return self.addBlog(**kwargs)
-
-        selectRows = ['id', 'user_id', 'text', 'title', 'public', self.TABLE]
-        selectSql = 'select "{0}", "{1}", "{2}", "{3}", "{4}" from "{5}" where id = %s'.format(*selectRows);
         connection = self.connect_postgres()
         cursor = connection.cursor()
-        cursor.execute(selectSql, [blogItem.id])
-        selectItem = cursor.fetchone()
-
-        selectDict = self.list_to_dict(selectRows)(selectItem)
-
-        if (selectDict is None or selectDict["user_id"] != profileDict["id"]):
-            connection.close()
-            raise Exception('Blog not found')
-
-        if (
-            blogItem.title == selectDict['text'] and
-            blogItem.text == selectDict['text'] and
-            blogItem.public == selectDict['public']
-        ):
-            connection.close()
-            raise Exception('Nothing to update')
-
-        updateSql = '''update "{0}"
-            set "title" = %s, "text" = %s, "public" = %s, "date" = %s
-            where id = %s
-            ;'''.format(self.TABLE)
-
-        cursor.execute(updateSql, [blogItem.title, blogItem.text, blogItem.public, blogItem.date, blogItem.id])
-        connection.commit()
+        cursor.execute(postSql, [
+            kwargs["blogId"]
+        ])
+        blogData = cursor.fetchone()
         connection.close()
 
-        return blogItem.__dict__
+        if (blogData is None):
+            return {
+                blog: None,
+                posts: None,
+                count: 0,
+            }
+
+        blogDict = self.list_to_dict(blogRows)(blogData)
+        
+
+
+        postSql = '''select 
+            blog.id as blogId,
+            blog.user_id as userId,
+            post.id as id,
+            post.title as title,
+            post.description as description,
+            post.text as "text",
+            post.public as "public",
+            post.date as "date"
+            from blog
+            left join post
+            on blog.id = post.blog_id
+            where blog.id = %s and post.id = %s and blog.user_id = %s
+            ;'''.format(BlogModel.TABLE, self.TABLE)
+
+
+
+
+
+
+
+
+
+
+
+
+
+        uModel = UserModel()
+        # check authentication and get data of current user
+        profileDict = uModel.getUserByToken(**kwargs)
+        
+        postSql = '''select 
+            blog.id as blogId,
+            blog.user_id as userId,
+            post.id as id,
+            post.title as title,
+            post.description as description,
+            post.text as "text",
+            post.public as "public",
+            post.date as "date"
+            from blog
+            left join post
+            on blog.id = post.blog_id
+            where blog.id = %s and post.id = %s and blog.user_id = %s
+            ;'''.format(BlogModel.TABLE, self.TABLE)
+
+        connection = self.connect_postgres()
+        cursor = connection.cursor()
+        cursor.execute(postSql, [
+            kwargs["blogId"], 
+            kwargs["id"], 
+            profileDict["id"]
+        ])
+        postData = cursor.fetchone()
+        connection.close()
+
+        if (postData is None):
+            raise Exception('Blog not found')
+
+        postRows = [
+            "blogId", "userId", "id", "title", "description", "text", "public", "date"
+        ]
+        postDict = self.list_to_dict(postRows)(postData)
+
+        if (
+            postDict is None or 
+            postDict["blogId"] is None or 
+            postDict["id"] is None
+        ):
+            raise Exception('Post not found')
+
+
+        return postDict
+
+
+
+
+
+
+
+
+
+    

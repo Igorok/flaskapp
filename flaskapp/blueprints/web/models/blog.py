@@ -226,7 +226,7 @@ class BlogModel (Model):
             raise Exception('Blog not found')
 
         if (
-            blogItem.title == selectDict['text'] and
+            blogItem.title == selectDict['title'] and
             blogItem.text == selectDict['text'] and
             blogItem.public == selectDict['public']
         ):
