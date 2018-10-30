@@ -50,7 +50,7 @@ def graphql():
         return jsonify(data = result.data or {})
 
     except Exception as e:
-        print("Unexpected error:", str(e))
+        print('Unexpected error:', str(e))
         err_dict = {
             'code': 400,
             'message': str(e)
@@ -66,29 +66,29 @@ def graphql():
 @web.route('/')
 def index():
     params = [
-        {"name": "page", "val": "about"}
+        {'name': 'page', 'val': 'about'}
     ]
-    return render_template('view.html', scripts=["about"], params=params )
+    return render_template('view.html', scripts=['about'], params=params )
 
 @web.route('/profile')
 def profile():
     params = [
-        {"name": "page", "val": "profile"}
+        {'name': 'page', 'val': 'profile'}
     ]
-    return render_template('view.html', scripts=["profile"], params=params)
+    return render_template('view.html', scripts=['profile'], params=params)
 
 @web.route('/login')
 def login():
-    return render_template('view.html', scripts=["login"])
+    return render_template('view.html', scripts=['login'])
 
 @web.route('/registration')
 def registration():
-    return render_template('view.html', scripts=["registration"])
+    return render_template('view.html', scripts=['registration'])
     
 @web.route('/blog-list')
 def blogList():
     params = getParams(['userId', 'start', 'perpage'], request.args)
-    params.append({"name": "page", "val": "blog"})
+    params.append({'name': 'page', 'val': 'blog'})
     return render_template(
         'view.html', 
         scripts = ['blogList'],
@@ -98,7 +98,7 @@ def blogList():
 @web.route('/my-blog-list')
 def myBlogList():
     params = getParams(['start', 'perpage'], request.args)
-    params.append({"name": "page", "val": "blog"})
+    params.append({'name': 'page', 'val': 'blog'})
     return render_template(
         'view.html', 
         scripts = ['myBlogList'],
@@ -112,8 +112,20 @@ def blogEdit(blogId):
         scripts = ['blogEdit'], 
         params = [
             {'name': 'blogId', 'val': blogId},
-            {"name": "page", "val": "blog"}
+            {'name': 'page', 'val': 'blog'}
         ]
+    )
+
+@web.route('/my-post-list/<blogId>')
+def myBlogList():
+    params = getParams(['start', 'perpage'], request.args)
+    params.append({'name': 'page', 'val': 'blog'})
+    params.append({'name': 'blogId', 'val': blogId})
+
+    return render_template(
+        'view.html', 
+        scripts = ['myPostList'],
+        params = params
     )
 
 @web.route('/post-edit/<blogId>/<postId>')
@@ -124,7 +136,7 @@ def postEdit(blogId, postId):
         params = [
             {'name': 'blogId', 'val': blogId},
             {'name': 'postId', 'val': postId},
-            {"name": "page", "val": "blog"}
+            {'name': 'page', 'val': 'blog'}
         ]
     )
 
