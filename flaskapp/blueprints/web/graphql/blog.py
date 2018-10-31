@@ -29,3 +29,8 @@ class PostGraph (graphene.ObjectType):
 class PostListGraph (graphene.ObjectType):
     posts = graphene.List(PostGraph)
     count = graphene.Int()
+
+class MyBlogDetailGraph (graphene.ObjectType):
+    count = graphene.Int()
+    blog = graphene.Field(BlogGraph)
+    posts = graphene.List(PostGraph)

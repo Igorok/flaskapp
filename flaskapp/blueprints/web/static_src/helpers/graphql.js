@@ -292,11 +292,11 @@ const MY_POST_GET = (opts) => {
     return JSON.stringify(q);
 };
 
-const MY_POST_LIST = (opts) => {
+const MY_BLOG_DETAIL = (opts) => {
     let q = {
         query: compress(`
-            query getMyPostList ($token: String!, $device: String!, $blogId: Int!) {
-                getMyPostList (token: $token, device: $device, blogId: $blogId) {
+            query getMyBlogDetail ($token: String!, $device: String!, $blogId: Int!, $start: Int!, $perpage: Int!) {
+                getMyBlogDetail (token: $token, device: $device, blogId: $blogId, start: $start, perpage: $perpage) {
                     count
                     blog {
                         id, title, text, public, date, userId, userName
@@ -311,6 +311,8 @@ const MY_POST_LIST = (opts) => {
             token: opts.token,
             device: opts.device,
             blogId: opts.blogId,
+            start: opts.start,
+            perpage: opts.perpage,
         },
     }
     return JSON.stringify(q);
@@ -327,8 +329,7 @@ export const query = {
     BLOG_LIST: BLOG_LIST,
     MY_BLOG_LIST: MY_BLOG_LIST,
     MY_BLOG_PUBLIC: MY_BLOG_PUBLIC,
-
-    MY_POST_LIST: MY_POST_LIST,
+    MY_BLOG_DETAIL: MY_BLOG_DETAIL,
     MY_POST_GET: MY_POST_GET,
     POST_EDIT: POST_EDIT,
 

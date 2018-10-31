@@ -4,8 +4,7 @@ from flaskapp.blueprints.web.models.blog import BlogModel
 from flaskapp.blueprints.web.models.post import PostModel
 
 from flaskapp.blueprints.web.graphql.user import RegGraph, AuthGraph, ProfileGraph, EditProfileGraph
-from flaskapp.blueprints.web.graphql.blog import BlogGraph, BlogListGraph, PostGraph, PostListGraph
-
+from flaskapp.blueprints.web.graphql.blog import BlogGraph, BlogListGraph, PostGraph, MyBlogDetailGraph
 
 # assign values to query
 class Query(graphene.ObjectType):
@@ -177,6 +176,28 @@ class Query(graphene.ObjectType):
         __p = PostModel()
         __post = __p.getMyPost(**kwargs)
         return PostGraph(**__post)
+
+    #get my post with posts
+    getMyBlogDetail = graphene.Field(
+        MyBlogDetailGraph,
+        token = graphene.String(),
+        device = graphene.String(),
+        start = graphene.Int(),
+        perpage = graphene.Int(),
+        blogId = graphene.Int(),
+    )
+    def resolve_getMyBlogDetail (self, info, *args, **kwargs):
+        __pm = PostModel()
+        __myBd = __pm.getMyBlogDetail(**kwargs)
+        __posts = map(lambda pDict: PostGraph(**pDict), __myBd['posts'])
+
+       
+
+        return MyBlogDetailGraph(
+            count = __myBd['count'],
+            blog = BlogGraph(**__myBd['blog']),
+            posts = __posts,
+        )
 
 
 # init query

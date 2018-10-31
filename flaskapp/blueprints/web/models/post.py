@@ -232,7 +232,7 @@ class PostModel (Model):
 
 
     # get my post for edit
-    def getMyPostList(self, *args, **kwargs):
+    def getMyBlogDetail(self, *args, **kwargs):
         if (not 'blogId' in kwargs):
             raise Exception('Blog not found')
 
@@ -251,21 +251,21 @@ class PostModel (Model):
 
         blogRows = ('id', 'title', 'text', 'public', 'date', 'userId', 'userName')
         blogSql = '''select 
-            blog.id as {0}
-            blog.title as {1}
-            blog.text as {2}
-            blog.public as {3}
-            blog.date as {4}
-            user.id as {5}
-            user.login as {6}
+            blog.id as "{0}",
+            blog.title as "{1}",
+            blog.text as "{2}",
+            blog.public as "{3}",
+            blog.date as "{4}",
+            uTable.id as "{5}",
+            uTable.login as "{6}"
             from blog
-            left join user on blog.user_id = user.id
+            left join "user" as uTable on blog.user_id = uTable.id
             where blog.id = %s and blog.user_id = %s
-            ;'''
+            ;'''.format(*blogRows)
 
         connection = self.connect_postgres()
         cursor = connection.cursor()
-        cursor.execute(postSql, (kwargs['blogId'], profileDict['id']))
+        cursor.execute(blogSql, (kwargs['blogId'], profileDict['id']))
         blogData = cursor.fetchone()
 
         if (blogData is None):
@@ -279,40 +279,40 @@ class PostModel (Model):
             'userId', 'userName'
         )
         postSql = '''select 
-            post.id as {0}
-            post.blogId as {1}
-            post.title as {2}
-            post.description as {3}
-            post.public as {4}
-            post.date as {5}
-            user.id as {6}
-            user.login as {7}
+            post.id as {0},
+            post.blog_id as {1},
+            post.title as {2},
+            post.description as {3},
+            post.public as {4},
+            post.date as {5},
+            uTable.id as {6},
+            uTable.login as {7}
             from post
-            left join user on post.user_id = user.id
+            left join "user" as uTable on post.user_id = uTable.id
             where post.blog_id = %s and post.user_id = %s
             order by post.{0} desc limit %s offset %s;
-            ;'''
+            ;'''.format(*postRows)
 
         cursor.execute(postSql, (
             kwargs['blogId'], 
-            profileDict['id']),
+            profileDict['id'],
             perpage,
             start
-        )
+        ))
         postData = cursor.fetchall()
 
         countSql = 'select count(id) from post where blog_id = %s and user_id = %s;'
-        cursor.execute(postSql, (
+        cursor.execute(countSql, (
             kwargs['blogId'], 
-            profileDict['id'])
-        )
+            profileDict['id']
+        ))
         countData = cursor.fetchone()
         
         if (countData != None):
             listResult['count'] = countData[0]
 
         if (postData != None):
-            listResult['posts'] = map(self.list_to_dict(postRows), blogData)
+            listResult['posts'] = map(self.list_to_dict(postRows), postData)
 
         return listResult
 

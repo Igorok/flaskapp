@@ -10,6 +10,7 @@ module.exports = {
         profile: path.resolve(__dirname, 'static_src/profile.js'),
         blogList: path.resolve(__dirname, 'static_src/blogList.js'),
         myBlogList: path.resolve(__dirname, 'static_src/myBlogList.js'),
+        myBlogDetail: path.resolve(__dirname, 'static_src/myBlogDetail.js'),
         blogEdit: path.resolve(__dirname, 'static_src/blogEdit.js'),
 
         postEdit: path.resolve(__dirname, 'static_src/postEdit.js'),
