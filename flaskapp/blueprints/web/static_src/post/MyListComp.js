@@ -4,6 +4,71 @@ import { graphql } from '../helpers/action';
 import {forEach, chunk, map} from 'lodash';
 import {AlertMessage, PaginatorLayout} from '../helpers/component';
 
+class BlogComp extends React.Component {
+    render () {
+        var self = this;
+        var tpl = null;
+        if (this.props.blog) {
+            let hideBtn = null;
+            function pubBlog (e) {
+                e.preventDefault();
+                return self.props.publicBlog({
+                    id: self.props.blog.id,
+                    public: ! self.props.blog.public
+                });
+            }
+            if (this.props.blog.public) {
+                hideBtn = <btn className="btn btn-default" onClick={pubBlog} data-id={this.props.blog.id}>
+                    <span className="glyphicon glyphicon-remove"></span>&nbsp;
+                    hide
+                </btn>
+            } else {
+                hideBtn = <btn className="btn btn-default" onClick={pubBlog} data-id={this.props.blog.id}>
+                    <span className="glyphicon glyphicon-ok"></span>&nbsp;
+                    show
+                </btn>
+            }
+
+            tpl = <div className="panel panel-default">
+                    <div className="panel-heading">
+                        <h4 className="panel-title">
+                            {this.props.blog.title}
+                        </h4>
+                    </div>
+                    <div className="panel-body">
+                        <div dangerouslySetInnerHTML={{__html: this.props.blog.text}} />
+                    </div>
+                    <div className="panel-footer">
+                        <p>
+                            <span className="glyphicon glyphicon-user"></span>&nbsp;
+                            {this.props.blog.userName}
+                            &nbsp;|&nbsp;
+                            <span className="glyphicon glyphicon-calendar"></span>&nbsp;
+                            {this.props.blog.date}
+                        </p>
+                        <p>
+                            <a href={"/blog-edit/" + this.props.blog.id} className="btn btn-default">
+                                <span className="glyphicon glyphicon-pencil"></span>&nbsp;
+                                edit
+                            </a>
+                            &nbsp;
+                            {hideBtn}
+                            &nbsp;
+                            <a href={"/post-edit/" + this.props.blog.id + "/-1"} className="btn btn-default">
+                                <span className="glyphicon glyphicon-plus"></span>&nbsp;
+                                Add post
+                            </a>
+                        </p>
+                    </div>
+                </div>
+        }
+        return tpl;
+    }
+}
+
+
+
+
 
 class MyListComp extends React.Component {
     constructor(props) {
@@ -17,12 +82,7 @@ class MyListComp extends React.Component {
     }
 
     componentWillMount () {
-        this.props.dispatch(graphql({
-            type: 'MY_BLOG_DETAIL',
-            start: this.props.myPostList.start,
-            perpage: this.props.myPostList.perpage,
-            blogId: this.props.myPostList.blogId,
-        }));
+        this.changePage();
     }
 
     changePage (start = 0) {
@@ -34,9 +94,64 @@ class MyListComp extends React.Component {
         }));
     }
 
+    /**
+     * make the blog public or hidden
+     * @param  {Number} p.id id of blog
+     * @param  {Boolean} p.public true - show blog, false - hide blog
+     */
+    publicBlog (p) {
+        this.props.dispatch(graphql({
+            type: 'MY_BLOG_PUBLIC',
+            id: p.id,
+            public: p.public
+        }));
+    }
+
+    getPostItems () {
+        var self = this;
+        if (
+            ! self.props.myPostList.posts || 
+            ! self.props.myPostList.posts.length
+        ) {
+            return null;
+        }
+
+        let chunkedItems = chunk(this.props.myPostList.posts, 3);
+        let posts = map(chunkedItems, posts => {
+            let partition = map(posts, post => {
+                return <div className="col-md-4">
+                    <div className="panel panel-default">
+                        <div className="panel-heading">
+                            <h4 className="panel-title">
+                                <a href = {"/post-edit/" + self.props.myPostList.blog.id + "/" + post.id}>
+                                    {post.title}
+                                </a>
+                            </h4>
+                        </div>
+                        <div className="panel-body">
+                            {post.description} 
+                        </div>
+                        <div className="panel-footer">
+                            <p>
+                                <span className="glyphicon glyphicon-user"></span>&nbsp;
+                                {post.userName}
+                            </p>
+                            <p>
+                                <span className="glyphicon glyphicon-calendar"></span>&nbsp;
+                                {post.date}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            });
+            return <div className="row">{partition}</div>
+        });
+        return posts;
+    }
+
     render () {
         let alertOpts = null,
-            blogs = null;
+            posts = null;
 
         if (this.props.myPostList.status === 'error') {
             alertOpts = {
@@ -49,26 +164,23 @@ class MyListComp extends React.Component {
                 text: 'Loading, please wait',
             }
         }
-        /*
-
-        let pagerParam = {
-            start: this.props.myBlogList.start,
-            perpage: this.props.myBlogList.perpage,
-            count: this.props.myBlogList.count,
-            items: this.getBlogItems(),
+        
+       let pagerParam = {
+            start: this.props.myPostList.start,
+            perpage: this.props.myPostList.perpage,
+            count: this.props.myPostList.count,
+            items: this.getPostItems(),
             changePage: ::this.changePage,
         };
-
-        return <div>
-            <AlertMessage opts={alertOpts} />
-            <PaginatorLayout param={pagerParam} />
-        </div>
-
-        */
-
+        
         return <div>
                 <AlertMessage opts={alertOpts} />
-                <h1>Blog detail here</h1>
+                <ol className="breadcrumb">
+                    <li><a href="/my-blog-list">My blogs</a></li>
+                    <li className="active">{this.props.myPostList.blog ? this.props.myPostList.blog.title : null}</li>
+                </ol>
+                <BlogComp blog={this.props.myPostList.blog} publicBlog={::this.publicBlog}/>
+                <PaginatorLayout param={pagerParam} />
             </div>
     }
 }

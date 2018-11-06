@@ -91,9 +91,6 @@ class Header extends React.Component {
         $('.dropdown-toggle').dropdown('toggle');
     }
     render () {
-
-        console.log('window.localParams.page', window.localParams.page);
-
         let profileItem = null;
         let userItem = null;
 

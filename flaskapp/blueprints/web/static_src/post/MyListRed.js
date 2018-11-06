@@ -29,22 +29,21 @@ const myPostList = (state = initState, action) => {
             data.error = action.error;
             return data;
 
-        /*
-        case 'MY_POST_PUBLIC_SEND':
+        
+        case 'MY_BLOG_PUBLIC_SEND':
             data.start = action.start;
             data.status = 'send';
             return data;
-        case 'MY_POST_PUBLIC_SUCCESS':
+        case 'MY_BLOG_PUBLIC_SUCCESS':
             data.status = 'success';
-            forEach(data.blogs, (blog) => {
-                if (blog.id == action.data.publicMyBlog.id) {
-                    blog.public = action.data.publicMyBlog.public;
-                }
-            });
-        */
+            data.blog.public = action.data.publicMyBlog.public;
+
+            console.log(
+                'action.data.publicMyBlog', action.data.publicMyBlog
+            )
 
             return data;
-        case 'MY_POST_PUBLIC_ERROR':
+        case 'MY_BLOG_PUBLIC_ERROR':
             data.status = 'error';
             data.error = action.error;
             return data;

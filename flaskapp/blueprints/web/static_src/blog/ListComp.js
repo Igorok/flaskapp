@@ -45,8 +45,14 @@ class BlogListComp extends React.Component {
                         </div>
                         <div className="panel-body">
                             <div dangerouslySetInnerHTML={{__html: blog.text}} />
+                        </div>
+                        <div className="panel-footer">
                             <p>
-                                {blog.userName}&nbsp;
+                                <span className="glyphicon glyphicon-user"></span>&nbsp;
+                                {blog.userName}
+                            </p>
+                            <p>
+                                <span className="glyphicon glyphicon-calendar"></span>&nbsp;
                                 {blog.date}
                             </p>
                         </div>
