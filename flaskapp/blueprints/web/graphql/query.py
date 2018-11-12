@@ -4,7 +4,7 @@ from flaskapp.blueprints.web.models.blog import BlogModel
 from flaskapp.blueprints.web.models.post import PostModel
 
 from flaskapp.blueprints.web.graphql.user import RegGraph, AuthGraph, ProfileGraph, EditProfileGraph
-from flaskapp.blueprints.web.graphql.blog import BlogGraph, BlogListGraph, PostGraph, MyBlogDetailGraph
+from flaskapp.blueprints.web.graphql.blog import BlogGraph, BlogListGraph, PostGraph, MyBlogDetailGraph, BlogDetailGraph
 
 # assign values to query
 class Query(graphene.ObjectType):
@@ -191,14 +191,31 @@ class Query(graphene.ObjectType):
         __myBd = __pm.getMyBlogDetail(**kwargs)
         __posts = map(lambda pDict: PostGraph(**pDict), __myBd['posts'])
 
-       
-
         return MyBlogDetailGraph(
             count = __myBd['count'],
             blog = BlogGraph(**__myBd['blog']),
             posts = __posts,
         )
 
+    #get my post with posts
+    getBlogDetail = graphene.Field(
+        BlogDetailGraph,
+        token = graphene.String(),
+        device = graphene.String(),
+        start = graphene.Int(),
+        perpage = graphene.Int(),
+        blogId = graphene.Int(),
+    )
+    def resolve_getBlogDetail (self, info, *args, **kwargs):
+        __pm = PostModel()
+        __myBd = __pm.getBlogDetail(**kwargs)
+        __posts = map(lambda pDict: PostGraph(**pDict), __myBd['posts'])
+
+        return BlogDetailGraph(
+            count = __myBd['count'],
+            blog = BlogGraph(**__myBd['blog']),
+            posts = __posts,
+        )
 
 # init query
 schema = graphene.Schema(query=Query)

@@ -318,6 +318,32 @@ const MY_BLOG_DETAIL = (opts) => {
     return JSON.stringify(q);
 };
 
+const BLOG_DETAIL = (opts) => {
+    let q = {
+        query: compress(`
+            query getBlogDetail ($token: String!, $device: String!, $blogId: Int!, $start: Int!, $perpage: Int!) {
+                getBlogDetail (token: $token, device: $device, blogId: $blogId, start: $start, perpage: $perpage) {
+                    count
+                    blog {
+                        id, title, text, public, date, userId, userName
+                    }
+                    posts {
+                        id, blogId, title, description, public, date, userId, userName
+                    }
+                }
+            }
+        `),
+        variables: {
+            token: opts.token,
+            device: opts.device,
+            blogId: opts.blogId,
+            start: opts.start,
+            perpage: opts.perpage,
+        },
+    }
+    return JSON.stringify(q);
+};
+
 export const query = {
     REG: REG,
     AUTH: AUTH,
