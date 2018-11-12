@@ -3,18 +3,11 @@ import { connect } from 'react-redux'
 import {api, graphql} from '../helpers/action'
 import {AlertMessage} from '../helpers/component'
 
-import { EditorState, convertToRaw, ContentState } from 'draft-js';
-import draftToHtml from 'draftjs-to-html';
-import htmlToDraft from 'html-to-draftjs';
-import { Editor } from 'react-draft-wysiwyg';
-
-
 
 class EditComp extends React.Component {
     constructor(props) {
         super(props);
         this.state = {...props.blogEdit};
-        this.state.editorState = EditorState.createEmpty();
     }
 
     componentWillMount () {
@@ -30,18 +23,11 @@ class EditComp extends React.Component {
     }
     componentWillReceiveProps(nextProps) {
         if (nextProps.blogEdit.status == 'success_get') {
-            const blocksFromHTML = htmlToDraft(nextProps.blogEdit.text);
-            const content = ContentState.createFromBlockArray(
-                blocksFromHTML.contentBlocks,
-                blocksFromHTML.entityMap
-            );
-
             this.setState({
                 title: nextProps.blogEdit.title,
                 text: nextProps.blogEdit.text,
                 public: nextProps.blogEdit.public,
                 date: nextProps.blogEdit.date,
-                editorState: EditorState.createWithContent(content),
             });
         }
         
@@ -53,16 +39,9 @@ class EditComp extends React.Component {
         stateObj[e.target.id] = val;
         this.setState(stateObj);
     }
-
-    onEditorStateChange (editorState) {
-        this.setState({
-            editorState
-        });
-    }
     
     formSubmit (e) {
         e.preventDefault();
-        let text = draftToHtml(convertToRaw(this.state.editorState.getCurrentContent()));
 
         if (text && (text.length > 512)) {
             return this.props.dispatch({
@@ -75,7 +54,7 @@ class EditComp extends React.Component {
             type: 'BLOG_EDIT',
             id: this.state.id,
             title: this.state.title,
-            text: draftToHtml(convertToRaw(this.state.editorState.getCurrentContent())),
+            text: this.state.text,
             public: this.state.public,
         }));
     }
@@ -119,13 +98,13 @@ class EditComp extends React.Component {
                 </div>
                 <div className="form-group">
                     <label htmlFor="text">Text</label>
-                    <Editor
-                        editorState={this.state.editorState}
-                        editorClassName="form-control"
-                        onEditorStateChange={::this.onEditorStateChange}
-                        toolbar={{
-                            options: ['inline', 'list', 'fontSize', 'fontFamily', 'textAlign', 'link', 'history', 'colorPicker'],
-                        }}
+                    <textarea 
+                        required
+                        className="form-control" 
+                        id='text'
+                        placeholder='Text'
+                        onChange={::this.fieldChange}
+                        value={this.state.text}
                     />
 
                 </div>

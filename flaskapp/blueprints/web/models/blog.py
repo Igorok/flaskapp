@@ -174,7 +174,7 @@ class BlogModel (Model):
 
         sql = '''insert into "{0}"
             ("title", "text", "user_id", "public", "date")
-            values (%s, %s, %s, %s)
+            values (%s, %s, %s, %s, %s)
             returning "id"
             ;'''.format(self.TABLE)
 

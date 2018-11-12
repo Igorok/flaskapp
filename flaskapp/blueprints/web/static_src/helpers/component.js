@@ -87,8 +87,8 @@ export class MathCaptcha extends React.Component {
 
 
 class Header extends React.Component {
-    showDropdown () {
-        $('.dropdown-toggle').dropdown('toggle');
+    componentDidMount () {
+        $('.dropdown-toggle').dropdown();
     }
     render () {
         let profileItem = null;
@@ -98,9 +98,12 @@ class Header extends React.Component {
             profileItem = <ul className="nav navbar-nav navbar-right">
                 <li className="dropdown">
                     <a
-                        href="#" className="dropdown-toggle" data-toggle="dropdown"
-                        role="button" aria-haspopup="true" aria-expanded="false"
-                        onClick={::this.showDropdown}
+                        href="#" 
+                        className="dropdown-toggle" 
+                        data-toggle="dropdown"
+                        role="button" 
+                        aria-haspopup="true" 
+                        aria-expanded="false"
                     >
                         <span className="glyphicon glyphicon-home"></span>&nbsp;&nbsp;
                         <strong>{this.props.auth.login}</strong>&nbsp;&nbsp;

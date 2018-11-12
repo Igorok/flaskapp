@@ -78,7 +78,7 @@ class BlogListComp extends React.Component {
                             </h4>
                         </div>
                         <div className="panel-body">
-                            <div dangerouslySetInnerHTML={{__html: blog.text}} />
+                            {blog.text}
                         </div>
                         <div className="panel-footer">
                             <p>
