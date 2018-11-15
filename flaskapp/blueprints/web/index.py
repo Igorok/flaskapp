@@ -96,7 +96,7 @@ def blogList():
     )
 
 @web.route('/blog/<blogId>')
-def blogEdit(blogId):
+def blogDetail(blogId):
     params = getParams(['start', 'perpage'], request.args)
     params.append({'name': 'page', 'val': 'blog'})
     params.append({'name': 'blogId', 'val': blogId})

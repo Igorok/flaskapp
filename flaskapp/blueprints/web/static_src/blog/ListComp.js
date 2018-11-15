@@ -38,7 +38,7 @@ class BlogListComp extends React.Component {
                     <div className="panel panel-default">
                         <div className="panel-heading">
                             <h4 className="panel-title">
-                                <a href = {"/blog-detail/" + blog.id}>
+                                <a href = {"/blog/" + blog.id}>
                                     {blog.title}
                                 </a>
                             </h4>

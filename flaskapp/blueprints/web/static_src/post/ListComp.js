@@ -9,25 +9,6 @@ class BlogComp extends React.Component {
         var self = this;
         var tpl = null;
         if (this.props.blog) {
-            let hideBtn = null;
-            function pubBlog (e) {
-                e.preventDefault();
-                return self.props.publicBlog({
-                    id: self.props.blog.id,
-                    public: ! self.props.blog.public
-                });
-            }
-            if (this.props.blog.public) {
-                hideBtn = <btn className="btn btn-default" onClick={pubBlog} data-id={this.props.blog.id}>
-                    <span className="glyphicon glyphicon-remove"></span>&nbsp;
-                    hide
-                </btn>
-            } else {
-                hideBtn = <btn className="btn btn-default" onClick={pubBlog} data-id={this.props.blog.id}>
-                    <span className="glyphicon glyphicon-ok"></span>&nbsp;
-                    show
-                </btn>
-            }
 
             tpl = <div className="panel panel-default">
                     <div className="panel-heading">
@@ -45,19 +26,6 @@ class BlogComp extends React.Component {
                             &nbsp;|&nbsp;
                             <span className="glyphicon glyphicon-calendar"></span>&nbsp;
                             {this.props.blog.date}
-                        </p>
-                        <p>
-                            <a href={"/blog-edit/" + this.props.blog.id} className="btn btn-default">
-                                <span className="glyphicon glyphicon-pencil"></span>&nbsp;
-                                edit
-                            </a>
-                            &nbsp;
-                            {hideBtn}
-                            &nbsp;
-                            <a href={"/post-edit/" + this.props.blog.id + "/-1"} className="btn btn-default">
-                                <span className="glyphicon glyphicon-plus"></span>&nbsp;
-                                Add post
-                            </a>
                         </p>
                     </div>
                 </div>
@@ -110,7 +78,7 @@ class ListComp extends React.Component {
                     <div className="panel panel-default">
                         <div className="panel-heading">
                             <h4 className="panel-title">
-                                <a href = {"/post-edit/" + self.props.postList.blog.id + "/" + post.id}>
+                                <a href = {"/post/" + self.props.postList.blog.id + "/" + post.id}>
                                     {post.title}
                                 </a>
                             </h4>
@@ -166,7 +134,7 @@ class ListComp extends React.Component {
                     <li><a href="/blog-list">Blogs</a></li>
                     <li className="active">{this.props.postList.blog ? this.props.postList.blog.title : null}</li>
                 </ol>
-                <BlogComp blog={this.props.postList.blog} publicBlog={::this.publicBlog}/>
+                <BlogComp blog={this.props.postList.blog} />
                 <PaginatorLayout param={pagerParam} />
             </div>
     }
