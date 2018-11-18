@@ -85,7 +85,7 @@ def login():
 def registration():
     return render_template('view.html', scripts=['registration'])
     
-@web.route('/blog-list')
+@web.route('/blogs')
 def blogList():
     params = getParams(['userId', 'start', 'perpage'], request.args)
     params.append({'name': 'page', 'val': 'blog'})
@@ -107,7 +107,7 @@ def blogDetail(blogId):
         params = params
     )
 
-@web.route('/my-blog-list')
+@web.route('/my-blogs')
 def myBlogList():
     params = getParams(['start', 'perpage'], request.args)
     params.append({'name': 'page', 'val': 'blog'})
@@ -152,10 +152,24 @@ def postEdit(blogId, postId):
         ]
     )
 
+@web.route('/post/<blogId>/<postId>')
+def postDetail(blogId, postId):
+    return render_template(
+        'view.html', 
+        scripts = ['postDetail'], 
+        params = [
+            {'name': 'blogId', 'val': blogId},
+            {'name': 'postId', 'val': postId},
+            {'name': 'page', 'val': 'blog'}
+        ]
+    )
 
-
-
-@web.route('/hello')
-def hello():
-    u_list = action.user().get_user_list()
-    return render_template('hello.html', u_list=u_list)
+@web.route('/users')
+def userList():
+    params = getParams(['start', 'perpage'], request.args)
+    params.append({'name': 'page', 'val': 'blog'})
+    return render_template(
+        'view.html', 
+        scripts = ['userList'],
+        params = params
+    )

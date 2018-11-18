@@ -344,6 +344,34 @@ const BLOG_DETAIL = (opts) => {
     return JSON.stringify(q);
 };
 
+const POST_GET = (opts) => {
+    let q = {
+        query: compress(`
+            query getPost ($token: String!, $device: String!, $id: Int!, $blogId: Int!) {
+                getPost (token: $token, device: $device, id: $id, blogId: $blogId) {
+                    id
+                    blogId
+                    userId
+                    userName
+                    userEmail
+                    title
+                    description
+                    text
+                    date
+                    public
+                }
+            }
+        `),
+        variables: {
+            token: opts.token,
+            device: opts.device,
+            id: opts.id,
+            blogId: opts.blogId,
+        },
+    }
+    return JSON.stringify(q);
+};
+
 export const query = {
     REG: REG,
     AUTH: AUTH,
@@ -358,9 +386,10 @@ export const query = {
     MY_BLOG_LIST: MY_BLOG_LIST,
     MY_BLOG_PUBLIC: MY_BLOG_PUBLIC,
     MY_BLOG_DETAIL: MY_BLOG_DETAIL,
-    MY_POST_GET: MY_POST_GET,
 
+    MY_POST_GET: MY_POST_GET,
     POST_EDIT: POST_EDIT,
+    POST_GET: POST_GET,
 
     USER_LIST: USER_LIST,
 }

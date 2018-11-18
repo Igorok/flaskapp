@@ -52,7 +52,7 @@ class BlogListComp extends React.Component {
                                 {blog.userName}
                             </p>
                             <p>
-                                <span className="glyphicon glyphicon-calendar"></span>&nbsp;
+                                <span className="glyphicon glyphicon-time"></span>&nbsp;
                                 {blog.date}
                             </p>
                         </div>

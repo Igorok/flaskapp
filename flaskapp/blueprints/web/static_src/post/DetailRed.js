@@ -1,15 +1,3 @@
-/*
-
-"id" SERIAL PRIMARY KEY,
-"user_id" SERIAL NOT NULL,
-"blog_id" SERIAL NOT NULL,
-"title" varchar(128) DEFAULT NULL,
-"description" varchar(256) DEFAULT NULL,
-"text" text,
-"date" timestamp DEFAULT NULL
-
-*/
-
 let blogId = window.localParams.blogId;
 let postId = window.localParams.postId || '-1';
 let initState = {
@@ -29,42 +17,39 @@ let initState = {
 };
 
 
-const postEdit = (state = initState, action) => {
+const postDetail = (state = initState, action) => {
     let data = null;
 
     switch (action.type) {
         case 'POST_GET_SEND':
-            return {
-                status: 'send',
-                ...state
-            };
+            data = {...state};
+            data.status = 'send';
+            return data;
 
         case 'POST_GET_SUCCESS':
             data = {...state};
-            data.status = 'success_get';
-            data.id = action.data.getMyPost.id;
-            data.blogId = action.data.getMyPost.blogId;
-            data.userId = action.data.getMyPost.userId;
-            data.userName = action.data.getMyPost.userName;
-            data.userEmail = action.data.getMyPost.userEmail;
-            data.title = action.data.getMyPost.title;
-            data.description = action.data.getMyPost.description;
-            data.text = action.data.getMyPost.text;
-            data.date = action.data.getMyPost.date;
-            data.public = !! action.data.getMyPost.public;
+            data.status = 'success';
+            data.id = action.data.getPost.id;
+            data.blogId = action.data.getPost.blogId;
+            data.userId = action.data.getPost.userId;
+            data.userName = action.data.getPost.userName;
+            data.userEmail = action.data.getPost.userEmail;
+            data.title = action.data.getPost.title;
+            data.description = action.data.getPost.description;
+            data.text = action.data.getPost.text;
+            data.date = action.data.getPost.date;
+            data.public = !! action.data.getPost.public;
             return data;
 
         case 'POST_GET_ERROR':
-            return {
-                status: 'error',
-                error: action.error,
-                ...state,
-            };
-
+            data = {...state};
+            data.status = 'error';
+            data.error = action.error;
+            return data;
 
         default:
             return state
     }
 }
 
-export default postEdit;
+export default postDetail;

@@ -43,7 +43,7 @@ class BlogComp extends React.Component {
                             <span className="glyphicon glyphicon-user"></span>&nbsp;
                             {this.props.blog.userName}
                             &nbsp;|&nbsp;
-                            <span className="glyphicon glyphicon-calendar"></span>&nbsp;
+                            <span className="glyphicon glyphicon-time"></span>&nbsp;
                             {this.props.blog.date}
                         </p>
                         <p>
@@ -137,7 +137,7 @@ class MyListComp extends React.Component {
                                 {post.userName}
                             </p>
                             <p>
-                                <span className="glyphicon glyphicon-calendar"></span>&nbsp;
+                                <span className="glyphicon glyphicon-time"></span>&nbsp;
                                 {post.date}
                             </p>
                         </div>
@@ -176,7 +176,7 @@ class MyListComp extends React.Component {
         return <div>
                 <AlertMessage opts={alertOpts} />
                 <ol className="breadcrumb">
-                    <li><a href="/my-blog-list">My blogs</a></li>
+                    <li><a href="/my-blogs">My blogs</a></li>
                     <li className="active">{this.props.myPostList.blog ? this.props.myPostList.blog.title : null}</li>
                 </ol>
                 <BlogComp blog={this.props.myPostList.blog} publicBlog={::this.publicBlog}/>

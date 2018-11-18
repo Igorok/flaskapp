@@ -17,14 +17,15 @@ class BlogComp extends React.Component {
                         </h4>
                     </div>
                     <div className="panel-body">
-                        <div dangerouslySetInnerHTML={{__html: this.props.blog.text}} />
+                        {this.props.blog.text}
+                        {/* <div dangerouslySetInnerHTML={{__html: this.props.blog.text}} /> */}
                     </div>
                     <div className="panel-footer">
                         <p>
                             <span className="glyphicon glyphicon-user"></span>&nbsp;
                             {this.props.blog.userName}
                             &nbsp;|&nbsp;
-                            <span className="glyphicon glyphicon-calendar"></span>&nbsp;
+                            <span className="glyphicon glyphicon-time"></span>&nbsp;
                             {this.props.blog.date}
                         </p>
                     </div>
@@ -92,7 +93,7 @@ class ListComp extends React.Component {
                                 {post.userName}
                             </p>
                             <p>
-                                <span className="glyphicon glyphicon-calendar"></span>&nbsp;
+                                <span className="glyphicon glyphicon-time"></span>&nbsp;
                                 {post.date}
                             </p>
                         </div>
@@ -131,7 +132,7 @@ class ListComp extends React.Component {
         return <div>
                 <AlertMessage opts={alertOpts} />
                 <ol className="breadcrumb">
-                    <li><a href="/blog-list">Blogs</a></li>
+                    <li><a href="/blogs">Blogs</a></li>
                     <li className="active">{this.props.postList.blog ? this.props.postList.blog.title : null}</li>
                 </ol>
                 <BlogComp blog={this.props.postList.blog} />

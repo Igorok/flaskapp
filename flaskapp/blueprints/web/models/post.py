@@ -404,7 +404,61 @@ class PostModel (Model):
         return listResult
 
 
+    # get my post for edit
+    def getPost(self, *args, **kwargs):
+        if (not 'blogId' in kwargs):
+            raise Exception('Blog not found')
+
+        if (not 'id' in kwargs):
+            raise Exception('Post not found')
 
 
+        uModel = UserModel()
+        # check authentication and get data of current user
+        profileDict = uModel.getUserByToken(**kwargs)
+        
+        postSql = '''select 
+            blog.id as blogId,
+            blog.user_id as userId,
+            "user".login as userName,
+            "user".email as userEmail,
+            post.id as id,
+            post.title as title,
+            post.description as description,
+            post.text as "text",
+            post.public as "public",
+            post.date as "date"
+            from post
+            left join blog
+                on blog.id = post.blog_id
+            left join "user"
+                on "user".id = post.user_id
+            where post.id = %s and blog.id = %s
+            ;'''.format(BlogModel.TABLE, self.TABLE)
 
-    
+        connection = self.connect_postgres()
+        cursor = connection.cursor()
+        cursor.execute(postSql, [
+            kwargs["id"],
+            kwargs["blogId"]
+        ])
+        postData = cursor.fetchone()
+        connection.close()
+
+        if (postData is None):
+            raise Exception('Blog not found')
+
+        postRows = [
+            "blogId", "userId", "userName", "userEmail", "id", "title", "description", "text", "public", "date"
+        ]
+        postDict = self.list_to_dict(postRows)(postData)
+
+        if (
+            postDict is None or 
+            postDict["blogId"] is None or 
+            postDict["id"] is None
+        ):
+            raise Exception('Post not found')
+
+
+        return postDict

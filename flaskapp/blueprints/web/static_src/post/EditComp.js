@@ -102,7 +102,7 @@ class EditComp extends React.Component {
 
         return <div>
             <ol className="breadcrumb">
-                <li><a href="/my-blog-list">My blogs</a></li>
+                <li><a href="/my-blogs">My blogs</a></li>
                 <li><a href={"/my-blog-detail/" + this.props.postEdit.blogId}>Blog</a></li>
                 <li className="active">{this.state.title || 'Edit post'}</li>
             </ol>

@@ -177,7 +177,7 @@ class Query(graphene.ObjectType):
         __post = __p.getMyPost(**kwargs)
         return PostGraph(**__post)
 
-    #get my post with posts
+    #get my blog with posts
     getMyBlogDetail = graphene.Field(
         MyBlogDetailGraph,
         token = graphene.String(),
@@ -197,7 +197,7 @@ class Query(graphene.ObjectType):
             posts = __posts,
         )
 
-    #get my post with posts
+    #get blog with posts
     getBlogDetail = graphene.Field(
         BlogDetailGraph,
         token = graphene.String(),
@@ -216,6 +216,19 @@ class Query(graphene.ObjectType):
             blog = BlogGraph(**__myBd['blog']),
             posts = __posts,
         )
+
+     # get one post
+    getPost = graphene.Field(
+        PostGraph,
+        token = graphene.String(),
+        device = graphene.String(),
+        id = graphene.Int(),
+        blogId = graphene.Int()
+    )
+    def resolve_getPost (self, info, *args, **kwargs):
+        __p = PostModel()
+        __post = __p.getPost(**kwargs)
+        return PostGraph(**__post)
 
 # init query
 schema = graphene.Schema(query=Query)

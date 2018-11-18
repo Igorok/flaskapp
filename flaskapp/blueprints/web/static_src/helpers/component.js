@@ -115,7 +115,7 @@ class Header extends React.Component {
                             <a href="/profile">Profile</a>
                         </li>
                         <li>
-                            <a href="/my-blog-list">My blogs</a>
+                            <a href="/my-blogs">My blogs</a>
                         </li>
                         <li>
                             <a href="/blog-edit/-1">Add blog</a>
@@ -154,7 +154,7 @@ class Header extends React.Component {
                             <a href="/"><span className="glyphicon glyphicon-exclamation-sign"></span>&nbsp;&nbsp;About</a>
                         </li>
                         <li className={window.localParams.page == 'blog' ? 'active' : ''}>
-                            <a href="/blog-list"><span className="glyphicon glyphicon-bookmark"></span>&nbsp;&nbsp;Blogs</a>
+                            <a href="/blogs"><span className="glyphicon glyphicon-bookmark"></span>&nbsp;&nbsp;Blogs</a>
                         </li>
                         {userItem}
                     </ul>

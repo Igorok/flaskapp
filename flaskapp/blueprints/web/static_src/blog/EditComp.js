@@ -83,6 +83,11 @@ class EditComp extends React.Component {
         }
 
         return <div>
+             <ol className="breadcrumb">
+                <li><a href="/my-blogs">My Blogs</a></li>
+                <li className="active">{this.state.title ? this.state.title : null}</li>
+            </ol>
+
             <form onSubmit={::this.formSubmit} >
                 <div className="form-group">
                     <label htmlFor="title">Title</label>
