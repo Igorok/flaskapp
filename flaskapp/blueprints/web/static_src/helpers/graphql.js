@@ -1,5 +1,7 @@
 import compress from "graphql-query-compress";
 
+/*
+
 const USER_LIST = (opts) => {
     let q = {
         query: compress(`
@@ -19,6 +21,12 @@ const USER_LIST = (opts) => {
     }
     return JSON.stringify(q);
 };
+
+*/
+
+
+
+
 
 const REG = (opts) => {
     let q = {
@@ -367,6 +375,33 @@ const POST_GET = (opts) => {
             device: opts.device,
             id: opts.id,
             blogId: opts.blogId,
+        },
+    }
+    return JSON.stringify(q);
+};
+
+const USER_LIST = (opts) => {
+    let q = {
+        query: compress(`
+            query getUserList ($token: String!, $device: String!, $start: Int, $perpage: Int) {
+                getUserList (token: $token, device: $device, start: $start, perpage: $perpage) {
+                    users {
+                        id
+                        login
+                        email
+                        friend
+                        online
+                        dtActive
+                    }
+                    count
+                }
+            }
+        `),
+        variables: {
+            token: opts.token,
+            device: opts.device,
+            start: opts.start,
+            perpage: opts.perpage,
         },
     }
     return JSON.stringify(q);

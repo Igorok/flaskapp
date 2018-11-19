@@ -5,7 +5,8 @@ CREATE TABLE "user" (
     "login" varchar(128) DEFAULT NULL,
     "password" varchar(128) DEFAULT NULL,
     "email" varchar(128) DEFAULT NULL,
-    "role" integer NOT NULL
+    "role" integer NOT NULL,
+    "date_reg" timestamp DEFAULT NULL
 );
 
 drop table if exists "token";
@@ -14,6 +15,7 @@ CREATE TABLE "token" (
     "user_id" SERIAL NOT NULL,
     "type" varchar(45) DEFAULT NULL,
     "date" timestamp DEFAULT NULL,
+    "date_act" timestamp DEFAULT NULL,
     "token" varchar(128) DEFAULT NULL,
     UNIQUE ("user_id","type")
 );

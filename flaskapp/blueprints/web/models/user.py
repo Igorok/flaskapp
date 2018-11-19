@@ -15,6 +15,10 @@ class UserItem ():
         self.confirmPassword = kwargs['confirmPassword'] if 'confirmPassword' in kwargs else None
         self.email = kwargs['email'] if 'email' in kwargs else None
         self.role = kwargs['role'] if 'role' in kwargs else self.ROLE_USER
+        if 'date_reg' in kwargs:
+            self.date_reg = str(kwargs['date_reg']).strip()
+        else:
+            self.date_reg = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
     def registrationValidate(self):
         if (
@@ -71,13 +75,14 @@ class UserModel (Model):
         user.login = user.email
         count = self.check_unique(id = user.id, login = user.login, email = user.email)
         password = self.hash_password(user.password)
+
         sql = '''insert into "{0}" 
-            ("login", "password", "email", "role") 
-            values (%s, %s, %s, %s);'''.format(self.TABLE)
+            ("login", "password", "email", "role", "date_reg") 
+            values (%s, %s, %s, %s, %s);'''.format(self.TABLE)
         
         connection = self.connect_postgres()
         cursor = connection.cursor()
-        cursor.execute(sql, [user.login, password, user.email, user.role])
+        cursor.execute(sql, [user.login, password, user.email, user.role, user.date_reg])
         connection.commit()
         connection.close()
 
@@ -87,22 +92,22 @@ class UserModel (Model):
         )
 
     # get list of users
-    def list(self):
-        connection = self.connect_postgres()
-        cursor = connection.cursor()
+    # def list(self):
+    #     connection = self.connect_postgres()
+    #     cursor = connection.cursor()
 
-        sql_rows = ['id', 'login', 'email', 'role', self.TABLE]
+    #     sql_rows = ['id', 'login', 'email', 'role', self.TABLE]
 
-        sql = '''select {0}, {1}, {2}, {3} 
-            from "{4}" 
-            order by id desc'''.format(*sql_rows)
+    #     sql = '''select {0}, {1}, {2}, {3} 
+    #         from "{4}" 
+    #         order by id desc'''.format(*sql_rows)
         
-        cursor.execute(sql)
-        u_list = cursor.fetchall()
-        connection.close()
+    #     cursor.execute(sql)
+    #     u_list = cursor.fetchall()
+    #     connection.close()
 
-        u_list = map(self.list_to_dict(sql_rows), u_list)
-        return u_list or []
+    #     u_list = map(self.list_to_dict(sql_rows), u_list)
+    #     return u_list or []
 
 
 
