@@ -332,10 +332,6 @@ class PostModel (Model):
             'posts': None
         }
 
-        uModel = UserModel()
-        # check authentication and get data of current user
-        profileDict = uModel.getUserByToken(**kwargs)
-
         blogRows = ('id', 'title', 'text', 'public', 'date', 'userId', 'userName')
         blogSql = '''select 
             blog.id as "{0}",
@@ -347,12 +343,12 @@ class PostModel (Model):
             uTable.login as "{6}"
             from blog
             left join "user" as uTable on blog.user_id = uTable.id
-            where blog.id = %s and blog.user_id = %s
+            where blog.id = %s
             ;'''.format(*blogRows)
 
         connection = self.connect_postgres()
         cursor = connection.cursor()
-        cursor.execute(blogSql, (kwargs['blogId'], profileDict['id']))
+        cursor.execute(blogSql, [kwargs['blogId']])
         blogData = cursor.fetchone()
 
         if (blogData is None):
@@ -376,23 +372,21 @@ class PostModel (Model):
             uTable.login as {7}
             from post
             left join "user" as uTable on post.user_id = uTable.id
-            where post.blog_id = %s and post.user_id = %s
+            where post.blog_id = %s
             order by post.{0} desc limit %s offset %s;
             ;'''.format(*postRows)
 
-        cursor.execute(postSql, (
-            kwargs['blogId'], 
-            profileDict['id'],
+        cursor.execute(postSql, [
+            kwargs['blogId'],
             perpage,
             start
-        ))
+        ])
         postData = cursor.fetchall()
 
-        countSql = 'select count(id) from post where blog_id = %s and user_id = %s;'
-        cursor.execute(countSql, (
-            kwargs['blogId'], 
-            profileDict['id']
-        ))
+        countSql = 'select count(id) from post where blog_id = %s;'
+        cursor.execute(countSql, [
+            kwargs['blogId']
+        ])
         countData = cursor.fetchone()
         
         if (countData != None):
@@ -412,11 +406,6 @@ class PostModel (Model):
         if (not 'id' in kwargs):
             raise Exception('Post not found')
 
-
-        uModel = UserModel()
-        # check authentication and get data of current user
-        profileDict = uModel.getUserByToken(**kwargs)
-        
         postSql = '''select 
             blog.id as blogId,
             blog.user_id as userId,

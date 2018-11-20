@@ -54,7 +54,7 @@ class DetailComp extends React.Component {
 
         return <div>
             <ol className="breadcrumb">
-                <li><a href="/blogs">My blogs</a></li>
+                <li><a href="/blogs">Blogs</a></li>
                 <li><a href={"/blog/" + this.props.postDetail.blogId}>Blog</a></li>
                 <li className="active">{this.state.title || 'Post detail'}</li>
             </ol>

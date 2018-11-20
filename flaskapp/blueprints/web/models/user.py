@@ -183,8 +183,8 @@ class UserModel (Model):
         # get token for web or mobile
         tokenVal = kwargs['token']
         tokenType = kwargs['device'] if 'device' in kwargs else 'web'
-        tokenRows = ['token', 'user_id', 'date', self.TABLE_TOKEN]
-        tokenQuery = 'select {0}, {1}, {2} from {3} where token = %s and "type" = %s'.format(*tokenRows)
+        tokenRows = ['id', 'token', 'user_id', 'date', self.TABLE_TOKEN]
+        tokenQuery = 'select {0}, {1}, {2}, {3} from {4} where token = %s and "type" = %s'.format(*tokenRows)
 
         connection = self.connect_postgres()
         cursor = connection.cursor()
@@ -206,6 +206,7 @@ class UserModel (Model):
         dateEnd = tokenDict['date'] + timedelta(days = config['TOKEN_LIFETIME'])
         
         if dateNow > dateEnd:
+            connection.close()
             raise Exception(403)
         
         # get user by user_id from token table
@@ -214,11 +215,20 @@ class UserModel (Model):
         
         cursor.execute(userQuery, [tokenDict['user_id']])
         userFound = cursor.fetchone()
-        connection.close()
 
         # if user not found, access denied
         if (userFound == None):
+            connection.close()
             raise Exception(403)
+
+        # update user activity
+        updateQuery = 'update "{0}" set "date_act" = %s where "id" = %s;'.format(self.TABLE_TOKEN)
+        cursor.execute(updateQuery, [
+            datetime.now().strftime('%Y-%m-%d %H:%M:%S'), 
+            tokenDict['id']
+        ])
+        connection.commit()
+        connection.close()
 
         # create a dictionary from list of values
         ltd_func = self.list_to_dict(userRows)

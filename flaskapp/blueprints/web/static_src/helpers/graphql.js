@@ -329,7 +329,7 @@ const MY_BLOG_DETAIL = (opts) => {
 const BLOG_DETAIL = (opts) => {
     let q = {
         query: compress(`
-            query getBlogDetail ($token: String!, $device: String!, $blogId: Int!, $start: Int!, $perpage: Int!) {
+            query getBlogDetail ($token: String, $device: String!, $blogId: Int!, $start: Int!, $perpage: Int!) {
                 getBlogDetail (token: $token, device: $device, blogId: $blogId, start: $start, perpage: $perpage) {
                     count
                     blog {
@@ -355,7 +355,7 @@ const BLOG_DETAIL = (opts) => {
 const POST_GET = (opts) => {
     let q = {
         query: compress(`
-            query getPost ($token: String!, $device: String!, $id: Int!, $blogId: Int!) {
+            query getPost ($token: String, $device: String!, $id: Int!, $blogId: Int!) {
                 getPost (token: $token, device: $device, id: $id, blogId: $blogId) {
                     id
                     blogId
