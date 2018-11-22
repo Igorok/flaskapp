@@ -6,7 +6,8 @@ CREATE TABLE "user" (
     "password" varchar(128) DEFAULT NULL,
     "email" varchar(128) DEFAULT NULL,
     "role" integer NOT NULL,
-    "date_reg" timestamp DEFAULT NULL
+    "date_reg" timestamp DEFAULT NULL,
+    "active" Boolean
 );
 
 drop table if exists "token";
@@ -76,7 +77,7 @@ CREATE TABLE "chat_message" (
 drop table if exists "friends";
 CREATE TABLE "friends" (
     "id" SERIAL PRIMARY KEY,
-    "from_id" SERIAL NOT NULL,
-    "to_id" SERIAL NOT NULL,
-    "approved" smallint
+    "user_id" SERIAL NOT NULL,
+    "friend_id" SERIAL NOT NULL,
+    "active" Boolean
 );

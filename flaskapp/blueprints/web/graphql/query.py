@@ -3,7 +3,7 @@ from flaskapp.blueprints.web.models.user import UserModel
 from flaskapp.blueprints.web.models.blog import BlogModel
 from flaskapp.blueprints.web.models.post import PostModel
 
-from flaskapp.blueprints.web.graphql.user import RegGraph, AuthGraph, ProfileGraph, EditProfileGraph
+from flaskapp.blueprints.web.graphql.user import RegGraph, AuthGraph, ProfileGraph, EditProfileGraph, UserDetailGraph, UserListGraph
 from flaskapp.blueprints.web.graphql.blog import BlogGraph, BlogListGraph, PostGraph, MyBlogDetailGraph, BlogDetailGraph
 
 # assign values to query
@@ -229,6 +229,26 @@ class Query(graphene.ObjectType):
         __p = PostModel()
         __post = __p.getPost(**kwargs)
         return PostGraph(**__post)
+
+    # get list blog data
+    getUserList = graphene.Field(
+        UserListGraph,
+        token = graphene.String(),
+        device = graphene.String(),
+        start = graphene.Int(),
+        perpage = graphene.Int(),
+    )
+    def resolve_getUserList (self, info, *args, **kwargs):
+        __u = UserModel()
+        __user = __u.getUserList(**kwargs)
+        __users = []
+        for v in __user['users']:
+            __users.append(UserDetailGraph(**v))
+        return UserDetailGraph(
+            count = __user['count']
+            users = __users
+        )
+
 
 # init query
 schema = graphene.Schema(query=Query)

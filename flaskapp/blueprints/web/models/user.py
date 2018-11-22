@@ -307,3 +307,46 @@ class UserModel (Model):
             login = login,
             email = email
         )
+
+
+    def getUserList (self, *args, **kwargs):
+         # check authentication and get data of current user
+        profile_dict = self.getUserByToken(**kwargs)
+
+        start = int(kwargs['start']) if ('start' in kwargs) else 0
+        perpage = int(kwargs['perpage']) if ('perpage' in kwargs) else 20
+
+        listResult = {
+            'count': 0,
+            'users': []
+        }
+
+
+        """
+
+        select 
+            uTable.id,
+            uTable.login,
+            uTable.email,
+            friends.user_id as u_id,
+            friends.friend_id as f_id,
+            friends.active as f_a
+            from "user" as uTable
+        left join friends
+            on uTable.id = friends.user_id
+            and friends.friend_id = 1
+        where uTable.id != 1
+        limit 10;
+
+
+
+        id = graphene.ID()
+        login = graphene.String()
+        email = graphene.String()
+        friend = graphene.Int()
+        online = graphene.Boolean()
+        dtActive = graphene.String()
+        """
+
+
+        return listResult

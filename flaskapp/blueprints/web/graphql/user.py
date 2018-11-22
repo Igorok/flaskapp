@@ -25,3 +25,15 @@ class ProfileGraph (graphene.ObjectType):
 class EditProfileGraph (graphene.ObjectType):
     login = graphene.String()
     email = graphene.String()
+
+class UserDetailGraph (graphene.ObjectType):
+    id = graphene.ID()
+    login = graphene.String()
+    email = graphene.String()
+    friend = graphene.Int()
+    online = graphene.Boolean()
+    dtActive = graphene.String()
+
+class UserListGraph (graphene.ObjectType):
+    count = graphene.Int()
+    users = graphene.List(UserDetailGraph)

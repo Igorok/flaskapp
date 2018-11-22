@@ -85,7 +85,7 @@ const PROFILE = (opts) => {
             }
         `),
         variables: {
-            token: opts.token,
+            token: opts.token || '',
             device: opts.device,
         },
     }
@@ -95,7 +95,7 @@ const PROFILE = (opts) => {
 const PROFILE_EDIT = (opts) => {
     let q = {
         query: compress(`
-            query editProfile ($token: String!, $device: String!, $login: String!, $email: String!) {
+            query editProfile ($token: String, $device: String!, $login: String!, $email: String!) {
                 editProfile (token: $token, device: $device, login: $login, email: $email) {
                     login
                     email
@@ -103,7 +103,7 @@ const PROFILE_EDIT = (opts) => {
             }
         `),
         variables: {
-            token: opts.token,
+            token: opts.token || '',
             device: opts.device,
             login: opts.login,
             email: opts.email,
@@ -115,7 +115,7 @@ const PROFILE_EDIT = (opts) => {
 const BLOG_EDIT = (opts) => {
     let q = {
         query: compress(`
-            query editBlog ($token: String!, $device: String!, $id: Int!, $title: String!, $text: String!, $public: Boolean) {
+            query editBlog ($token: String, $device: String!, $id: Int!, $title: String!, $text: String!, $public: Boolean) {
                 editBlog (token: $token, device: $device, id: $id, title: $title, text: $text, public: $public) {
                     id
                     userId
@@ -128,7 +128,7 @@ const BLOG_EDIT = (opts) => {
             }
         `),
         variables: {
-            token: opts.token,
+            token: opts.token || '',
             device: opts.device,
             id: opts.id,
             title: opts.title,
@@ -142,7 +142,7 @@ const BLOG_EDIT = (opts) => {
 const BLOG_GET = (opts) => {
     let q = {
         query: compress(`
-            query getBlog ($token: String!, $device: String!, $id: Int!) {
+            query getBlog ($token: String, $device: String!, $id: Int!) {
                 getBlog (token: $token, device: $device, id: $id) {
                     id
                     userId
@@ -156,7 +156,7 @@ const BLOG_GET = (opts) => {
             }
         `),
         variables: {
-            token: opts.token,
+            token: opts.token || '',
             device: opts.device,
             id: opts.id,
         },
@@ -184,7 +184,7 @@ const BLOG_LIST = (opts) => {
             }
         `),
         variables: {
-            token: opts.token,
+            token: opts.token || '',
             device: opts.device,
             userId: opts.userId,
             start: opts.start,
@@ -197,7 +197,7 @@ const BLOG_LIST = (opts) => {
 const MY_BLOG_LIST = (opts) => {
     let q = {
         query: compress(`
-            query getMyBlogList ($token: String!, $device: String!, $start: Int, $perpage: Int) {
+            query getMyBlogList ($token: String, $device: String!, $start: Int, $perpage: Int) {
                 getMyBlogList (token: $token, device: $device, start: $start, perpage: $perpage) {
                     blogs {
                         id
@@ -214,7 +214,7 @@ const MY_BLOG_LIST = (opts) => {
             }
         `),
         variables: {
-            token: opts.token,
+            token: opts.token || '',
             device: opts.device,
             start: opts.start,
             perpage: opts.perpage,
@@ -226,7 +226,7 @@ const MY_BLOG_LIST = (opts) => {
 const MY_BLOG_PUBLIC = (opts) => {
     let q = {
         query: compress(`
-            query publicMyBlog ($token: String!, $device: String!, $id: Int, $public: Boolean) {
+            query publicMyBlog ($token: String, $device: String!, $id: Int, $public: Boolean) {
                 publicMyBlog (token: $token, device: $device, id: $id, public: $public) {
                     id
                     public
@@ -234,7 +234,7 @@ const MY_BLOG_PUBLIC = (opts) => {
             }
         `),
         variables: {
-            token: opts.token,
+            token: opts.token || '',
             device: opts.device,
             id: opts.id,
             public: opts.public,
@@ -246,7 +246,7 @@ const MY_BLOG_PUBLIC = (opts) => {
 
 const POST_EDIT = (opts) => {
     let q = {
-        query: compress(`query editPost ($token: String!, $device: String!, $id: Int!, $blogId: Int!, $title: String!, $descript: String!, $text: String!, $public: Boolean) {
+        query: compress(`query editPost ($token: String, $device: String!, $id: Int!, $blogId: Int!, $title: String!, $descript: String!, $text: String!, $public: Boolean) {
                 editPost (token: $token, device: $device, id: $id, blogId: $blogId, title: $title, descript: $descript, text: $text, public: $public) {
                     id
                     blogId
@@ -259,7 +259,7 @@ const POST_EDIT = (opts) => {
             }
         `),
         variables: {
-            token: opts.token,
+            token: opts.token || '',
             device: opts.device,
             id: opts.id,
             blogId: opts.blogId,
@@ -275,7 +275,7 @@ const POST_EDIT = (opts) => {
 const MY_POST_GET = (opts) => {
     let q = {
         query: compress(`
-            query getMyPost ($token: String!, $device: String!, $id: Int!, $blogId: Int!) {
+            query getMyPost ($token: String, $device: String!, $id: Int!, $blogId: Int!) {
                 getMyPost (token: $token, device: $device, id: $id, blogId: $blogId) {
                     id
                     blogId
@@ -291,7 +291,7 @@ const MY_POST_GET = (opts) => {
             }
         `),
         variables: {
-            token: opts.token,
+            token: opts.token || '',
             device: opts.device,
             id: opts.id,
             blogId: opts.blogId,
@@ -303,7 +303,7 @@ const MY_POST_GET = (opts) => {
 const MY_BLOG_DETAIL = (opts) => {
     let q = {
         query: compress(`
-            query getMyBlogDetail ($token: String!, $device: String!, $blogId: Int!, $start: Int!, $perpage: Int!) {
+            query getMyBlogDetail ($token: String, $device: String!, $blogId: Int!, $start: Int!, $perpage: Int!) {
                 getMyBlogDetail (token: $token, device: $device, blogId: $blogId, start: $start, perpage: $perpage) {
                     count
                     blog {
@@ -316,7 +316,7 @@ const MY_BLOG_DETAIL = (opts) => {
             }
         `),
         variables: {
-            token: opts.token,
+            token: opts.token || '',
             device: opts.device,
             blogId: opts.blogId,
             start: opts.start,
@@ -342,7 +342,7 @@ const BLOG_DETAIL = (opts) => {
             }
         `),
         variables: {
-            token: opts.token,
+            token: opts.token || '',
             device: opts.device,
             blogId: opts.blogId,
             start: opts.start,
@@ -371,7 +371,7 @@ const POST_GET = (opts) => {
             }
         `),
         variables: {
-            token: opts.token,
+            token: opts.token || '',
             device: opts.device,
             id: opts.id,
             blogId: opts.blogId,
@@ -383,7 +383,7 @@ const POST_GET = (opts) => {
 const USER_LIST = (opts) => {
     let q = {
         query: compress(`
-            query getUserList ($token: String!, $device: String!, $start: Int, $perpage: Int) {
+            query getUserList ($token: String, $device: String!, $start: Int, $perpage: Int) {
                 getUserList (token: $token, device: $device, start: $start, perpage: $perpage) {
                     users {
                         id
@@ -398,7 +398,7 @@ const USER_LIST = (opts) => {
             }
         `),
         variables: {
-            token: opts.token,
+            token: opts.token || '',
             device: opts.device,
             start: opts.start,
             perpage: opts.perpage,
