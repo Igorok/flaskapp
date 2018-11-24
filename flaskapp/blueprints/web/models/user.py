@@ -15,10 +15,15 @@ class UserItem ():
         self.confirmPassword = kwargs['confirmPassword'] if 'confirmPassword' in kwargs else None
         self.email = kwargs['email'] if 'email' in kwargs else None
         self.role = kwargs['role'] if 'role' in kwargs else self.ROLE_USER
+
         if 'date_reg' in kwargs:
             self.date_reg = str(kwargs['date_reg']).strip()
         else:
             self.date_reg = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
+        if 'date_act' in kwargs:
+            self.date_act = str(kwargs['date_act']).strip()
+            
 
     def registrationValidate(self):
         if (
@@ -221,18 +226,18 @@ class UserModel (Model):
             connection.close()
             raise Exception(403)
 
-        # update user activity
-        updateQuery = 'update "{0}" set "date_act" = %s where "id" = %s;'.format(self.TABLE_TOKEN)
-        cursor.execute(updateQuery, [
-            datetime.now().strftime('%Y-%m-%d %H:%M:%S'), 
-            tokenDict['id']
-        ])
-        connection.commit()
-        connection.close()
-
         # create a dictionary from list of values
         ltd_func = self.list_to_dict(userRows)
         userDict = ltd_func(userFound)
+
+        # update user activity
+        updateQuery = 'update "{0}" set "date_act" = %s where "id" = %s;'.format(self.TABLE)
+        cursor.execute(updateQuery, [
+            datetime.now().strftime('%Y-%m-%d %H:%M:%S'), 
+            userDict['id']
+        ])
+        connection.commit()
+        connection.close()
 
         return userDict
 
@@ -347,6 +352,77 @@ class UserModel (Model):
         online = graphene.Boolean()
         dtActive = graphene.String()
         """
+
+
+        userSql = '''
+            select 
+                uTable.id,
+                uTable.login,
+                uTable.email,
+                friends.user_id as u_id,
+                friends.friend_id as f_id,
+                friends.active as f_a
+                from "user" as uTable
+            left join friends
+                on uTable.id = friends.user_id
+                and friends.friend_id = 1
+            where uTable.id != 1
+            limit 10;
+        '''
+        connection = self.connect_postgres()
+        cursor = connection.cursor()
+        cursor.execute(blogSql, (kwargs['blogId'], profileDict['id']))
+        blogData = cursor.fetchone()
+
+        if (blogData is None):
+            connection.close()
+            return listResult
+
+        listResult['blog'] = self.list_to_dict(blogRows)(blogData)
+
+        postRows = (
+            'id', 'blogId', 'title', 'description', 'public', 'date', 
+            'userId', 'userName'
+        )
+        postSql = '''select 
+            post.id as {0},
+            post.blog_id as {1},
+            post.title as {2},
+            post.description as {3},
+            post.public as {4},
+            post.date as {5},
+            uTable.id as {6},
+            uTable.login as {7}
+            from post
+            left join "user" as uTable on post.user_id = uTable.id
+            where post.blog_id = %s and post.user_id = %s
+            order by post.{0} desc limit %s offset %s;
+            ;'''.format(*postRows)
+
+        cursor.execute(postSql, (
+            kwargs['blogId'], 
+            profileDict['id'],
+            perpage,
+            start
+        ))
+        postData = cursor.fetchall()
+
+        countSql = 'select count(id) from post where blog_id = %s and user_id = %s;'
+        cursor.execute(countSql, (
+            kwargs['blogId'], 
+            profileDict['id']
+        ))
+        countData = cursor.fetchone()
+        
+        if (countData != None):
+            listResult['count'] = countData[0]
+
+        if (postData != None):
+            listResult['posts'] = map(self.list_to_dict(postRows), postData)
+
+        return listResult
+
+
 
 
         return listResult

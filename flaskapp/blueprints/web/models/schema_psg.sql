@@ -7,6 +7,7 @@ CREATE TABLE "user" (
     "email" varchar(128) DEFAULT NULL,
     "role" integer NOT NULL,
     "date_reg" timestamp DEFAULT NULL,
+    "date_act" timestamp DEFAULT NULL,
     "active" Boolean
 );
 
@@ -16,7 +17,6 @@ CREATE TABLE "token" (
     "user_id" SERIAL NOT NULL,
     "type" varchar(45) DEFAULT NULL,
     "date" timestamp DEFAULT NULL,
-    "date_act" timestamp DEFAULT NULL,
     "token" varchar(128) DEFAULT NULL,
     UNIQUE ("user_id","type")
 );
