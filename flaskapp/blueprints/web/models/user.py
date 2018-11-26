@@ -314,6 +314,14 @@ class UserModel (Model):
         )
 
 
+    '''
+        id = graphene.ID()
+        login = graphene.String()
+        email = graphene.String()
+        friend = graphene.Int()
+        online = graphene.Boolean()
+        dtActive = graphene.String()
+    '''
     def getUserList (self, *args, **kwargs):
          # check authentication and get data of current user
         profile_dict = self.getUserByToken(**kwargs)
@@ -325,104 +333,61 @@ class UserModel (Model):
             'count': 0,
             'users': []
         }
-
-
-        """
-
-        select 
-            uTable.id,
-            uTable.login,
-            uTable.email,
-            friends.user_id as u_id,
-            friends.friend_id as f_id,
-            friends.active as f_a
-            from "user" as uTable
-        left join friends
-            on uTable.id = friends.user_id
-            and friends.friend_id = 1
-        where uTable.id != 1
-        limit 10;
-
-
-
-        id = graphene.ID()
-        login = graphene.String()
-        email = graphene.String()
-        friend = graphene.Int()
-        online = graphene.Boolean()
-        dtActive = graphene.String()
-        """
-
-
+        userRows = ['id', 'login', 'email', 'date_act', 'date_reg', 'friend_id']
         userSql = '''
             select 
-                uTable.id,
-                uTable.login,
-                uTable.email,
-                friends.user_id as u_id,
-                friends.friend_id as f_id,
-                friends.active as f_a
+                uTable.id as {0},
+                uTable.login as {1},
+                uTable.email as {2},
+                uTable.date_act as {3},
+                uTable.date_reg as {4},
+                friends.friend_id as {5}
                 from "user" as uTable
             left join friends
                 on uTable.id = friends.user_id
-                and friends.friend_id = 1
-            where uTable.id != 1
-            limit 10;
-        '''
+                and friends.friend_id = %s
+            where uTable.id != %s
+            order by uTable.id asc limit %s offset %s;
+        '''.format(*userRows)
         connection = self.connect_postgres()
         cursor = connection.cursor()
-        cursor.execute(blogSql, (kwargs['blogId'], profileDict['id']))
-        blogData = cursor.fetchone()
-
-        if (blogData is None):
-            connection.close()
-            return listResult
-
-        listResult['blog'] = self.list_to_dict(blogRows)(blogData)
-
-        postRows = (
-            'id', 'blogId', 'title', 'description', 'public', 'date', 
-            'userId', 'userName'
-        )
-        postSql = '''select 
-            post.id as {0},
-            post.blog_id as {1},
-            post.title as {2},
-            post.description as {3},
-            post.public as {4},
-            post.date as {5},
-            uTable.id as {6},
-            uTable.login as {7}
-            from post
-            left join "user" as uTable on post.user_id = uTable.id
-            where post.blog_id = %s and post.user_id = %s
-            order by post.{0} desc limit %s offset %s;
-            ;'''.format(*postRows)
-
-        cursor.execute(postSql, (
-            kwargs['blogId'], 
-            profileDict['id'],
+        cursor.execute(userSql, [
+            profile_dict['id'],
+            profile_dict['id'],
             perpage,
             start
-        ))
-        postData = cursor.fetchall()
+        ])
+        userData = cursor.fetchall()
 
-        countSql = 'select count(id) from post where blog_id = %s and user_id = %s;'
-        cursor.execute(countSql, (
-            kwargs['blogId'], 
-            profileDict['id']
-        ))
+        # format users data for frontend
+        if (userData is None):
+            connection.close()
+            return listResult
+        else:
+            ltd = self.list_to_dict(userRows)
+            for u in userData:
+                uDict = ltd(u)
+                dateAct = getattr(uDict, 'date_act', uDict['date_reg'])
+                dateDiff = (datetime.now() - dateAct).total_seconds() / 60.0
+
+                uFormat = {
+                    'id': uDict['id'],
+                    'login': uDict['login'],
+                    'email': uDict['email'],
+                    'friend': not uDict['friend_id'] is None,
+                    'online': dateDiff < 5,
+                    'dtActive': dateAct.strftime('%Y-%m-%d %H:%M:%S'),
+                }
+                listResult['users'].append(uFormat)
+
+        # get count of users for paginator
+        countSql = 'select count(id) from "user" where "user".id != %s;'
+        cursor.execute(countSql, [
+            profile_dict['id']
+        ])
         countData = cursor.fetchone()
         
         if (countData != None):
             listResult['count'] = countData[0]
-
-        if (postData != None):
-            listResult['posts'] = map(self.list_to_dict(postRows), postData)
-
-        return listResult
-
-
-
 
         return listResult

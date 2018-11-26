@@ -9,27 +9,24 @@ class UserListComp extends React.Component {
         super(props);
 
         this.state = {
-            start: this.props.blogList.start,
-            blogs: this.props.blogList.blogs,
+            start: this.props.userList.start,
+            users: this.props.userList.users,
         }
     }
 
     componentWillMount () {
-        this.props.dispatch(graphql({
-            type: 'BLOG_LIST',
-            start: this.props.blogList.start, 
-            perpage: this.props.blogList.perpage, 
-        }));
+        this.changePage(this.props.userList.start);
     }
 
     changePage (start = 0) {
         this.props.dispatch(graphql({
-            type: 'BLOG_LIST',
+            type: 'USER_LIST',
             start: start, 
-            perpage: this.props.blogList.perpage, 
+            perpage: this.props.userList.perpage, 
         }));
     }
 
+    /*
     getBlogItems () {
         let chunkedItems = chunk(this.props.blogList.blogs, 3);
         let blogs = map(chunkedItems, blogs => {
@@ -65,13 +62,14 @@ class UserListComp extends React.Component {
 
         return blogs;
     }
-
+    */
     
 
     render () {
-        let alertOpts = null,
-            blogs = null;
+        let alertOpts = null;
+        let users = null;
 
+            /*
         if (this.props.blogList.status == 'error') {
             alertOpts = {
                 className: 'danger',
@@ -91,10 +89,12 @@ class UserListComp extends React.Component {
             items: this.getBlogItems(),
             changePage: ::this.changePage,
         };
+        */
+
 
         return <div>
             <AlertMessage opts={alertOpts} />
-            <PaginatorLayout param={pagerParam} />
+            {/* <PaginatorLayout param={pagerParam} /> */}
         </div>
         
     }

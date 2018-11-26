@@ -244,7 +244,7 @@ class Query(graphene.ObjectType):
         __users = []
         for v in __user['users']:
             __users.append(UserDetailGraph(**v))
-        return UserDetailGraph(
+        return UserListGraph(
             count = __user['count'],
             users = __users
         )
