@@ -333,7 +333,7 @@ class UserModel (Model):
             'count': 0,
             'users': []
         }
-        userRows = ['id', 'login', 'email', 'date_act', 'date_reg', 'friend_id']
+        userRows = ['id', 'login', 'email', 'date_act', 'date_reg', 'friend_id', 'approved']
         userSql = '''
             select 
                 uTable.id as {0},
@@ -341,7 +341,8 @@ class UserModel (Model):
                 uTable.email as {2},
                 uTable.date_act as {3},
                 uTable.date_reg as {4},
-                friends.friend_id as {5}
+                friends.friend_id as {5},
+                friends.approved as {6}
                 from "user" as uTable
             left join friends
                 on uTable.id = friends.user_id
@@ -367,14 +368,22 @@ class UserModel (Model):
             ltd = self.list_to_dict(userRows)
             for u in userData:
                 uDict = ltd(u)
+                # check active
                 dateAct = getattr(uDict, 'date_act', uDict['date_reg'])
                 dateDiff = (datetime.now() - dateAct).total_seconds() / 60.0
+                # check friend
+                friend = False
+                if (
+                    not uDict['friend_id'] is None and
+                    uDict['approved']
+                ) :
+                    friend = True
 
                 uFormat = {
                     'id': uDict['id'],
                     'login': uDict['login'],
                     'email': uDict['email'],
-                    'friend': not uDict['friend_id'] is None,
+                    'friend': friend,
                     'online': dateDiff < 5,
                     'dtActive': dateAct.strftime('%Y-%m-%d %H:%M:%S'),
                 }

@@ -167,7 +167,7 @@ def postDetail(blogId, postId):
 @web.route('/users')
 def userList():
     params = getParams(['start', 'perpage'], request.args)
-    params.append({'name': 'page', 'val': 'blog'})
+    params.append({'name': 'page', 'val': 'user'})
     return render_template(
         'view.html', 
         scripts = ['userList'],

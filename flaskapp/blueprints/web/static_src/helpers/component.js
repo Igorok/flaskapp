@@ -131,7 +131,10 @@ class Header extends React.Component {
                 </li>
             </ul>
 
-            userItem = <li role="presentation">
+            userItem = <li 
+                role="presentation"
+                className={window.localParams.page == 'user' ? 'active' : ''}
+                >
                 <a href="/users"><span className="glyphicon glyphicon-user"></span>&nbsp;&nbsp;Users</a>
             </li>
         }
