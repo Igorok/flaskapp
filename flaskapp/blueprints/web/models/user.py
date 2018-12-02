@@ -333,7 +333,7 @@ class UserModel (Model):
             'count': 0,
             'users': []
         }
-        userRows = ['id', 'login', 'email', 'date_act', 'date_reg', 'friend_id', 'approved']
+        userRows = ['id', 'login', 'email', 'dateAct', 'dateReg', 'friendId', 'approved']
         userSql = '''
             select 
                 uTable.id as {0},
@@ -368,13 +368,19 @@ class UserModel (Model):
             ltd = self.list_to_dict(userRows)
             for u in userData:
                 uDict = ltd(u)
-                # check active
-                dateAct = getattr(uDict, 'date_act', uDict['date_reg'])
+                # check the date of last activity
+                dateAct = uDict['dateReg']
+                if (
+                    'dateAct' in uDict and
+                    not uDict['dateAct'] is None
+                ):
+                    dateAct = uDict['dateAct']
+
                 dateDiff = (datetime.now() - dateAct).total_seconds() / 60.0
                 # check friend
                 friend = False
                 if (
-                    not uDict['friend_id'] is None and
+                    not uDict['friendId'] is None and
                     uDict['approved']
                 ) :
                     friend = True

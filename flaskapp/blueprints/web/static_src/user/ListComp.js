@@ -26,15 +26,6 @@ class UserListComp extends React.Component {
         }));
     }
 
-    getOnlineIcon (online) {
-        let clName = 'glyphicon glyphicon-user ';
-        if (online) {
-            clName += 'text-success';
-        } else {
-            clName += 'text-warning';
-        }
-        return <span className={clName}></span>
-    }
     getUserItems () {
         var self = this;
         const items = map(this.props.userList.users, user => {
@@ -48,6 +39,8 @@ class UserListComp extends React.Component {
             dtActive = graphene.String()
             */
 
+            /*
+
             return <div className="row">
                 <div className="col-md-4">
                     {self.getOnlineIcon(user.online)}&nbsp;
@@ -55,50 +48,40 @@ class UserListComp extends React.Component {
                     {user.dtActive}
                 </div>
             </div>
-        });
-        return items;
 
+            */
 
-
-
-
-        /*
-
-        let chunkedItems = chunk(this.props.blogList.blogs, 3);
-        let blogs = map(chunkedItems, blogs => {
-            let partition = map(blogs, blog => {
-                return <div className="col-md-4">
-                    <div className="panel panel-default">
-                        <div className="panel-heading">
-                            <h4 className="panel-title">
-                                <a href = {"/blog/" + blog.id}>
-                                    {blog.title}
-                                </a>
-                            </h4>
-                        </div>
-                        <div className="panel-body">
-                            {blog.text}
-                        </div>
-                        <div className="panel-footer">
-                            <p>
-                                <span className="glyphicon glyphicon-user"></span>&nbsp;
-                                {blog.userName}
-                            </p>
-                            <p>
-                                <span className="glyphicon glyphicon-time"></span>&nbsp;
-                                {blog.date}
-                            </p>
-                        </div>
-                    </div>
-                </div> 
-            });
-
-            return <div className="row">{partition}</div>
+            let textClass = user.online ? 'success' : 'active';
+            return <tr className={textClass}>
+                <td>
+                    <span className="glyphicon glyphicon-user"></span>
+                    &nbsp;
+                    <span>{user.login}</span>
+                </td>
+                <td>
+                    {user.dtActive}
+                </td>
+                <td className="text-right">
+                    <button className="btn btn-default">
+                        <span className="glyphicon glyphicon-plus"></span>
+                        &nbsp;
+                        Add to friend
+                    </button>
+                    &nbsp;
+                    <button className="btn btn-default">
+                        <span className="glyphicon glyphicon-envelope"></span>
+                        &nbsp;
+                        Send message
+                    </button>
+                </td>
+            </tr>
         });
 
-        return blogs;
-
-        */
+        return <table className="table table-hover">
+            <tbody>
+                {items}
+            </tbody>
+        </table>
     }
     
 
@@ -126,33 +109,12 @@ class UserListComp extends React.Component {
             changePage: ::this.changePage,
         };
 
-        /*
-
-        if (this.props.blogList.status == 'error') {
-            alertOpts = {
-                className: 'danger',
-                text: this.props.blogList.error
-            }
-        } else if (this.props.blogList.status === 'send') {
-            alertOpts = {
-                className: 'info',
-                text: 'Loading, please wait',
-            }
-        }
-
-        let pagerParam = {
-            start: this.props.blogList.start,
-            perpage: this.props.blogList.perpage,
-            count: this.props.blogList.count,
-            items: this.getBlogItems(),
-            changePage: ::this.changePage,
-        };
-
-        */
+      
 
 
         return <div>
             <AlertMessage opts={alertOpts} />
+
             <PaginatorLayout param={pagerParam} />
         </div>
         
