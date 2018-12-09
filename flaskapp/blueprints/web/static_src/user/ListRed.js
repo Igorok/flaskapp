@@ -23,6 +23,24 @@ const userList = (state = initState, action) => {
             data.status = 'error';
             data.error = action.error;
             return data;
+
+
+
+        case 'FRIEND_REQUEST_SEND':
+            // data.start = action.start;
+            data.status = 'send';
+            return data;
+        case 'FRIEND_REQUEST_SUCCESS':
+            data.status = 'success';
+            // data.users = action.data.getUserList.users;
+            // data.count = action.data.getUserList.count;
+            return data;
+        case 'FRIEND_REQUEST_ERROR':
+            data.status = 'error';
+            // data.error = action.error;
+            return data;
+
+
         default:
             return state
     }

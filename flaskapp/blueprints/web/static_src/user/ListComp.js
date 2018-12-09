@@ -30,27 +30,6 @@ class UserListComp extends React.Component {
         var self = this;
         const items = map(this.props.userList.users, user => {
 
-            /*
-            id = graphene.ID()
-            login = graphene.String()
-            email = graphene.String()
-            friend = graphene.Int()
-            online = graphene.Boolean()
-            dtActive = graphene.String()
-            */
-
-            /*
-
-            return <div className="row">
-                <div className="col-md-4">
-                    {self.getOnlineIcon(user.online)}&nbsp;
-                    {user.login}&nbsp;
-                    {user.dtActive}
-                </div>
-            </div>
-
-            */
-
             let textClass = user.online ? 'success' : 'active';
             return <tr className={textClass}>
                 <td>

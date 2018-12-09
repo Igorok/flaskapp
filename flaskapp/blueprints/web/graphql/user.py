@@ -37,3 +37,9 @@ class UserDetailGraph (graphene.ObjectType):
 class UserListGraph (graphene.ObjectType):
     count = graphene.Int()
     users = graphene.List(UserDetailGraph)
+
+class FriendRequest (graphene.ObjectType):
+    success = graphene.Boolean()
+
+class FriendApprove (graphene.ObjectType):
+    success = graphene.Boolean()

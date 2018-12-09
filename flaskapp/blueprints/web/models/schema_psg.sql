@@ -79,5 +79,6 @@ CREATE TABLE "friends" (
     "id" SERIAL PRIMARY KEY,
     "user_id" SERIAL NOT NULL,
     "friend_id" SERIAL NOT NULL,
-    "approved" Boolean
+    "approved" Boolean,
+    "date" timestamp DEFAULT NULL
 );

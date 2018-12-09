@@ -407,6 +407,29 @@ const USER_LIST = (opts) => {
     return JSON.stringify(q);
 };
 
+
+
+
+friendRequest
+const FRIEND_REQUEST = (opts) => {
+    let q = {
+        query: compress(`
+            query friendRequest ($token: String, $device: String!, $id: Int) {
+                friendRequest (token: $token, device: $device, id: $id) {
+                    success
+                }
+            }
+        `),
+        variables: {
+            token: opts.token || '',
+            device: opts.device,
+            id: opts.id
+        }
+    };
+    return JSON.stringify(q);
+};
+
+
 export const query = {
     REG: REG,
     AUTH: AUTH,
@@ -427,4 +450,5 @@ export const query = {
     POST_GET: POST_GET,
 
     USER_LIST: USER_LIST,
+    FRIEND_REQUEST: FRIEND_REQUEST
 }

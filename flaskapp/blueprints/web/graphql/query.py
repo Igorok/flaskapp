@@ -3,7 +3,7 @@ from flaskapp.blueprints.web.models.user import UserModel
 from flaskapp.blueprints.web.models.blog import BlogModel
 from flaskapp.blueprints.web.models.post import PostModel
 
-from flaskapp.blueprints.web.graphql.user import RegGraph, AuthGraph, ProfileGraph, EditProfileGraph, UserDetailGraph, UserListGraph
+from flaskapp.blueprints.web.graphql.user import RegGraph, AuthGraph, ProfileGraph, EditProfileGraph, UserDetailGraph, UserListGraph, FriendRequest
 from flaskapp.blueprints.web.graphql.blog import BlogGraph, BlogListGraph, PostGraph, MyBlogDetailGraph, BlogDetailGraph
 
 # assign values to query
@@ -247,6 +247,20 @@ class Query(graphene.ObjectType):
         return UserListGraph(
             count = __user['count'],
             users = __users
+        )
+
+    # get list blog data
+    friendRequest = graphene.Field(
+        FriendRequest,
+        token = graphene.String(),
+        device = graphene.String(),
+        id = graphene.Int(),
+    )
+    def resolve_friendRequest (self, info, *args, **kwargs):
+        __u = UserModel()
+        __res = __u.friendRequest(**kwargs)
+        return FriendRequest(
+            success = __res['success']
         )
 
 

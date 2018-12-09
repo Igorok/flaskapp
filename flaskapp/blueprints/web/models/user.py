@@ -323,7 +323,7 @@ class UserModel (Model):
         dtActive = graphene.String()
     '''
     def getUserList (self, *args, **kwargs):
-         # check authentication and get data of current user
+        # check authentication and get data of current user
         profile_dict = self.getUserByToken(**kwargs)
 
         start = int(kwargs['start']) if ('start' in kwargs) else 0
@@ -406,3 +406,69 @@ class UserModel (Model):
             listResult['count'] = countData[0]
 
         return listResult
+
+
+    """
+    send friend request to some user
+    :param token: - current token of user
+    :param id: - id of the user for friendship
+    return True if request added
+    """
+    def friendRequest (self, *args, **kwargs):
+        # check authentication and get data of current user
+        profile_dict = self.getUserByToken(**kwargs)
+
+        id = int(kwargs['id']) if ('id' in kwargs) else 0
+        dt = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
+        connection = self.connect_postgres()
+        cursor = connection.cursor()
+
+        sqlUpdate = '''insert into "friends" ("user_id", "friend_id", "date") 
+            values (%s, %s, %s)
+            on conflict ("user_id", "type") do update 
+            set "date" = excluded.date;
+        '''
+
+        cursor.execute(sqlUpdate, [profile_dict["id"], id, dt])
+        connection.commit()
+        connection.close()
+
+        """
+
+        auth_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
+        sql_update = '''insert into {0} ("user_id", "type", "date", "token")
+            values (%s, %s, %s, %s)
+            on conflict ("user_id", "type") do update 
+            set "date" = excluded.date,
+            "token" = excluded.token;'''.format(self.TABLE_TOKEN)
+    
+        cursor.execute(sql_update, [auth_user['id'], auth_type, auth_date, auth_token])        
+        connection.commit()
+        connection.close()
+
+        auth_user['token'] = auth_token
+
+
+
+        id integer NOT NULL DEFAULT nextval('friends_id_seq'::regclass),
+        user_id integer NOT NULL DEFAULT nextval('friends_from_id_seq'::regclass),
+        friend_id integer NOT NULL DEFAULT nextval('friends_to_id_seq'::regclass),
+        approved boolean,
+
+
+
+        sql_update = '''insert into {0} ("user_id", "type", "date", "token")
+            values (%s, %s, %s, %s)
+            on conflict ("user_id", "type") do update 
+            set "date" = excluded.date,
+            "token" = excluded.token;'''.format(self.TABLE_TOKEN)
+        """
+    
+
+
+
+        return {
+            'success': True
+        }
