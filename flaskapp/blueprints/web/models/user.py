@@ -333,7 +333,15 @@ class UserModel (Model):
             'count': 0,
             'users': []
         }
-        userRows = ['id', 'login', 'email', 'dateAct', 'dateReg', 'friendId', 'approved']
+        userRows = [
+            'id', 'login', 'email', 'dateAct', 'dateReg', # user data
+            'selfFriendId', # friend for whom did send request this user
+            'friendUserId' # user that did send friend request for this user
+        ]
+
+        # get data from the user table, excluding the current user
+        # first join - get friends request to current user from this row
+        # second join - get friends request from current user to this row
         userSql = '''
             select 
                 uTable.id as {0},
@@ -341,18 +349,26 @@ class UserModel (Model):
                 uTable.email as {2},
                 uTable.date_act as {3},
                 uTable.date_reg as {4},
-                friends.friend_id as {5},
-                friends.approved as {6}
+
+                selfReq.friend_id as {5},
+                frReq.user_id as {6}
+
                 from "user" as uTable
-            left join friends
-                on uTable.id = friends.user_id
-                and friends.friend_id = %s
+            left join friends as selfReq
+                on uTable.id = selfReq.user_id
+                and selfReq.friend_id = %s
+
+            left join friends as frReq
+                on uTable.id = frReq.friend_id
+                and frReq.user_id = %s
+
             where uTable.id != %s
             order by uTable.id asc limit %s offset %s;
         '''.format(*userRows)
         connection = self.connect_postgres()
         cursor = connection.cursor()
         cursor.execute(userSql, [
+            profile_dict['id'],
             profile_dict['id'],
             profile_dict['id'],
             perpage,
@@ -377,19 +393,13 @@ class UserModel (Model):
                     dateAct = uDict['dateAct']
 
                 dateDiff = (datetime.now() - dateAct).total_seconds() / 60.0
-                # check friend
-                friend = False
-                if (
-                    not uDict['friendId'] is None and
-                    uDict['approved']
-                ) :
-                    friend = True
 
                 uFormat = {
                     'id': uDict['id'],
                     'login': uDict['login'],
                     'email': uDict['email'],
-                    'friend': friend,
+                    'selfFriendId': uDict['selfFriendId'],
+                    'friendUserId': uDict['friendUserId'],
                     'online': dateDiff < 5,
                     'dtActive': dateAct.strftime('%Y-%m-%d %H:%M:%S'),
                 }
@@ -426,48 +436,13 @@ class UserModel (Model):
 
         sqlUpdate = '''insert into "friends" ("user_id", "friend_id", "date") 
             values (%s, %s, %s)
-            on conflict ("user_id", "type") do update 
+            on conflict ("user_id", "friend_id") do update 
             set "date" = excluded.date;
         '''
 
         cursor.execute(sqlUpdate, [profile_dict["id"], id, dt])
         connection.commit()
         connection.close()
-
-        """
-
-        auth_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-
-        sql_update = '''insert into {0} ("user_id", "type", "date", "token")
-            values (%s, %s, %s, %s)
-            on conflict ("user_id", "type") do update 
-            set "date" = excluded.date,
-            "token" = excluded.token;'''.format(self.TABLE_TOKEN)
-    
-        cursor.execute(sql_update, [auth_user['id'], auth_type, auth_date, auth_token])        
-        connection.commit()
-        connection.close()
-
-        auth_user['token'] = auth_token
-
-
-
-        id integer NOT NULL DEFAULT nextval('friends_id_seq'::regclass),
-        user_id integer NOT NULL DEFAULT nextval('friends_from_id_seq'::regclass),
-        friend_id integer NOT NULL DEFAULT nextval('friends_to_id_seq'::regclass),
-        approved boolean,
-
-
-
-        sql_update = '''insert into {0} ("user_id", "type", "date", "token")
-            values (%s, %s, %s, %s)
-            on conflict ("user_id", "type") do update 
-            set "date" = excluded.date,
-            "token" = excluded.token;'''.format(self.TABLE_TOKEN)
-        """
-    
-
-
 
         return {
             'success': True

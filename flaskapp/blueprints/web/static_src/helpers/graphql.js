@@ -389,7 +389,8 @@ const USER_LIST = (opts) => {
                         id
                         login
                         email
-                        friend
+                        selfFriendId
+                        friendUserId
                         online
                         dtActive
                     }
@@ -410,7 +411,7 @@ const USER_LIST = (opts) => {
 
 
 
-friendRequest
+// friendRequest
 const FRIEND_REQUEST = (opts) => {
     let q = {
         query: compress(`

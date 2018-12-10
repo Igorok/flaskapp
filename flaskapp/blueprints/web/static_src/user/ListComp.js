@@ -26,9 +26,19 @@ class UserListComp extends React.Component {
         }));
     }
 
+    
+
     getUserItems () {
         var self = this;
         const items = map(this.props.userList.users, user => {
+            function friendRequest (e) {
+                e.preventDefault();
+                
+                self.props.dispatch(graphql({
+                    type: 'FRIEND_REQUEST',
+                    id: user.id
+                }));
+            }
 
             let textClass = user.online ? 'success' : 'active';
             return <tr className={textClass}>
@@ -41,7 +51,7 @@ class UserListComp extends React.Component {
                     {user.dtActive}
                 </td>
                 <td className="text-right">
-                    <button className="btn btn-default">
+                    <button className="btn btn-default" onClick={friendRequest} >
                         <span className="glyphicon glyphicon-plus"></span>
                         &nbsp;
                         Add to friend

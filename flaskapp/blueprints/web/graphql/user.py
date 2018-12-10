@@ -30,7 +30,8 @@ class UserDetailGraph (graphene.ObjectType):
     id = graphene.ID()
     login = graphene.String()
     email = graphene.String()
-    friend = graphene.Int()
+    selfFriendId = graphene.Int()
+    friendUserId = graphene.Int()
     online = graphene.Boolean()
     dtActive = graphene.String()
 
