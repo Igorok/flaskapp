@@ -34,7 +34,7 @@ class UserItemComp extends React.Component {
         // if this row sended request to current user
         else if (this.props.user.selfFriendId !== null) {
             friendBtn = <button className="btn btn-default" onClick={::this.friendRequest} >
-                <span className="glyphicon glyphicon-minus"></span>
+                <span className="glyphicon glyphicon-plus"></span>
                 &nbsp;
                 Approve friend
             </button>
@@ -42,7 +42,13 @@ class UserItemComp extends React.Component {
         // if current user sended request to current row
         else if (this.props.user.friendUserId !== null) {
             friendBtn = <button disabled className="btn btn-default" onClick={::this.friendRequest} >
-                <span className="glyphicon glyphicon-minus"></span>
+                <span className="glyphicon glyphicon-plus"></span>
+                &nbsp;
+                Add to friends
+            </button>
+        } else {
+            friendBtn = <button className="btn btn-default" onClick={::this.friendRequest} >
+                <span className="glyphicon glyphicon-plus"></span>
                 &nbsp;
                 Add to friends
             </button>
