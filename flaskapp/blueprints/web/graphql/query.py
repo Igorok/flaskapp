@@ -249,7 +249,7 @@ class Query(graphene.ObjectType):
             users = __users
         )
 
-    # get list blog data
+    # add user to friends
     friendRequest = graphene.Field(
         FriendRequest,
         token = graphene.String(),
@@ -260,9 +260,26 @@ class Query(graphene.ObjectType):
         __u = UserModel()
         __res = __u.friendRequest(**kwargs)
         return FriendRequest(
-            success = __res['success']
+            success = __res['success'],
+            friendId = __res['friendId'],
+            userId = __res['userId']
         )
 
+    # remove users from friends
+    friendRemove = graphene.Field(
+        FriendRequest,
+        token = graphene.String(),
+        device = graphene.String(),
+        id = graphene.Int(),
+    )
+    def resolve_friendRemove (self, info, *args, **kwargs):
+        __u = UserModel()
+        __res = __u.friendRemove(**kwargs)
+        return FriendRequest(
+            success = __res['success'],
+            friendId = __res['friendId'],
+            userId = __res['userId']
+        )
 
 # init query
 schema = graphene.Schema(query=Query)

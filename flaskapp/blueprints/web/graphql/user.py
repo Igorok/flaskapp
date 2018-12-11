@@ -41,6 +41,5 @@ class UserListGraph (graphene.ObjectType):
 
 class FriendRequest (graphene.ObjectType):
     success = graphene.Boolean()
-
-class FriendApprove (graphene.ObjectType):
-    success = graphene.Boolean()
+    friendId = graphene.Int()
+    userId = graphene.Int()

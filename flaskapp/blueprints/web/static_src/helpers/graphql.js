@@ -408,9 +408,6 @@ const USER_LIST = (opts) => {
     return JSON.stringify(q);
 };
 
-
-
-
 // friendRequest
 const FRIEND_REQUEST = (opts) => {
     let q = {
@@ -418,6 +415,29 @@ const FRIEND_REQUEST = (opts) => {
             query friendRequest ($token: String, $device: String!, $id: Int) {
                 friendRequest (token: $token, device: $device, id: $id) {
                     success
+                    userId
+                    friendId
+                }
+            }
+        `),
+        variables: {
+            token: opts.token || '',
+            device: opts.device,
+            id: opts.id
+        }
+    };
+    return JSON.stringify(q);
+};
+
+// friendRemove
+const FRIEND_REMOVE = (opts) => {
+    let q = {
+        query: compress(`
+            query friendRemove ($token: String, $device: String!, $id: Int) {
+                friendRemove (token: $token, device: $device, id: $id) {
+                    success
+                    userId
+                    friendId
                 }
             }
         `),
@@ -451,5 +471,6 @@ export const query = {
     POST_GET: POST_GET,
 
     USER_LIST: USER_LIST,
-    FRIEND_REQUEST: FRIEND_REQUEST
+    FRIEND_REQUEST: FRIEND_REQUEST,
+    FRIEND_REMOVE: FRIEND_REMOVE
 }

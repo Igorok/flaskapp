@@ -7,17 +7,15 @@ import {AlertMessage, PaginatorLayout} from '../helpers/component';
 
 
 
-/*
-    one user row
-
-
-'selfFriendId', # friend for whom did send request this user
-'friendUserId'
- */
+// one user row
 class UserItemComp extends React.Component {
     friendRequest (e) {
         e.preventDefault();
         return this.props.friendRequest(this.props.user.id);
+    }
+    friendRemove (e) {
+        e.preventDefault();
+        return this.props.friendRemove(this.props.user.id);
     }
     render () {
         let textClass = this.props.user.online ? 'success' : 'active';
@@ -27,7 +25,7 @@ class UserItemComp extends React.Component {
             this.props.user.selfFriendId !== null &&
             this.props.user.friendUserId !== null
         ) {
-            friendBtn = <button className="btn btn-default" onClick={::this.friendRequest} >
+            friendBtn = <button className="btn btn-default" onClick={::this.friendRemove} >
                 <span className="glyphicon glyphicon-minus"></span>
                 &nbsp;
                 Remove from friends
@@ -102,11 +100,19 @@ class UserListComp extends React.Component {
         }));
     }
 
+    friendRemove (id) {
+        this.props.dispatch(graphql({
+            type: 'FRIEND_REMOVE',
+            id: id
+        }));
+    }
+
     getUserItems () {
         const items = map(this.props.userList.users, user => {
             return <UserItemComp
                 user={user}
                 friendRequest={::this.friendRequest}
+                friendRemove={::this.friendRemove}
                 />
         });
 

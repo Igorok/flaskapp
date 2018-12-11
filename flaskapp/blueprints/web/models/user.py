@@ -445,5 +445,35 @@ class UserModel (Model):
         connection.close()
 
         return {
-            'success': True
+            'success': True,
+            'friendId': id,
+            'userId': profile_dict["id"]
+        }
+
+    """
+    remove friend request to some user
+    :param token: - current token of user
+    :param id: - id of the user for friendship
+    return True if request deleted
+    """
+    def friendRemove (self, *args, **kwargs):
+        # check authentication and get data of current user
+        profile_dict = self.getUserByToken(**kwargs)
+
+        id = int(kwargs['id']) if ('id' in kwargs) else 0
+        dt = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
+        connection = self.connect_postgres()
+        cursor = connection.cursor()
+
+        sqlRemove = 'delete from "friends" where user_id=%s and friend_id=%s;'
+
+        cursor.execute(sqlRemove, [profile_dict["id"], id])
+        connection.commit()
+        connection.close()
+
+        return {
+            'success': True,
+            'friendId': id,
+            'userId': profile_dict["id"]
         }
