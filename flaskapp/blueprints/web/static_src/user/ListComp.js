@@ -1,9 +1,78 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { graphql } from '../helpers/action';
-import {forEach, chunk, map} from 'lodash';
+import {map, isNumber} from 'lodash';
 import {AlertMessage, PaginatorLayout} from '../helpers/component';
 
+
+
+
+/*
+    one user row
+
+
+'selfFriendId', # friend for whom did send request this user
+'friendUserId'
+ */
+class UserItemComp extends React.Component {
+    friendRequest (e) {
+        e.preventDefault();
+        return this.props.friendRequest(this.props.user.id);
+    }
+    render () {
+        let textClass = this.props.user.online ? 'success' : 'active';
+        let friendBtn = null;
+        // if both users sended friend requests
+        if (
+            this.props.user.selfFriendId !== null &&
+            this.props.user.friendUserId !== null
+        ) {
+            friendBtn = <button className="btn btn-default" onClick={::this.friendRequest} >
+                <span className="glyphicon glyphicon-minus"></span>
+                &nbsp;
+                Remove from friends
+            </button>
+        }
+        // if this row sended request to current user
+        else if (this.props.user.selfFriendId !== null) {
+            friendBtn = <button className="btn btn-default" onClick={::this.friendRequest} >
+                <span className="glyphicon glyphicon-minus"></span>
+                &nbsp;
+                Approve friend
+            </button>
+        }
+        // if current user sended request to current row
+        else if (this.props.user.friendUserId !== null) {
+            friendBtn = <button disabled className="btn btn-default" onClick={::this.friendRequest} >
+                <span className="glyphicon glyphicon-minus"></span>
+                &nbsp;
+                Add to friends
+            </button>
+        }
+
+        return <tr className={textClass}>
+            <td>
+                <span className="glyphicon glyphicon-user"></span>
+                &nbsp;
+                <span>{this.props.user.login}</span>
+            </td>
+            <td>
+                {this.props.user.dtActive}
+            </td>
+            <td className="text-right">
+                {friendBtn}
+                &nbsp;
+                <button className="btn btn-default">
+                    <span className="glyphicon glyphicon-envelope"></span>
+                    &nbsp;
+                    Send message
+                </button>
+            </td>
+        </tr>
+    }
+}
+
+// list of users
 class UserListComp extends React.Component {
     constructor(props) {
         super(props);
@@ -21,19 +90,41 @@ class UserListComp extends React.Component {
     changePage (start = 0) {
         this.props.dispatch(graphql({
             type: 'USER_LIST',
-            start: start, 
-            perpage: this.props.userList.perpage, 
+            start: start,
+            perpage: this.props.userList.perpage,
         }));
     }
 
-    
+    friendRequest (id) {
+        this.props.dispatch(graphql({
+            type: 'FRIEND_REQUEST',
+            id: id
+        }));
+    }
+
+    getUserItems () {
+        const items = map(this.props.userList.users, user => {
+            return <UserItemComp
+                user={user}
+                friendRequest={::this.friendRequest}
+                />
+        });
+
+        return <table className="table table-hover">
+            <tbody>
+                {items}
+            </tbody>
+        </table>
+    }
+
+    /*
 
     getUserItems () {
         var self = this;
         const items = map(this.props.userList.users, user => {
             function friendRequest (e) {
                 e.preventDefault();
-                
+
                 self.props.dispatch(graphql({
                     type: 'FRIEND_REQUEST',
                     id: user.id
@@ -72,7 +163,9 @@ class UserListComp extends React.Component {
             </tbody>
         </table>
     }
-    
+
+     */
+
 
     render () {
         let alertOpts = null;
@@ -98,15 +191,11 @@ class UserListComp extends React.Component {
             changePage: ::this.changePage,
         };
 
-      
-
-
         return <div>
             <AlertMessage opts={alertOpts} />
-
             <PaginatorLayout param={pagerParam} />
         </div>
-        
+
     }
 }
 const mapStateToProps = (state) => {
