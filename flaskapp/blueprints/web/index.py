@@ -29,7 +29,7 @@ def getParams (keys, args):
     for key in keys:
         if (args.get(key) != None):
             params.append({'name': key, 'val': args.get(key)})
-    
+
     return params
 
 
@@ -84,13 +84,13 @@ def login():
 @web.route('/registration')
 def registration():
     return render_template('view.html', scripts=['registration'])
-    
+
 @web.route('/blogs')
 def blogList():
     params = getParams(['userId', 'start', 'perpage'], request.args)
     params.append({'name': 'page', 'val': 'blog'})
     return render_template(
-        'view.html', 
+        'view.html',
         scripts = ['blogList'],
         params = params
     )
@@ -102,7 +102,7 @@ def blogDetail(blogId):
     params.append({'name': 'blogId', 'val': blogId})
 
     return render_template(
-        'view.html', 
+        'view.html',
         scripts = ['blogDetail'],
         params = params
     )
@@ -112,7 +112,7 @@ def myBlogList():
     params = getParams(['start', 'perpage'], request.args)
     params.append({'name': 'page', 'val': 'blog'})
     return render_template(
-        'view.html', 
+        'view.html',
         scripts = ['myBlogList'],
         params = params
     )
@@ -120,8 +120,8 @@ def myBlogList():
 @web.route('/blog-edit/<blogId>')
 def blogEdit(blogId):
     return render_template(
-        'view.html', 
-        scripts = ['blogEdit'], 
+        'view.html',
+        scripts = ['blogEdit'],
         params = [
             {'name': 'blogId', 'val': blogId},
             {'name': 'page', 'val': 'blog'}
@@ -135,7 +135,7 @@ def myBlogDetail(blogId):
     params.append({'name': 'blogId', 'val': blogId})
 
     return render_template(
-        'view.html', 
+        'view.html',
         scripts = ['myBlogDetail'],
         params = params
     )
@@ -143,8 +143,8 @@ def myBlogDetail(blogId):
 @web.route('/post-edit/<blogId>/<postId>')
 def postEdit(blogId, postId):
     return render_template(
-        'view.html', 
-        scripts = ['postEdit'], 
+        'view.html',
+        scripts = ['postEdit'],
         params = [
             {'name': 'blogId', 'val': blogId},
             {'name': 'postId', 'val': postId},
@@ -155,8 +155,8 @@ def postEdit(blogId, postId):
 @web.route('/post/<blogId>/<postId>')
 def postDetail(blogId, postId):
     return render_template(
-        'view.html', 
-        scripts = ['postDetail'], 
+        'view.html',
+        scripts = ['postDetail'],
         params = [
             {'name': 'blogId', 'val': blogId},
             {'name': 'postId', 'val': postId},
@@ -169,7 +169,19 @@ def userList():
     params = getParams(['start', 'perpage'], request.args)
     params.append({'name': 'page', 'val': 'user'})
     return render_template(
-        'view.html', 
+        'view.html',
         scripts = ['userList'],
+        params = params
+    )
+
+@web.route('/chat/<userId>')
+def userList(userId):
+    params = [
+        {'name': 'page', 'val': 'chat'},
+        {'name': 'userId', 'val': userId}
+    ]
+    return render_template(
+        'view.html',
+        scripts = ['chat'],
         params = params
     )

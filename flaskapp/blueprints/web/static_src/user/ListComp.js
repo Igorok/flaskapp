@@ -128,57 +128,7 @@ class UserListComp extends React.Component {
             </tbody>
         </table>
     }
-
-    /*
-
-    getUserItems () {
-        var self = this;
-        const items = map(this.props.userList.users, user => {
-            function friendRequest (e) {
-                e.preventDefault();
-
-                self.props.dispatch(graphql({
-                    type: 'FRIEND_REQUEST',
-                    id: user.id
-                }));
-            }
-
-            let textClass = user.online ? 'success' : 'active';
-            return <tr className={textClass}>
-                <td>
-                    <span className="glyphicon glyphicon-user"></span>
-                    &nbsp;
-                    <span>{user.login}</span>
-                </td>
-                <td>
-                    {user.dtActive}
-                </td>
-                <td className="text-right">
-                    <button className="btn btn-default" onClick={friendRequest} >
-                        <span className="glyphicon glyphicon-plus"></span>
-                        &nbsp;
-                        Add to friend
-                    </button>
-                    &nbsp;
-                    <button className="btn btn-default">
-                        <span className="glyphicon glyphicon-envelope"></span>
-                        &nbsp;
-                        Send message
-                    </button>
-                </td>
-            </tr>
-        });
-
-        return <table className="table table-hover">
-            <tbody>
-                {items}
-            </tbody>
-        </table>
-    }
-
-     */
-
-
+    
     render () {
         let alertOpts = null;
         let users = null;
