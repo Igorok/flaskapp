@@ -1,1 +1,1 @@
-from .index import app
+from flaskapp.index import app, socketio

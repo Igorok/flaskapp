@@ -14,7 +14,7 @@ source venv/bin/activate
 
 ### install modules
 ```
-python setup.py install
+pip install -e .
 ```
 
 ### launch site

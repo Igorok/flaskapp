@@ -20,6 +20,7 @@ class UserItemComp extends React.Component {
     render () {
         let textClass = this.props.user.online ? 'success' : 'active';
         let friendBtn = null;
+        let msgBtn = null
         // if both users sended friend requests
         if (
             this.props.user.selfFriendId !== null &&
@@ -30,6 +31,11 @@ class UserItemComp extends React.Component {
                 &nbsp;
                 Remove from friends
             </button>
+            msgBtn = <a className="btn btn-default" href={"/chat-private/" + this.props.user.id}>
+                <span className="glyphicon glyphicon-envelope"></span>
+                &nbsp;
+                Send message
+            </a>
         }
         // if this row sended request to current user
         else if (this.props.user.selfFriendId !== null) {
@@ -66,11 +72,7 @@ class UserItemComp extends React.Component {
             <td className="text-right">
                 {friendBtn}
                 &nbsp;
-                <button className="btn btn-default">
-                    <span className="glyphicon glyphicon-envelope"></span>
-                    &nbsp;
-                    Send message
-                </button>
+                {msgBtn}
             </td>
         </tr>
     }

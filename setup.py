@@ -17,6 +17,8 @@ setup(
         'psycopg2-binary',
         'graphene',
         'pylint',
+        'gevent',
+        'flask-socketio'
     ],
     setup_requires=[
         'pytest-runner',

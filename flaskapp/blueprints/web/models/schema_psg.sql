@@ -52,15 +52,24 @@ CREATE TABLE "comment" (
     "date" timestamp DEFAULT NULL
 );
 
-drop table if exists "chat";
-CREATE TABLE "chat" (
+drop table if exists "chat_private";
+CREATE TABLE "chat_private" (
     "id" SERIAL PRIMARY KEY,
-    "type" varchar(45) DEFAULT NULL
+    "user_id" SERIAL NOT NULL,
+    "friend_id" SERIAL NOT NULL,
+    "date" timestamp DEFAULT NULL
 );
 
+drop table if exists "chat_group";
+CREATE TABLE "chat_group" (
+    "id" SERIAL PRIMARY KEY,
+    "user_id" SERIAL NOT NULL,
+    "description" varchar(256) DEFAULT NULL,
+    "date" timestamp DEFAULT NULL
+);
 
-drop table if exists "chat_and_user";
-CREATE TABLE "chat_and_user" (
+drop table if exists "chat_users";
+CREATE TABLE "chat_users" (
     "id" SERIAL PRIMARY KEY,
     "user_id" SERIAL NOT NULL,
     "chat_id" SERIAL NOT NULL
@@ -71,7 +80,8 @@ CREATE TABLE "chat_message" (
     "id" SERIAL PRIMARY KEY,
     "user_id" SERIAL NOT NULL,
     "chat_id" SERIAL NOT NULL,
-    "text" text
+    "text" text,
+    "date" timestamp DEFAULT NULL
 );
 
 drop table if exists "friends";

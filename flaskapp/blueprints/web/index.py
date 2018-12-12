@@ -1,8 +1,9 @@
 from flask import Blueprint, render_template, abort
 from jinja2 import TemplateNotFound
-
 import graphene
-
+from flask import request, session, g, redirect, url_for, abort, \
+    render_template, flash, current_app, jsonify
+from flaskapp.blueprints.web.graphql.query import schema
 
 web = Blueprint(
         'web',
@@ -11,17 +12,6 @@ web = Blueprint(
         static_folder = 'static',
         static_url_path='/static/web'
     )
-
-
-
-
-from flask import request, session, g, redirect, url_for, abort, \
-    render_template, flash, current_app, jsonify
-
-# from flaskapp.blueprints.web.actions.index import Action
-from flaskapp.blueprints.web.graphql.query import schema
-
-# action = Action()
 
 # get params from GET route
 def getParams (keys, args):
@@ -56,10 +46,6 @@ def graphql():
             'message': str(e)
         }
         abort(jsonify(error = err_dict))
-
-
-
-
 
 
 # GET routes
@@ -174,14 +160,14 @@ def userList():
         params = params
     )
 
-@web.route('/chat/<userId>')
-def userList(userId):
+@web.route('/chat-private/<userId>')
+def chatPrivate(userId):
     params = [
         {'name': 'page', 'val': 'chat'},
         {'name': 'userId', 'val': userId}
     ]
     return render_template(
         'view.html',
-        scripts = ['chat'],
+        scripts = ['chatPrivate'],
         params = params
     )

@@ -21,6 +21,8 @@ module.exports = {
         postEdit: path.resolve(__dirname, 'static_src/postEdit.js'),
         postDetail: path.resolve(__dirname, 'static_src/postDetail.js'),
 
+        chatPrivate: path.resolve(__dirname, 'static_src/chatPrivate.js'),
+
 
         
 
