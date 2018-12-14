@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 {% block body %}
     <div id="root"></div>
-    
+
     <script type="text/javascript">
         window.localParams = {};
         {% if params %}
@@ -17,22 +17,5 @@
             <script src="/static/web/js/{{ script }}.js"></script>
         {% endfor %}
     {% endif %}
-
-
-
-
-    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
-    <script type="text/javascript" charset="utf-8">
-        var socket = io.connect('http://' + document.domain + ':' + location.port);
-        socket.on('connect', function() {
-            socket.emit('json', {data: 'I\'m connected!'});
-        });
-        socket.on('json', function(r) {
-            console.log('receive json', r);
-        });
-
-    </script>
-
-
 
 {% endblock %}

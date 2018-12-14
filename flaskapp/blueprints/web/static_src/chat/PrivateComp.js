@@ -4,17 +4,93 @@ import {api, graphql} from '../helpers/action'
 import {AlertMessage} from '../helpers/component'
 
 
+import io from 'socket.io-client'
+
 
 class PrivateComp extends React.Component {
     constructor(props) {
         super(props);
+        this.props = this.props || {};
+        this.props.socket = io.connect('http://' + document.domain + ':' + location.port);
 
         this.state = {
             userId: this.props.chatPrivate.userId
-        }
+        };
+
+
+        this.props.socket.on('connect', () => {
+            this.props.socket.emit('json', {data: 'I\'m connected!'});
+        });
+        this.props.socket.on('json', (r) => {
+            console.log('receive json', r);
+        });
+
+        /*
+
+        this.io = client(window.location.host);
+
+        this.io.on('joinPers', (r) => {
+            this.props.dispatch(joinPers(r));
+        });
+
+        this.io.on('message', (r) => {
+            this.props.dispatch(message(r));
+        });
+
+        this.io.on('err', (e) => {
+            if (e && e.toString() === '403') {
+                localStorage.removeItem('user');
+                return window.location = '/login'
+            }
+            this.props.dispatch(err({
+                error: e,
+            }));
+        });
+
+        */
     }
 
+
+    /*
+    
+    emitMessage (msg) {
+        let p = {
+            token: this.props.auth.token,
+            uId: this.props.chatPersonal.userId,
+            rId: this.props.chatPersonal.roomId,
+            msg: msg,
+        }
+        this.io.emit('message', p);
+    }
+
+    componentWillMount () {
+        let p = {
+            token: this.props.auth.token,
+            userId: this.props.chatPersonal.userId,
+        }
+        this.io.emit('joinPers', p);
+    }
+
+    */
+
+
     render () {
+
+        /*
+
+        var socket = io.connect('http://' + document.domain + ':' + location.port);
+        socket.on('connect', function() {
+            socket.emit('json', {data: 'I\'m connected!'});
+        });
+        socket.on('json', function(r) {
+            console.log('receive json', r);
+        });
+
+        */
+
+
+
+
         let alertOpts = null;
 
         console.log('this.props', this.props);
