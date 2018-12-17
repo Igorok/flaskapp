@@ -15,8 +15,7 @@ app.register_blueprint(web)
 
 from flask_socketio import SocketIO
 socketio = SocketIO(app)
-flaskchat = getChat(socketio)
-
+getChat(socketio)
 
 app.config.update(dict(
     DATABASE=os.path.join(app.root_path, 'flaskapp.db'),

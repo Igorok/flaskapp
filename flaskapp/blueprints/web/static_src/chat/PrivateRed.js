@@ -26,11 +26,11 @@ CREATE TABLE "chat_message" (
 
 */
 
-const userId = window.localParams.userId;
+const friendId = parseInt(window.localParams.friendId);
 const initState = {
     id: null,
-    userId: userId,
-    friendId: null,
+    userId: null,
+    friendId: friendId,
     date: null,
     users: [],
     messages: [],
@@ -42,8 +42,27 @@ const initState = {
 const PrivateRed = (state = initState, action) => {
     let data = null;
 
-    return state;
-}
+    switch (action.type) {
+        case 'PRIVATE_GROUP_GET_SEND':
+            return {
+                status: 'send',
+                ...state
+            };
+        case 'PRIVATE_GROUP_GET_SUCCESS':
+            return {
+                status: 'success',
+                ...state
+            };
+        case 'PRIVATE_GROUP_GET_ERROR':
+            return {
+                status: 'error',
+                ...state
+            };
+        default:
+            return state;
+    }
+};
+
 export default PrivateRed;
 
 /*

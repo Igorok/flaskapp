@@ -160,11 +160,11 @@ def userList():
         params = params
     )
 
-@web.route('/chat-private/<userId>')
-def chatPrivate(userId):
+@web.route('/chat-private/<friendId>')
+def chatPrivate(friendId):
     params = [
         {'name': 'page', 'val': 'chat'},
-        {'name': 'userId', 'val': userId}
+        {'name': 'friendId', 'val': friendId}
     ]
     return render_template(
         'view.html',

@@ -96,26 +96,6 @@ class UserModel (Model):
             email=user.email,
         )
 
-    # get list of users
-    # def list(self):
-    #     connection = self.connect_postgres()
-    #     cursor = connection.cursor()
-
-    #     sql_rows = ['id', 'login', 'email', 'role', self.TABLE]
-
-    #     sql = '''select {0}, {1}, {2}, {3} 
-    #         from "{4}" 
-    #         order by id desc'''.format(*sql_rows)
-        
-    #     cursor.execute(sql)
-    #     u_list = cursor.fetchall()
-    #     connection.close()
-
-    #     u_list = map(self.list_to_dict(sql_rows), u_list)
-    #     return u_list or []
-
-
-
     """
     login function 
     @param {string} login - login

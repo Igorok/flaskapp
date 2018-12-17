@@ -5,6 +5,11 @@ def getChat(socketio):
     def connect():
         print('connect: ')
 
+    @socketio.on('getPrivateGroup')
+    def getPrivateGroup(data):
+        print('getPrivateGroup: ', data)
+        
+
     @socketio.on('json')
     def handle_json(json):
         print('received json: ' + str(json))

@@ -14,13 +14,18 @@ class PrivateComp extends React.Component {
         this.props.socket = io.connect('http://' + document.domain + ':' + location.port);
 
         this.state = {
-            userId: this.props.chatPrivate.userId
+            friendId: this.props.chatPrivate.friendId
         };
 
 
         this.props.socket.on('connect', () => {
-            this.props.socket.emit('json', {data: 'I\'m connected!'});
+            this.props.socket.emit('getPrivateGroup', {friendId: this.props.chatPrivate.friendId});
         });
+
+        this.props.socket.on('getPrivateGroup', (r) => {
+            console.log('getPrivateGroup', r);
+        });
+
         this.props.socket.on('json', (r) => {
             console.log('receive json', r);
         });
@@ -119,6 +124,48 @@ class PrivateComp extends React.Component {
             </ol>
 
             Hello userId - {this.state.userId}
+
+            <div>
+                <span className="label label-default">User 1</span>
+                <span className="label label-success">User 2</span>
+            </div>
+            <br />
+            <div>
+                <table className="table table-hover">
+                    <tbody>
+                        <tr>
+                            <td className="text-center">
+                                User 1
+                                <br />
+                                2018-12-01 13:00
+                            </td>
+                            <td>Some msg</td>
+                        </tr>
+                        <tr>
+                            <td className="text-center">
+                                User 2
+                                <br />
+                                2018-12-01 13:00
+                            </td>
+                            <td>Some msg</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <form>
+                <div className="row">
+                    <div className="col-md-10">
+                        <textarea className="form-control" rows="3"></textarea>
+                    </div>
+                    <div className="col-md-2">
+                        <button className="btn btn-default">
+                            <span className="glyphicon glyphicon-send"></span>
+                        </button>
+                    </div>
+                </div>
+            </form>
+            
         </div>
     }
 }
