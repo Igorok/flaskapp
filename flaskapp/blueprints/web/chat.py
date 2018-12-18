@@ -1,4 +1,5 @@
 from flask_socketio import send, emit, send
+from flaskapp.blueprints.web.models.chat import ChatModel
 
 def getChat(socketio):
     @socketio.on('connect')
@@ -7,8 +8,10 @@ def getChat(socketio):
 
     @socketio.on('getPrivateGroup')
     def getPrivateGroup(data):
-        print('getPrivateGroup: ', data)
-        
+        cm = ChatModel()
+        prGr = cm.getPrivateGroup(**data)
+        send(prGr, json=True)
+
 
     @socketio.on('json')
     def handle_json(json):

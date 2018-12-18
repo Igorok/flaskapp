@@ -19,7 +19,10 @@ class PrivateComp extends React.Component {
 
 
         this.props.socket.on('connect', () => {
-            this.props.socket.emit('getPrivateGroup', {friendId: this.props.chatPrivate.friendId});
+            this.props.socket.emit('getPrivateGroup', {
+                token: this.props.auth.token,
+                friendId: this.props.chatPrivate.friendId
+            });
         });
 
         this.props.socket.on('getPrivateGroup', (r) => {
@@ -57,7 +60,7 @@ class PrivateComp extends React.Component {
 
 
     /*
-    
+
     emitMessage (msg) {
         let p = {
             token: this.props.auth.token,
@@ -165,7 +168,7 @@ class PrivateComp extends React.Component {
                     </div>
                 </div>
             </form>
-            
+
         </div>
     }
 }

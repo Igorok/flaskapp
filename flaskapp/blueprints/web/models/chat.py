@@ -26,4 +26,43 @@ class ChatModel (Model):
         uModel = UserModel()
         profileDict = uModel.getUserByToken(**kwargs)
 
-        return None
+        selGrRows = ['id', 'user_id', 'friend_id', 'date'];
+        selGrSql = '''select {0}, {1}, {2}, {3} from "chat_private"
+            where ({1}=%s and {2}=%s) or ({1}=%s and {2}=%s)
+            '''.format(*selGrRows);
+
+        insGrSql = '''insert into "chat_private"
+            ({1}, {2}, {3}) values (%s, %s, %s)
+            returning "{0}"'''.format(*selGrRows)
+
+        selGrByIdSql = '''select {0}, {1}, {2}, {3} from "chat_private"
+            where {0}=%s
+            '''.format(*selGrRows);
+
+        connection = self.connect_postgres()
+        cursor = connection.cursor()
+        cursor.execute(selGrSql, [
+            profileDict['id'],
+            kwargs['friendId'],
+            kwargs['friendId'],
+            profileDict['id']
+        ])
+        selGrData = cursor.fetchone()
+
+        if (selGrData is None):
+            cursor.execute(insGrSql, [
+                profileDict['id'],
+                kwargs['friendId'],
+                datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            ])
+            grId = cursor.fetchone()[0]
+            connection.commit()
+            cursor.execute(selGrByIdSql, [grId])
+            selGrData = cursor.fetchone()
+
+        ltd = self.list_to_dict(selGrRows)
+        selGrDict = ltd(selGrData)
+
+        selGrDict['date'] = selGrDict['date'].strftime('%Y-%m-%d %H:%M:%S')
+
+        return selGrDict

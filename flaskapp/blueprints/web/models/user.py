@@ -23,13 +23,13 @@ class UserItem ():
 
         if 'date_act' in kwargs:
             self.date_act = str(kwargs['date_act']).strip()
-            
+
 
     def registrationValidate(self):
         if (
             self.password == None or
             self.email == None
-        ): 
+        ):
             raise Exception('Email and password are required!')
 
         if (self.password != self.confirmPassword):
@@ -41,6 +41,20 @@ class UserModel (Model):
     TABLE = 'user'
     TABLE_TOKEN = 'token'
 
+    # check the date of last user activity and return his status
+    def checkOnline(self, uDict):
+        dateAct = uDict['dateReg']
+        if (
+            'dateAct' in uDict and
+            not uDict['dateAct'] is None
+        ):
+            dateAct = uDict['dateAct']
+        dateDiff = (datetime.now() - dateAct).total_seconds() / 60.0
+        return {
+            'dateAct': dateAct,
+            'online': dateDiff < 5
+        }
+
     # hash password of user
     def hash_password (self, password):
         return sha256(str(password + config['SALT']).encode('utf-8')).hexdigest()
@@ -51,7 +65,7 @@ class UserModel (Model):
             not 'id' in kwargs or
             not 'login' in kwargs or
             not 'email' in kwargs
-        ): 
+        ):
             raise Exception('Login and email are required')
 
         user_id = kwargs['id'] if kwargs['id'] != None else -1
@@ -81,10 +95,10 @@ class UserModel (Model):
         count = self.check_unique(id = user.id, login = user.login, email = user.email)
         password = self.hash_password(user.password)
 
-        sql = '''insert into "{0}" 
-            ("login", "password", "email", "role", "date_reg") 
+        sql = '''insert into "{0}"
+            ("login", "password", "email", "role", "date_reg")
             values (%s, %s, %s, %s, %s);'''.format(self.TABLE)
-        
+
         connection = self.connect_postgres()
         cursor = connection.cursor()
         cursor.execute(sql, [user.login, password, user.email, user.role, user.date_reg])
@@ -97,7 +111,7 @@ class UserModel (Model):
         )
 
     """
-    login function 
+    login function
     @param {string} login - login
     @param {string} password - password
     """
@@ -108,17 +122,17 @@ class UserModel (Model):
             not 'password' in kwargs
         ):
             raise Exception('Login and password are required')
-        
+
         # hash password, select user
-        password = self.hash_password(kwargs['password'])        
+        password = self.hash_password(kwargs['password'])
         sql_rows = ['id', 'login', 'email', 'role', self.TABLE]
 
         connection = self.connect_postgres()
         cursor = connection.cursor()
-        
-        sql_select = '''select {0}, {1}, {2}, {3} 
-            from "{4}" 
-            where "login" = %s 
+
+        sql_select = '''select {0}, {1}, {2}, {3}
+            from "{4}"
+            where "login" = %s
             and "password" = %s;'''.format(*sql_rows)
 
         cursor.execute(sql_select, (kwargs['login'], password))
@@ -140,16 +154,16 @@ class UserModel (Model):
 
         sql_update = '''insert into {0} ("user_id", "type", "date", "token")
             values (%s, %s, %s, %s)
-            on conflict ("user_id", "type") do update 
+            on conflict ("user_id", "type") do update
             set "date" = excluded.date,
             "token" = excluded.token;'''.format(self.TABLE_TOKEN)
-    
-        cursor.execute(sql_update, [auth_user['id'], auth_type, auth_date, auth_token])        
+
+        cursor.execute(sql_update, [auth_user['id'], auth_type, auth_date, auth_token])
         connection.commit()
         connection.close()
 
         auth_user['token'] = auth_token
-        
+
         # return dict with user data
         return auth_user
 
@@ -189,15 +203,15 @@ class UserModel (Model):
         # check that token is actual
         dateNow = datetime.now()
         dateEnd = tokenDict['date'] + timedelta(days = config['TOKEN_LIFETIME'])
-        
+
         if dateNow > dateEnd:
             connection.close()
             raise Exception(403)
-        
+
         # get user by user_id from token table
         userRows = ['id', 'login', 'email', 'role', self.TABLE]
         userQuery = 'select "{0}", "{1}", "{2}", "{3}" from "{4}" where "id" = %s'.format(*userRows)
-        
+
         cursor.execute(userQuery, [tokenDict['user_id']])
         userFound = cursor.fetchone()
 
@@ -213,7 +227,7 @@ class UserModel (Model):
         # update user activity
         updateQuery = 'update "{0}" set "date_act" = %s where "id" = %s;'.format(self.TABLE)
         cursor.execute(updateQuery, [
-            datetime.now().strftime('%Y-%m-%d %H:%M:%S'), 
+            datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
             userDict['id']
         ])
         connection.commit()
@@ -258,7 +272,7 @@ class UserModel (Model):
 
         # check required params
         if (
-            not 'login' in kwargs or 
+            not 'login' in kwargs or
             not 'email' in kwargs
         ):
             raise Exception('Nothing to change')
@@ -268,7 +282,7 @@ class UserModel (Model):
 
         # check that login or email was changed
         if (
-            login == profile_dict['login'] and 
+            login == profile_dict['login'] and
             email == profile_dict['email']
         ):
             raise Exception('Nothing to change')
@@ -281,7 +295,7 @@ class UserModel (Model):
         )
 
         update_query = 'update "{0}" set "login" = %s, "email" = %s where "id" = %s;'.format(self.TABLE)
-        
+
         connection = self.connect_postgres()
         cursor = connection.cursor()
         cursor.execute(update_query, [login, email, profile_dict['id']])
@@ -323,7 +337,7 @@ class UserModel (Model):
         # first join - get friends request to current user from this row
         # second join - get friends request from current user to this row
         userSql = '''
-            select 
+            select
                 uTable.id as {0},
                 uTable.login as {1},
                 uTable.email as {2},
@@ -365,14 +379,7 @@ class UserModel (Model):
             for u in userData:
                 uDict = ltd(u)
                 # check the date of last activity
-                dateAct = uDict['dateReg']
-                if (
-                    'dateAct' in uDict and
-                    not uDict['dateAct'] is None
-                ):
-                    dateAct = uDict['dateAct']
-
-                dateDiff = (datetime.now() - dateAct).total_seconds() / 60.0
+                onlineInfo = self.checkOnline(uDict)
 
                 uFormat = {
                     'id': uDict['id'],
@@ -380,8 +387,8 @@ class UserModel (Model):
                     'email': uDict['email'],
                     'selfFriendId': uDict['selfFriendId'],
                     'friendUserId': uDict['friendUserId'],
-                    'online': dateDiff < 5,
-                    'dtActive': dateAct.strftime('%Y-%m-%d %H:%M:%S'),
+                    'online': onlineInfo['online'],
+                    'dtActive': onlineInfo['dateAct'].strftime('%Y-%m-%d %H:%M:%S'),
                 }
                 listResult['users'].append(uFormat)
 
@@ -391,7 +398,8 @@ class UserModel (Model):
             profile_dict['id']
         ])
         countData = cursor.fetchone()
-        
+        connection.close()
+
         if (countData != None):
             listResult['count'] = countData[0]
 
@@ -414,9 +422,9 @@ class UserModel (Model):
         connection = self.connect_postgres()
         cursor = connection.cursor()
 
-        sqlUpdate = '''insert into "friends" ("user_id", "friend_id", "date") 
+        sqlUpdate = '''insert into "friends" ("user_id", "friend_id", "date")
             values (%s, %s, %s)
-            on conflict ("user_id", "friend_id") do update 
+            on conflict ("user_id", "friend_id") do update
             set "date" = excluded.date;
         '''
 
