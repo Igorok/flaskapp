@@ -10,27 +10,33 @@ import io from 'socket.io-client'
 class PrivateComp extends React.Component {
     constructor(props) {
         super(props);
-        this.props = this.props || {};
-        this.props.socket = io.connect('http://' + document.domain + ':' + location.port);
+        const self = this;
+        self.props = self.props || {};
+        self.props.socket = io.connect('http://' + document.domain + ':' + location.port);
 
-        this.state = {
-            friendId: this.props.chatPrivate.friendId
+        self.state = {
+            friendId: self.props.chatPrivate.friendId,
+            msg: null
         };
 
 
-        this.props.socket.on('connect', () => {
-            this.props.socket.emit('getPrivateGroup', {
-                token: this.props.auth.token,
-                friendId: this.props.chatPrivate.friendId
+        self.props.socket.on('connect', () => {
+            self.props.socket.emit('joinPrivateGroup', {
+                token: self.props.auth.token,
+                friendId: self.props.chatPrivate.friendId
             });
         });
 
-        this.props.socket.on('getPrivateGroup', (r) => {
-            console.log('getPrivateGroup', r);
+        self.props.socket.on('joinPrivateGroup', (r) => {
+            console.log('joinPrivateGroup', r);
         });
 
-        this.props.socket.on('json', (r) => {
-            console.log('receive json', r);
+        self.props.socket.on('messagePrivate', (r) => {
+            console.log('receive messagePrivate', r);
+
+            self.setState({
+                msg: ''
+            });
         });
 
         /*
@@ -81,6 +87,22 @@ class PrivateComp extends React.Component {
 
     */
 
+    sendMsg (e) {
+        e.preventDefault();
+
+        console.log('send msg', this.state.msg);
+        this.props.socket.emit('messagePrivate', {
+            token: this.props.auth.token,
+            chatId: 1,
+            text: this.state.msg
+        });
+
+    }
+    changeMsg (e) {
+        this.setState({
+            msg: e.target.value
+        });
+    }
 
     render () {
 
@@ -100,8 +122,6 @@ class PrivateComp extends React.Component {
 
 
         let alertOpts = null;
-
-        console.log('this.props', this.props);
 
         if (this.props.chatPrivate.status === 'error') {
             alertOpts = {
@@ -156,13 +176,20 @@ class PrivateComp extends React.Component {
                 </table>
             </div>
 
-            <form>
+            <form onSubmit={::this.sendMsg} >
                 <div className="row">
                     <div className="col-md-10">
-                        <textarea className="form-control" rows="3"></textarea>
+                        <p>{this.state.msg}</p>
+
+                        <textarea 
+                            className="form-control" 
+                            rows="3" 
+                            value={this.state.msg}
+                            onChange={::this.changeMsg}
+                        ></textarea>
                     </div>
                     <div className="col-md-2">
-                        <button className="btn btn-default">
+                        <button className="btn btn-default" >
                             <span className="glyphicon glyphicon-send"></span>
                         </button>
                     </div>

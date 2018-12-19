@@ -9,7 +9,7 @@ class ChatModel (Model):
     :param friendId: - friendId of friend
     return object, contain id of group, list of users and messages
     """
-    def getPrivateGroup(self, *args, **kwargs):
+    def joinPrivateGroup(self, *args, **kwargs):
         if (not 'friendId' in kwargs):
             raise Exception('Group not found')
 
@@ -95,6 +95,8 @@ class ChatModel (Model):
             100
         ])
         selMsgData = cursor.fetchall()
+        connection.close()
+
         msgList = []
         if (not selMsgData is None):
             ltdMsg = self.list_to_dict(selMsgRows)
@@ -110,3 +112,80 @@ class ChatModel (Model):
         }
 
         return resDict
+
+
+    """
+    receive message from user
+    :param token: - current token of user
+    :param chatId: - id of chat room
+    :param text: - text of message
+
+    return saved message 
+    """
+    def messagePrivate (self, *args, **kwargs):
+        if (not 'chatId' in kwargs):
+            raise Exception('Chat room not found')
+
+        if (
+            not 'text' in kwargs or
+            kwargs['text'] is None or
+            len(str(kwargs['text'])) == 0
+        ):
+            return None
+        
+        # check authentication and get data of current user
+        uModel = UserModel()
+        profileDict = uModel.getUserByToken(**kwargs)
+
+        # check access to chat room
+        grRows = ['id', 'user_id', 'friend_id', 'date']
+        grSql = '''select {0}, {1}, {2}, {3} 
+            from chat_private
+            where id = %s 
+            and (user_id = %s or friend_id = %s)
+            ;'''.format(*grRows)
+
+        connection = self.connect_postgres()
+        cursor = connection.cursor()
+        cursor.execute(grSql, [
+            kwargs['chatId'],
+            profileDict['id'],
+            profileDict['id']
+        ])
+        grId = cursor.fetchone()
+
+        if (grId is None):
+            connection.close()
+            raise Exception('Message not saved')
+
+        insRows = ['id', 'user_id', 'chat_id', 'text', 'date']
+        insDict = {
+            'userId': profileDict['id'],
+            'chatId': kwargs['chatId'],
+            'text': str(kwargs['text']),
+            'date': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        }
+        insSql = '''insert into "chat_message"
+            ({1}, {2}, {3}, {4})
+            values (%s, %s, %s, %s)
+            returning {0};'''.format(*insRows)
+        cursor.execute(insSql, [
+            insDict['userId'],
+            insDict['chatId'],
+            insDict['text'],
+            insDict['date'],
+        ])
+        insDict['id'] = cursor.fetchone()[0]
+        connection.commit()
+        connection.close()
+
+        return insDict
+
+
+
+
+
+
+
+
+        
