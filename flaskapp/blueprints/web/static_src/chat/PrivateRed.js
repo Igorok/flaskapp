@@ -40,7 +40,7 @@ const initState = {
 };
 
 const PrivateRed = (state = initState, action) => {
-    let data = null;
+    let data = {...state};
 
     switch (action.type) {
         case 'PRIVATE_GROUP_GET_SEND':
@@ -58,6 +58,28 @@ const PrivateRed = (state = initState, action) => {
                 status: 'error',
                 ...state
             };
+
+
+
+
+
+
+        case 'PRIVATE_JOIN_SEND':
+            return {
+                status: 'send',
+                ...state
+            };
+        case 'PRIVATE_JOIN_SUCCESS':
+            return {
+                status: 'success',
+                ...action
+            };
+        case 'PRIVATE_JOIN_ERROR':
+            return {
+                status: 'error',
+                ...state
+            };
+
         default:
             return state;
     }

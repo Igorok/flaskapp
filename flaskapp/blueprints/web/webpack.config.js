@@ -24,11 +24,11 @@ module.exports = {
         chatPrivate: path.resolve(__dirname, 'static_src/chatPrivate.js'),
 
 
-        
+
 
         // profile: path.resolve(__dirname, 'src/profile.js'),
         // about: path.resolve(__dirname, 'src/about.js'),
-        
+
         // blog_list: path.resolve(__dirname, 'src/blog_list.js'),
         // blog_detail: path.resolve(__dirname, 'src/blog_detail.js'),
         // post_detail: path.resolve(__dirname, 'src/post_detail.js'),
@@ -121,7 +121,7 @@ module.exports = {
 
     // devtool: 'cheap-module-eval-source-map',
 
-    devtool: 'inline-source-map',
+    devtool: 'debug',
     watch: true,
 
 

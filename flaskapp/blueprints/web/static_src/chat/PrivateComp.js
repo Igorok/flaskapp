@@ -10,9 +10,9 @@ import io from 'socket.io-client'
 class PrivateComp extends React.Component {
     constructor(props) {
         super(props);
-        const self = this;
+        let self = this;
         self.props = self.props || {};
-        self.props.socket = io.connect('http://' + document.domain + ':' + location.port);
+        self.socket = io.connect('http://' + document.domain + ':' + location.port);
 
         self.state = {
             friendId: self.props.chatPrivate.friendId,
@@ -20,18 +20,33 @@ class PrivateComp extends React.Component {
         };
 
 
-        self.props.socket.on('connect', () => {
-            self.props.socket.emit('joinPrivateGroup', {
+        self.socket.on('connect', () => {
+            self.props.dispatch({
+                type: 'PRIVATE_JOIN_SEND',
+            });
+
+            console.log(
+                'self.socket', self.socket
+            );
+
+            self.socket.emit('joinPrivateGroup', {
                 token: self.props.auth.token,
                 friendId: self.props.chatPrivate.friendId
             });
         });
 
-        self.props.socket.on('joinPrivateGroup', (r) => {
-            console.log('joinPrivateGroup', r);
+        self.socket.on('joinPrivateGroup', (r) => {
+            self.props.dispatch({
+                type: 'PRIVATE_JOIN_SUCCESS',
+                id: r.id,
+                userId: r.userId,
+                friendId: r.friendId,
+                users: r.users,
+                messages: r.messages
+            });
         });
 
-        self.props.socket.on('messagePrivate', (r) => {
+        self.socket.on('messagePrivate', (r) => {
             console.log('receive messagePrivate', r);
 
             self.setState({
@@ -91,7 +106,8 @@ class PrivateComp extends React.Component {
         e.preventDefault();
 
         console.log('send msg', this.state.msg);
-        this.props.socket.emit('messagePrivate', {
+
+        this.socket.emit('messagePrivate', {
             token: this.props.auth.token,
             chatId: 1,
             text: this.state.msg
@@ -181,9 +197,9 @@ class PrivateComp extends React.Component {
                     <div className="col-md-10">
                         <p>{this.state.msg}</p>
 
-                        <textarea 
-                            className="form-control" 
-                            rows="3" 
+                        <textarea
+                            className="form-control"
+                            rows="3"
                             value={this.state.msg}
                             onChange={::this.changeMsg}
                         ></textarea>
