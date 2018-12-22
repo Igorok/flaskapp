@@ -13,7 +13,6 @@ class ChatModel (Model):
         if (not 'friendId' in kwargs):
             raise Exception('Group not found')
 
-        
         # check authentication and get data of current user
         uModel = UserModel()
         profileDict = uModel.getUserByToken(**kwargs)
@@ -56,7 +55,8 @@ class ChatModel (Model):
         #get users from group
         selUsrRows = ['id', 'login', 'dateReg', 'dateAct']
         selUsrSql = '''select {0}, {1}, date_reg as {2}, date_act as {3} 
-            from "user" where {0}=any(%s);
+            from "user" where {0}=any(%s)
+            order by id asc;
             '''.format(*selUsrRows)
         cursor.execute(selUsrSql, [
             [selGrDict['user_id'], selGrDict['friend_id']]
@@ -77,16 +77,17 @@ class ChatModel (Model):
             })
 
         #get messages from group
-        '''
-        "id" SERIAL PRIMARY KEY,
-        "user_id" SERIAL NOT NULL,
-        "chat_id" SERIAL NOT NULL,
-        "text" text,
-        "date" timestamp DEFAULT NULL
-        '''
-        selMsgRows = ['id', 'userId', 'chatId', 'text', 'date']
-        selMsgSql = '''select {0}, user_id as {1}, chat_id as {2}, {3}, {4}
-            from "chat_message" where chat_id=%s
+        selMsgRows = ['id', 'userId', 'chatId', 'text', 'date', 'userLogin']
+        selMsgSql = '''select 
+                chat_message.id as {0}, 
+                chat_message.user_id as {1}, 
+                chat_message.chat_id as {2}, 
+                chat_message.text as {3}, 
+                chat_message.date as {4},
+                uTable.login as {5}
+            from "chat_message" 
+            join "user" as uTable on uTable.id = chat_message.user_id
+            where chat_message.chat_id=%s
             order by id desc 
             limit %s
             ;'''.format(*selMsgRows)
@@ -100,7 +101,11 @@ class ChatModel (Model):
         msgList = []
         if (not selMsgData is None):
             ltdMsg = self.list_to_dict(selMsgRows)
-            msgList = list(map(ltdMsg, selMsgData))
+            for msg in selMsgData:
+                msgDict = ltdMsg(msg)
+                msgDict['date'] = msgDict['date'].strftime('%Y-%m-%d %H:%M')
+                msgList.append(msgDict)
+            msgList.reverse()
 
         resDict = {
             'id': selGrDict['id'],
@@ -158,6 +163,7 @@ class ChatModel (Model):
             connection.close()
             raise Exception('Message not saved')
 
+        # insert message and return dict with id
         insRows = ['id', 'user_id', 'chat_id', 'text', 'date']
         insDict = {
             'userId': profileDict['id'],
@@ -179,13 +185,7 @@ class ChatModel (Model):
         connection.commit()
         connection.close()
 
+        insDict['userLogin'] = profileDict['login']
+        insDict['date'] = datetime.strptime(insDict['date'], '%Y-%m-%d %H:%M:%S').strftime('%Y-%m-%d %H:%M')
+
         return insDict
-
-
-
-
-
-
-
-
-        

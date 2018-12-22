@@ -34,3 +34,14 @@
     margin: 0 2px;
 
 }
+
+.chat-page {
+    .user-list {
+        .label {
+            margin-right: 10px;
+        }
+    }
+    textarea {
+        resize: none;
+    }
+}

@@ -43,42 +43,36 @@ const PrivateRed = (state = initState, action) => {
     let data = {...state};
 
     switch (action.type) {
-        case 'PRIVATE_GROUP_GET_SEND':
-            return {
-                status: 'send',
-                ...state
-            };
-        case 'PRIVATE_GROUP_GET_SUCCESS':
-            return {
-                status: 'success',
-                ...state
-            };
-        case 'PRIVATE_GROUP_GET_ERROR':
-            return {
-                status: 'error',
-                ...state
-            };
-
-
-
-
-
-
         case 'PRIVATE_JOIN_SEND':
-            return {
-                status: 'send',
-                ...state
-            };
+            data.status =  'send';
+            return data;
         case 'PRIVATE_JOIN_SUCCESS':
-            return {
-                status: 'success',
-                ...action
-            };
-        case 'PRIVATE_JOIN_ERROR':
-            return {
-                status: 'error',
-                ...state
-            };
+            data.id = action.id;
+            data.date = action.date;
+            data.users = action.users;
+            data.messages = action.messages;
+            data.status = 'success';
+            return data;
+
+        case 'PRIVATE_MSG_SEND':
+            data.status = 'send';
+            return data;
+        case 'PRIVATE_MSG_SUCCESS':
+            data.status = 'success';
+            data.messages.push({
+                id: action.id,
+                userId: action.userId,
+                userLogin: action.userLogin,
+                chatId: action.chatId,
+                date: action.date,
+                text: action.text
+            });
+            return data;
+
+        case 'ERROR':
+            data.status = 'error';
+            data.error = action.error;
+            return data;
 
         default:
             return state;

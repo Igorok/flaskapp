@@ -13,7 +13,7 @@ sudo apt-get install libreadline-dev wget curl llvm libncurses5-dev xz-utils lib
 curl -L https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer | bash
 pyenv update
 pyenv versions
-pyenv install 3.6.5
+pyenv install 3.7.1
 ```
 
 ### install venv
@@ -34,4 +34,12 @@ source venv/bin/activate
 export FLASK_APP="flaskapp.index"
 export FLASK_DEBUG=1
 flask run
+```
+
+### webpack
+```
+increase limit of watchers
+echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
+cd flaskapp/flaskapp/blueprints/web
+npm run-script build
 ```

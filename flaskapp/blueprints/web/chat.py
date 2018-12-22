@@ -13,10 +13,14 @@ def getChat(socketio):
         join_room(prGr['id'])
         emit('joinPrivateGroup', prGr, json=True, room=prGr['id'])
 
-
     @socketio.on('messagePrivate')
     def messagePrivate(data):
         cm = ChatModel()
         msg = cm.messagePrivate(**data)
-        emit('messagePrivate', msg, json=True, room=msg['chatId'])
+        if (not msg is None):
+            emit('messagePrivate', msg, json=True, room=msg['chatId'])
 
+    @socketio.on_error()
+    def error_handler(e):
+        print('@socketio.on_error', e)
+        emit('error', {'error': str(e)}, json=True)
