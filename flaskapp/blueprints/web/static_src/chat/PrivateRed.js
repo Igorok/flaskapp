@@ -55,7 +55,7 @@ const PrivateRed = (state = initState, action) => {
             return data;
 
         case 'PRIVATE_MSG_SEND':
-            data.status = 'send';
+            data.status = 'send_message';
             return data;
         case 'PRIVATE_MSG_SUCCESS':
             data.status = 'success';

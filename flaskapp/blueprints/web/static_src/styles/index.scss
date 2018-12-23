@@ -44,4 +44,11 @@
     textarea {
         resize: none;
     }
+    .message-list {
+        overflow: auto;
+        margin-bottom: 20px;
+        .table {
+            margin-bottom: 0;
+        }
+    }
 }

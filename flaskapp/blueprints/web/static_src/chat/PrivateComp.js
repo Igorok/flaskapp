@@ -1,6 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { map } from 'lodash'
+import 'jquery'
 import {api, graphql} from '../helpers/action'
 import {AlertMessage} from '../helpers/component'
 
@@ -27,7 +28,47 @@ class UsersComp extends React.Component {
 }
 
 class MessagesComp extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            mHeight: 100
+        }
+    }
+
+    scrollBottom () {
+        let h = $('.table-hover').height();
+        $('.message-list').scrollTop(h);
+    }
+
+    changeHeinght () {
+        let wHeight = $(window).height();
+        let mHeight = wHeight - 50 -20 - 
+            36 - 20 -
+            10 - 20 -10 -
+            20 -
+            75 - 20
+            ;
+
+        this.setState({mHeight: mHeight});
+    }
+
+    componentDidMount () {
+        this.changeHeinght();
+        this.scrollBottom();
+        $(window).on('resize', () => {
+            this.changeHeinght();
+        })
+    }
+
+    componentDidUpdate() {
+        this.scrollBottom();
+    }
+
     render () {
+        let style = {
+            height: this.state.mHeight + 'px',
+        };
+
         let messages = null;
         if (this.props.messages) {
             messages = map(this.props.messages, m => {
@@ -38,7 +79,7 @@ class MessagesComp extends React.Component {
                 </tr>
             });
         }
-        return <div>
+        return <div className='message-list' style={style}>
             <table className="table table-hover">
                 <tbody>
                     {messages}
@@ -121,9 +162,9 @@ class PrivateComp extends React.Component {
     }
 
     render () {
-
         let alertOpts = null;
-
+        let formDisabled = false;
+        
         if (this.props.chatPrivate.status === 'error') {
             alertOpts = {
                 className: 'danger',
@@ -134,6 +175,10 @@ class PrivateComp extends React.Component {
                 className: 'info',
                 text: 'Loading, please wait',
             }
+        } else if (this.props.chatPrivate.status === 'send_message') {
+            formDisabled = true;
+        } else if (this.props.chatPrivate.status === 'success') {
+            formDisabled = false;
         }
 
         return <div className='chat-page'>
@@ -141,10 +186,10 @@ class PrivateComp extends React.Component {
                 <li><a href="/users">Users</a></li>
                 <li className="active">Chat</li>
             </ol>
-
-            <AlertMessage opts={alertOpts} />
+            
             <UsersComp users={this.props.chatPrivate.users} />
-            <MessagesComp messages={this.props.chatPrivate.messages} />
+            <MessagesComp messages={this.props.chatPrivate.messages}/>
+            <AlertMessage opts={alertOpts} />
 
             <form className='chat-form' onSubmit={::this.sendMsg} >
                 <div className="row">
@@ -154,10 +199,11 @@ class PrivateComp extends React.Component {
                             rows="3"
                             value={this.state.msg}
                             onChange={::this.changeMsg}
+                            disabled={formDisabled}
                         ></textarea>
                     </div>
                     <div className="col-md-2">
-                        <button className="btn btn-default" >
+                        <button className="btn btn-default" disabled={formDisabled}>
                             <span className="glyphicon glyphicon-send"></span>
                         </button>
                     </div>
