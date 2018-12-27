@@ -171,3 +171,13 @@ def chatPrivate(friendId):
         scripts = ['chatPrivate'],
         params = params
     )
+
+@web.route('/friends')
+def friendList():
+    params = getParams(['start', 'perpage'], request.args)
+    params.append({'name': 'page', 'val': 'friend'})
+    return render_template(
+        'view.html',
+        scripts = ['friendList'],
+        params = params
+    )

@@ -11,6 +11,7 @@ module.exports = {
 
         profile: path.resolve(__dirname, 'static_src/profile.js'),
         userList: path.resolve(__dirname, 'static_src/userList.js'),
+        userList: path.resolve(__dirname, 'static_src/friendList.js'),
 
         blogList: path.resolve(__dirname, 'static_src/blogList.js'),
         blogDetail: path.resolve(__dirname, 'static_src/blogDetail.js'),
