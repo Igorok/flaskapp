@@ -1,33 +1,5 @@
 import compress from "graphql-query-compress";
 
-/*
-
-const USER_LIST = (opts) => {
-    let q = {
-        query: compress(`
-            query userlist($id: String) {
-                userlist (id: $id) {
-                    users {
-                        id
-                        login
-                        role
-                    }
-                }
-            }
-        `),
-        variables: {
-            id: opts.id
-        },
-    }
-    return JSON.stringify(q);
-};
-
-*/
-
-
-
-
-
 const REG = (opts) => {
     let q = {
         query: compress(`
@@ -450,6 +422,31 @@ const FRIEND_REMOVE = (opts) => {
     return JSON.stringify(q);
 };
 
+const FRIEND_LIST = (opts) => {
+    let q = {
+        query: compress(`
+            query getFriendList ($token: String, $device: String!, $start: Int, $perpage: Int) {
+                getFriendList (token: $token, device: $device, start: $start, perpage: $perpage) {
+                    friends {
+                        id
+                        login
+                        email
+                        online
+                        dtActive
+                    }
+                    count
+                }
+            }
+        `),
+        variables: {
+            token: opts.token || '',
+            device: opts.device,
+            start: opts.start,
+            perpage: opts.perpage,
+        },
+    }
+    return JSON.stringify(q);
+};
 
 export const query = {
     REG: REG,

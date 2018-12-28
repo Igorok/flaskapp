@@ -308,14 +308,7 @@ class UserModel (Model):
         )
 
 
-    '''
-        id = graphene.ID()
-        login = graphene.String()
-        email = graphene.String()
-        friend = graphene.Int()
-        online = graphene.Boolean()
-        dtActive = graphene.String()
-    '''
+    # list of users
     def getUserList (self, *args, **kwargs):
         # check authentication and get data of current user
         profile_dict = self.getUserByToken(**kwargs)
@@ -465,3 +458,132 @@ class UserModel (Model):
             'friendId': id,
             'userId': profile_dict["id"]
         }
+
+
+
+
+    # list of friends
+    def getFriendList (self, *args, **kwargs):
+
+        '''
+        select uTable.id, uTable.login ,
+            selfReq.user_id as self_u_id , selfReq.friend_id as self_f_id,
+            usrReq.user_id as usr_u_id , usrReq.friend_id as usr_f_id
+
+        from "user" as uTable
+
+        left join friends as selfReq
+            on uTable.id = selfReq.user_id
+            and selfReq.friend_id = 1
+
+        left join friends as usrReq
+            on uTable.id = usrReq.friend_id
+            and usrReq.user_id = 1
+
+        where uTable.id <> 1
+            and selfReq.friend_id is not null
+            and usrReq.user_id is not null
+        ;
+
+
+        '''
+
+
+
+
+
+
+
+
+
+
+
+
+
+        # check authentication and get data of current user
+        profile_dict = self.getUserByToken(**kwargs)
+
+        start = int(kwargs['start']) if ('start' in kwargs) else 0
+        perpage = int(kwargs['perpage']) if ('perpage' in kwargs) else 20
+
+        listResult = {
+            'count': 0,
+            'users': []
+        }
+        userRows = [
+            'id', 'login', 'email', 'dateAct', 'dateReg', # user data
+            'selfFriendId', # friend for whom did send request this user
+            'friendUserId' # user that did send friend request for this user
+        ]
+
+        # get data from the user table, excluding the current user
+        # first join - get friends request to current user from this row
+        # second join - get friends request from current user to this row
+        userSql = '''
+            select
+                uTable.id as {0},
+                uTable.login as {1},
+                uTable.email as {2},
+                uTable.date_act as {3},
+                uTable.date_reg as {4},
+
+                selfReq.friend_id as {5},
+                frReq.user_id as {6}
+
+                from "user" as uTable
+            left join friends as selfReq
+                on uTable.id = selfReq.user_id
+                and selfReq.friend_id = %s
+
+            left join friends as frReq
+                on uTable.id = frReq.friend_id
+                and frReq.user_id = %s
+
+            where uTable.id != %s
+            order by uTable.id asc limit %s offset %s;
+        '''.format(*userRows)
+        connection = self.connect_postgres()
+        cursor = connection.cursor()
+        cursor.execute(userSql, [
+            profile_dict['id'],
+            profile_dict['id'],
+            profile_dict['id'],
+            perpage,
+            start
+        ])
+        userData = cursor.fetchall()
+
+        # format users data for frontend
+        if (userData is None):
+            connection.close()
+            return listResult
+        else:
+            ltd = self.list_to_dict(userRows)
+            for u in userData:
+                uDict = ltd(u)
+                # check the date of last activity
+                onlineInfo = self.checkOnline(uDict)
+
+                uFormat = {
+                    'id': uDict['id'],
+                    'login': uDict['login'],
+                    'email': uDict['email'],
+                    'selfFriendId': uDict['selfFriendId'],
+                    'friendUserId': uDict['friendUserId'],
+                    'online': onlineInfo['online'],
+                    'dtActive': onlineInfo['dateAct'].strftime('%Y-%m-%d %H:%M:%S'),
+                }
+                listResult['users'].append(uFormat)
+
+        # get count of users for paginator
+        countSql = 'select count(id) from "user" where "user".id != %s;'
+        cursor.execute(countSql, [
+            profile_dict['id']
+        ])
+        countData = cursor.fetchone()
+        connection.close()
+
+        if (countData != None):
+            listResult['count'] = countData[0]
+
+        return listResult

@@ -6,16 +6,18 @@ import {AlertMessage, PaginatorLayout} from '../helpers/component';
 
 
 
-// list of users
+// list of friends
 class FriendListComp extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
             start: this.props.friendList.start,
-            users: this.props.friendList.users,
+            friends: this.props.friendList.friends,
         }
+
     }
+
 
     componentWillMount () {
         this.changePage(this.props.friendList.start);
@@ -23,7 +25,7 @@ class FriendListComp extends React.Component {
 
     changePage (start = 0) {
         this.props.dispatch(graphql({
-            type: 'USER_LIST',
+            type: 'FRIEND_LIST',
             start: start,
             perpage: this.props.friendList.perpage,
         }));
@@ -44,7 +46,6 @@ class FriendListComp extends React.Component {
     }
 
     getUserItems () {
-        /*
         const items = map(this.props.friendList.users, user => {
             return <UserItemComp
                 user={user}
@@ -58,14 +59,13 @@ class FriendListComp extends React.Component {
                 {items}
             </tbody>
         </table>
-        */
 
-       return null;
+       return <p>qwe</p>;
     }
-    
+
     render () {
         let alertOpts = null;
-        let users = null;
+        let friends = null;
 
         if (this.props.friendList.status == 'error') {
             alertOpts = {
@@ -89,7 +89,10 @@ class FriendListComp extends React.Component {
 
         return <div>
             <AlertMessage opts={alertOpts} />
-            <PaginatorLayout param={pagerParam} />
+
+            <p>qwe</p>
+
+            // <PaginatorLayout param={pagerParam} />
         </div>
 
     }
@@ -229,7 +232,7 @@ class friendListComp extends React.Component {
             </tbody>
         </table>
     }
-    
+
     render () {
         let alertOpts = null;
         let users = null;

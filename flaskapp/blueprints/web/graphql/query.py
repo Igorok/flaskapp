@@ -3,7 +3,7 @@ from flaskapp.blueprints.web.models.user import UserModel
 from flaskapp.blueprints.web.models.blog import BlogModel
 from flaskapp.blueprints.web.models.post import PostModel
 
-from flaskapp.blueprints.web.graphql.user import RegGraph, AuthGraph, ProfileGraph, EditProfileGraph, UserDetailGraph, UserListGraph, FriendRequest
+from flaskapp.blueprints.web.graphql.user import RegGraph, AuthGraph, ProfileGraph, EditProfileGraph, UserDetailGraph, UserListGraph, FriendRequest, FriendListGraph
 from flaskapp.blueprints.web.graphql.blog import BlogGraph, BlogListGraph, PostGraph, MyBlogDetailGraph, BlogDetailGraph
 
 # assign values to query
@@ -163,7 +163,7 @@ class Query(graphene.ObjectType):
         __p = PostModel()
         __post = __p.editPost(**kwargs)
         return PostGraph(**__post)
-    
+
     # get my post
     getMyPost = graphene.Field(
         PostGraph,
@@ -230,7 +230,7 @@ class Query(graphene.ObjectType):
         __post = __p.getPost(**kwargs)
         return PostGraph(**__post)
 
-    # get list blog data
+    # get list of users
     getUserList = graphene.Field(
         UserListGraph,
         token = graphene.String(),
@@ -279,6 +279,25 @@ class Query(graphene.ObjectType):
             success = __res['success'],
             friendId = __res['friendId'],
             userId = __res['userId']
+        )
+
+    # get list of users
+    getFriendList = graphene.Field(
+        FriendListGraph,
+        token = graphene.String(),
+        device = graphene.String(),
+        start = graphene.Int(),
+        perpage = graphene.Int(),
+    )
+    def resolve_getFriendList (self, info, *args, **kwargs):
+        __u = UserModel()
+        __fList = __u.getFriendList(**kwargs)
+        __firends = []
+        for v in __fList['firends']:
+            __firends.append(UserDetailGraph(**v))
+        return FriendListGraph(
+            count = __fList['count'],
+            users = __firends
         )
 
 # init query

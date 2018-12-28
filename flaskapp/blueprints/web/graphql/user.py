@@ -43,3 +43,7 @@ class FriendRequest (graphene.ObjectType):
     success = graphene.Boolean()
     friendId = graphene.Int()
     userId = graphene.Int()
+
+class FriendListGraph (graphene.ObjectType):
+    count = graphene.Int()
+    friends = graphene.List(UserDetailGraph)

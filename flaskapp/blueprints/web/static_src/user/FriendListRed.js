@@ -54,22 +54,25 @@ const friendList = (state = initState, action) => {
             return data;
         case 'FRIEND_REMOVE_SUCCESS':
             data.status = 'success';
+            /*
             forEach(data.friends, u => {
                 if (parseInt(u.id) == action.data.friendRemove.friendId) {
                     u.friendUserId = null;
                 }
             });
+            */
+
             return data;
         case 'FRIEND_REMOVE_ERROR':
             data.status = 'error';
             return data;
-
+            
         default:
             return state
     }
 }
 
-export default friendList
+export default friendList;
 
 /*
 

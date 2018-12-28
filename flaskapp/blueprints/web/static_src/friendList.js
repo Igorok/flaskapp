@@ -6,7 +6,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 import './styles/index.scss'
 
 import {layout} from './helpers/component'
-import {FriendListComp} from './user/FriendListComp'
+import friendListComp from './user/FriendListComp'
 
 import auth from './auth/LoginRed'
 import friendList from './user/FriendListRed'
@@ -18,7 +18,7 @@ let store = configureStore({
 	friendList: friendList,
 });
 
-let Comp = layout({comp: FriendListComp, forAuth: true});
+let Comp = layout({comp: friendListComp, forAuth: true});
 render(
 	<Provider store={store}>
 		<Comp />
