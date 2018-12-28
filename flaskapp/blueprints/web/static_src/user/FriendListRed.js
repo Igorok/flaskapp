@@ -25,8 +25,8 @@ const friendList = (state = initState, action) => {
             return data;
         case 'FRIEND_LIST_SUCCESS':
             data.status = 'success';
-            data.friends = action.data.getUserList.friends;
-            data.count = action.data.getUserList.count;
+            data.friends = action.data.getFriendList.friends;
+            data.count = action.data.getFriendList.count;
             return data;
         case 'FRIEND_LIST_ERROR':
             data.status = 'error';

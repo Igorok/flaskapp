@@ -293,11 +293,11 @@ class Query(graphene.ObjectType):
         __u = UserModel()
         __fList = __u.getFriendList(**kwargs)
         __firends = []
-        for v in __fList['firends']:
+        for v in __fList['friends']:
             __firends.append(UserDetailGraph(**v))
         return FriendListGraph(
             count = __fList['count'],
-            users = __firends
+            friends = __firends
         )
 
 # init query

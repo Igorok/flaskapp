@@ -467,8 +467,8 @@ class UserModel (Model):
 
         '''
         select uTable.id, uTable.login ,
-            selfReq.user_id as self_u_id , selfReq.friend_id as self_f_id,
-            usrReq.user_id as usr_u_id , usrReq.friend_id as usr_f_id
+            selfReq.friend_id as selfFriendId,
+            usrReq.user_id as friendUserId
 
         from "user" as uTable
 
@@ -488,18 +488,6 @@ class UserModel (Model):
 
         '''
 
-
-
-
-
-
-
-
-
-
-
-
-
         # check authentication and get data of current user
         profile_dict = self.getUserByToken(**kwargs)
 
@@ -508,7 +496,7 @@ class UserModel (Model):
 
         listResult = {
             'count': 0,
-            'users': []
+            'friends': []
         }
         userRows = [
             'id', 'login', 'email', 'dateAct', 'dateReg', # user data
@@ -516,35 +504,37 @@ class UserModel (Model):
             'friendUserId' # user that did send friend request for this user
         ]
 
-        # get data from the user table, excluding the current user
-        # first join - get friends request to current user from this row
-        # second join - get friends request from current user to this row
         userSql = '''
-            select
-                uTable.id as {0},
+            select uTable.id as {0},
                 uTable.login as {1},
                 uTable.email as {2},
                 uTable.date_act as {3},
                 uTable.date_reg as {4},
-
                 selfReq.friend_id as {5},
-                frReq.user_id as {6}
+                usrReq.user_id as {6}
 
-                from "user" as uTable
+            from "user" as uTable
+
             left join friends as selfReq
                 on uTable.id = selfReq.user_id
                 and selfReq.friend_id = %s
 
-            left join friends as frReq
-                on uTable.id = frReq.friend_id
-                and frReq.user_id = %s
+            left join friends as usrReq
+                on uTable.id = usrReq.friend_id
+                and usrReq.user_id = %s
 
-            where uTable.id != %s
+            where uTable.id <> %s
+                and selfReq.friend_id = %s
+                and usrReq.user_id = %s
+
             order by uTable.id asc limit %s offset %s;
         '''.format(*userRows)
+
         connection = self.connect_postgres()
         cursor = connection.cursor()
         cursor.execute(userSql, [
+            profile_dict['id'],
+            profile_dict['id'],
             profile_dict['id'],
             profile_dict['id'],
             profile_dict['id'],
@@ -573,11 +563,33 @@ class UserModel (Model):
                     'online': onlineInfo['online'],
                     'dtActive': onlineInfo['dateAct'].strftime('%Y-%m-%d %H:%M:%S'),
                 }
-                listResult['users'].append(uFormat)
+                listResult['friends'].append(uFormat)
 
         # get count of users for paginator
         countSql = 'select count(id) from "user" where "user".id != %s;'
+        countSql = '''
+            select count(uTable.id)
+
+            from "user" as uTable
+
+            left join friends as selfReq
+                on uTable.id = selfReq.user_id
+                and selfReq.friend_id = %s
+
+            left join friends as usrReq
+                on uTable.id = usrReq.friend_id
+                and usrReq.user_id = %s
+
+            where uTable.id <> %s
+                and selfReq.friend_id = %s
+                and usrReq.user_id = %s
+        '''.format(*userRows)
+
         cursor.execute(countSql, [
+            profile_dict['id'],
+            profile_dict['id'],
+            profile_dict['id'],
+            profile_dict['id'],
             profile_dict['id']
         ])
         countData = cursor.fetchone()
