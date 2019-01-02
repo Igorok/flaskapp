@@ -10,47 +10,68 @@ import 'jquery'
 class UserRemoveModal extends React.Component {
     constructor (props) {
         super(props);
-        this.state = {
-            user: null
-        }
     }
 
     showRemove () {
-        console.log('UserRemoveModal', this.props.show);
-
-        if (this.props.show === true) {
+        if (this.props.user) {
             $('.user-remove-modal').modal('show');
         } else {
             $('.user-remove-modal').modal('hide');
         }
     }
+
+    cancelRemove () {
+        if (! this.props.user) {
+            return;
+        }
+        this.props.cancelRemove(this.props.user.id);
+    }
+
+    approveRemove () {
+        if (! this.props.user) {
+            return;
+        }
+        this.props.approveRemove(this.props.user.id);
+    }
+
     componentDidMount () {
         this.showRemove();
     }
 
     componentDidUpdate(prevProps, prevState) {
-        console.log(
-            'prevProps', prevProps,
-            'prevState', prevState
-        );
-
         this.showRemove();
     }
 
     render () {
+        let login = this.props.user ? this.props.user.login : null;
+
         return <div className="user-remove-modal modal fade" tabindex="-1" role="dialog">
-            <div className="modal-dialog modal-sm" role="document">
+            <div className="modal-dialog" role="document">
                 <div className="modal-content">
                     <div className="modal-header">
-                        <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h4 className="modal-title">Modal title</h4>
+                        <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h4 className="modal-title">Confirm of removing</h4>
                     </div>
                     <div className="modal-body">
-                        <p>One fine body&hellip;</p>
+                        <p>Would you like to remove {login} from the friends?</p>
                     </div>
                     <div className="modal-footer">
-                        <button type="button" className="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="button" className="btn btn-primary">Save changes</button>
+                        <button 
+                            type="button" 
+                            className="btn btn-default" 
+                            onClick={::this.cancelRemove}
+                        >
+                            Cancel
+                        </button>
+                        <button 
+                            type="button" 
+                            className="btn btn-danger"
+                            onClick={::this.approveRemove}
+                        >
+                            Remove
+                        </button>
                     </div>
                 </div>
             </div>
@@ -60,27 +81,15 @@ class UserRemoveModal extends React.Component {
 
 // one user row
 class UserItemComp extends React.Component {
-    /*
-    friendRemove (e) {
-        e.preventDefault();
-        return this.props.friendRemove(this.props.user.id);
-    }
-    */
     showRemove (e) {
         e.preventDefault();
-
-        console.log('UserItemComp showRemove');
-
-        this.props.showRemove();
-        // return this.props.friendRemove(this.props.user.id);
-
-
+        this.props.showRemove(this.props.user);
     }
 
     render () {
         let textClass = this.props.user.online ? 'success' : 'active';
         let friendBtn = null;
-        let msgBtn = null
+        let msgBtn = null;
         // if both users sended friend requests
         if (
             this.props.user.selfFriendId !== null &&
@@ -130,11 +139,9 @@ class FriendListComp extends React.Component {
         this.state = {
             start: this.props.friendList.start,
             friends: this.props.friendList.friends,
-            showRemove: false
+            rmUsr: null
         }
-
     }
-
 
     componentWillMount () {
         this.changePage(this.props.friendList.start);
@@ -148,22 +155,19 @@ class FriendListComp extends React.Component {
         }));
     }
 
-    /*
-    friendRemove (id) {
+    approveRemove (id) {
         this.props.dispatch(graphql({
             type: 'FRIEND_REMOVE',
             id: id
         }));
+        this.setState({rmUsr: null});
     }
-    */
+    cancelRemove (id) {
+        this.setState({rmUsr: null});
+    }
 
-    showRemove () {
-
-        console.log('FriendListComp showRemove');
-
-        this.setState({
-            showRemove: true
-        });
+    showRemove (u) {
+        this.setState({rmUsr: u});
     }
 
     getUserItems () {
@@ -208,7 +212,11 @@ class FriendListComp extends React.Component {
         return <div>
             <AlertMessage opts={alertOpts} />
             <PaginatorLayout param={pagerParam} />
-            <UserRemoveModal show={this.state.showRemove} />
+            <UserRemoveModal 
+                user={this.state.rmUsr} 
+                cancelRemove={::this.cancelRemove}
+                approveRemove={::this.approveRemove}
+            />
         </div>
 
     }
