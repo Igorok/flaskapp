@@ -3,81 +3,8 @@ import { connect } from 'react-redux';
 import { graphql } from '../helpers/action';
 import {map, isNumber} from 'lodash';
 import {AlertMessage, PaginatorLayout} from '../helpers/component';
-import {Modal} from 'bootstrap'
-import 'jquery'
+import {UserRemoveModal, UserApproveModal} from './UserModal';
 
-
-class UserRemoveModal extends React.Component {
-    constructor (props) {
-        super(props);
-    }
-
-    showRemove () {
-        if (this.props.user) {
-            $('.user-remove-modal').modal('show');
-        } else {
-            $('.user-remove-modal').modal('hide');
-        }
-    }
-
-    cancelRemove () {
-        if (! this.props.user) {
-            return;
-        }
-        this.props.cancelRemove(this.props.user.id);
-    }
-
-    approveRemove () {
-        if (! this.props.user) {
-            return;
-        }
-        this.props.approveRemove(this.props.user.id);
-    }
-
-    componentDidMount () {
-        this.showRemove();
-    }
-
-    componentDidUpdate(prevProps, prevState) {
-        this.showRemove();
-    }
-
-    render () {
-        let login = this.props.user ? this.props.user.login : null;
-
-        return <div className="user-remove-modal modal fade" tabindex="-1" role="dialog">
-            <div className="modal-dialog" role="document">
-                <div className="modal-content">
-                    <div className="modal-header">
-                        <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                        <h4 className="modal-title">Confirm of removing</h4>
-                    </div>
-                    <div className="modal-body">
-                        <p>Would you like to remove {login} from the friends?</p>
-                    </div>
-                    <div className="modal-footer">
-                        <button 
-                            type="button" 
-                            className="btn btn-default" 
-                            onClick={::this.cancelRemove}
-                        >
-                            Cancel
-                        </button>
-                        <button 
-                            type="button" 
-                            className="btn btn-danger"
-                            onClick={::this.approveRemove}
-                        >
-                            Remove
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    }
-}
 
 // one user row
 class UserItemComp extends React.Component {
@@ -221,6 +148,7 @@ class FriendListComp extends React.Component {
 
     }
 }
+
 
 const mapStateToProps = (state) => {
     return {...state}
