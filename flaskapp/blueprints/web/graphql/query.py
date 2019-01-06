@@ -2,9 +2,11 @@ import graphene
 from flaskapp.blueprints.web.models.user import UserModel
 from flaskapp.blueprints.web.models.blog import BlogModel
 from flaskapp.blueprints.web.models.post import PostModel
+from flaskapp.blueprints.web.models.chat import ChatModel
 
 from flaskapp.blueprints.web.graphql.user import RegGraph, AuthGraph, ProfileGraph, EditProfileGraph, UserDetailGraph, UserListGraph, FriendRequest, FriendListGraph
 from flaskapp.blueprints.web.graphql.blog import BlogGraph, BlogListGraph, PostGraph, MyBlogDetailGraph, BlogDetailGraph
+from flaskapp.blueprints.web.graphql.chat import ChatPrivateGraph, ChatListGraph
 
 # assign values to query
 class Query(graphene.ObjectType):
@@ -299,6 +301,24 @@ class Query(graphene.ObjectType):
             count = __fList['count'],
             friends = __firends
         )
+
+    # get list of users
+    getChatList = graphene.Field(
+        ChatListGraph,
+        token = graphene.String(),
+        device = graphene.String(),
+        start = graphene.Int(),
+        perpage = graphene.Int(),
+    )
+    def resolve_getChatList (self, info, *args, **kwargs):
+        __c = ChatModel()
+        __cList = __c.getChatList(**kwargs)
+        __cResult = {
+            'count': __cList['count'],
+            'chatPrivate': map(lambda __cPr: ChatPrivateGraph(**__cPr), __cList['chatPrivate']),
+            'chatGroup': map(lambda __cPr: ChatPrivateGraph(**__cPr), __cList['chatGroup'])
+        }
+        return ChatListGraph(**__cResult)
 
 # init query
 schema = graphene.Schema(query=Query)

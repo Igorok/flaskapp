@@ -160,10 +160,20 @@ def userList():
         params = params
     )
 
+@web.route('/friends')
+def friendList():
+    params = getParams(['start', 'perpage'], request.args)
+    params.append({'name': 'page', 'val': 'friend'})
+    return render_template(
+        'view.html',
+        scripts = ['friendList'],
+        params = params
+    )
+
 @web.route('/chat-private/<friendId>')
 def chatPrivate(friendId):
     params = [
-        {'name': 'page', 'val': 'chat'},
+        {'name': 'page', 'val': 'chatList'},
         {'name': 'friendId', 'val': friendId}
     ]
     return render_template(
@@ -172,12 +182,13 @@ def chatPrivate(friendId):
         params = params
     )
 
-@web.route('/friends')
-def friendList():
-    params = getParams(['start', 'perpage'], request.args)
-    params.append({'name': 'page', 'val': 'friend'})
+@web.route('/chat-list')
+def chatList():
+    params = [
+        {'name': 'page', 'val': 'chatList'}
+    ]
     return render_template(
         'view.html',
-        scripts = ['friendList'],
+        scripts = ['chatList'],
         params = params
     )

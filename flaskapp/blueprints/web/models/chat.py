@@ -189,3 +189,73 @@ class ChatModel (Model):
         insDict['date'] = datetime.strptime(insDict['date'], '%Y-%m-%d %H:%M:%S').strftime('%Y-%m-%d %H:%M')
 
         return insDict
+
+
+    '''
+    get list of chats for current user
+    token (string): - current token of user
+    start (int): - skip
+    perpage (int): - limit
+
+    return the list of chat rooms
+    '''
+
+
+    # param: start = graphene.Int()
+
+    def getChatList (self, *args, **kwargs):
+        start = int(kwargs['start']) if ('start' in kwargs) else 0
+        perpage = int(kwargs['perpage']) if ('perpage' in kwargs) else 20
+
+        listResult = {
+            'count': 0,
+            'chatPrivate': [],
+            'chatGroup': []
+        }
+
+        uModel = UserModel()
+        # check authentication and get data of current user
+        profileDict = uModel.getUserByToken(**kwargs)
+
+        chatRows = ['id', 'userId', 'friendId', 'userLogin', 'friendLogin']
+        chatSql = '''select 
+            chat_private.id as {0}, 
+            chat_private.user_id as {1},
+            chat_private.friend_id as {2},
+            uTable.login as {3},
+            fTable.login as {4}
+        from chat_private 
+        left join "user" as uTable on uTable.id = chat_private.user_id
+        left join "user" as fTable on fTable.id = chat_private.friend_id
+        where chat_private.user_id = %s or chat_private.friend_id = %s
+        order by chat_private.id desc
+        limit %s offset %s;'''.format(*chatRows)
+
+        connection = self.connect_postgres()
+        cursor = connection.cursor()
+        cursor.execute(chatSql, (
+            profileDict['id'],
+            profileDict['id'],
+            perpage,
+            start
+        ))
+        chatData = cursor.fetchall()
+
+        countSql = 'select count(id) from chat_private where chat_private.user_id = %s or chat_private.friend_id = %s;'
+        cursor.execute(countSql, (
+            profileDict['id'],
+            profileDict['id']
+        ))
+        countData = cursor.fetchone()
+        connection.close()
+
+        if (countData != None):
+            listResult['count'] = countData[0]
+
+        if (chatData != None):
+            for row in chatData:
+                chat = self.list_to_dict(chatRows)(row)
+                chat['linkId'] = chat['friendId'] if profileDict['id'] == chat['userId'] else chat['userId']
+                listResult['chatPrivate'].append(chat)
+
+        return listResult

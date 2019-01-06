@@ -24,7 +24,7 @@ class NumInfo extends React.Component {
                 <div className="panel panel-default">
                     <div className="panel-heading">
                         <span className="glyphicon glyphicon-user"></span>&nbsp;&nbsp;
-                        <a href="#">My friends</a>
+                        <a href="/friends">My friends</a>
                     </div>
                     <div className="panel-body">
                         Friends : {this.props.profile.friends}
@@ -41,7 +41,7 @@ class NumInfo extends React.Component {
                 <div className="panel panel-default">
                     <div className="panel-heading">
                         <span className="glyphicon glyphicon-envelope"></span>&nbsp;&nbsp;
-                        <a href="/chats">My chats</a>
+                        <a href="/chat-list">My chats</a>
                     </div>
                     <div className="panel-body">
                         {this.props.profile.countChats}

@@ -448,6 +448,41 @@ const FRIEND_LIST = (opts) => {
     return JSON.stringify(q);
 };
 
+const CHAT_LIST = (opts) => {
+    let q = {
+        query: compress(`
+            query getChatList ($token: String, $device: String!, $start: Int, $perpage: Int) {
+                getChatList (token: $token, device: $device, start: $start, perpage: $perpage) {
+                    chatPrivate {
+                        id
+                        userId
+                        friendId
+                        userLogin
+                        friendLogin
+                        linkId
+                    }
+                    chatGroup {
+                        id
+                        userId
+                        friendId
+                        userLogin
+                        friendLogin
+                        linkId
+                    }
+                    count
+                }
+            }
+        `),
+        variables: {
+            token: opts.token || '',
+            device: opts.device,
+            start: opts.start,
+            perpage: opts.perpage,
+        },
+    }
+    return JSON.stringify(q);
+};
+
 export const query = {
     REG: REG,
     AUTH: AUTH,
@@ -470,5 +505,7 @@ export const query = {
     USER_LIST: USER_LIST,
     FRIEND_REQUEST: FRIEND_REQUEST,
     FRIEND_REMOVE: FRIEND_REMOVE,
-    FRIEND_LIST: FRIEND_LIST
+    FRIEND_LIST: FRIEND_LIST,
+
+    CHAT_LIST: CHAT_LIST
 }

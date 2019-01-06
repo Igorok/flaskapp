@@ -124,7 +124,7 @@ class Header extends React.Component {
                             <a href="/friends">Friends</a>
                         </li>
                         <li>
-                            <a href="/chats">Chats</a>
+                            <a href="/chat-list">Chats</a>
                         </li>
 
                     </ul>

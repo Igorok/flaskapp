@@ -255,6 +255,52 @@ class UserModel (Model):
         profile_dict['countChats'] = 0
         profile_dict['countBlogs'] = 0
 
+        blogQ = 'select count(id) from blog where user_id = %s;'
+        chatQ = 'select count(id) from chat_private where user_id = %s or friend_id = %s;'
+        friendsQ = '''select count(friends.id) from friends
+            join friends as approve on friends.friend_id = approve.user_id 
+                and friends.user_id = approve.friend_id
+            where friends.user_id = %s;
+        '''
+        selfReqQ = '''select count (friends.id) from friends
+            left join friends as approve on friends.friend_id = approve.user_id 
+                and friends.user_id = approve.friend_id
+            where friends.user_id = %s and approve.user_id is null;
+        '''
+        usrReqQ = '''select count(approve.friend_id) from friends
+            right join friends as approve on friends.friend_id = approve.user_id
+                and friends.user_id = approve.friend_id
+            where approve.friend_id = %s and friends.user_id is null;
+        '''
+        connection = self.connect_postgres()
+        cursor = connection.cursor()
+        cursor.execute(blogQ, [profile_dict['id']])
+        blogD = cursor.fetchone()
+        if not blogD is None:
+            profile_dict['countBlogs'] = blogD[0]
+
+        cursor.execute(chatQ, [profile_dict['id'], profile_dict['id']])
+        chatD = cursor.fetchone()
+        if not chatD is None:
+            profile_dict['countChats'] = chatD[0]
+
+        cursor.execute(friendsQ, [profile_dict['id']])
+        friendsD = cursor.fetchone()
+        if not friendsD is None:
+            profile_dict['friends'] = friendsD[0]
+        
+        cursor.execute(selfReqQ, [profile_dict['id']])
+        selfReqD = cursor.fetchone()
+        if not selfReqD is None:
+            profile_dict['selfFriendRequests'] = selfReqD[0]
+
+        cursor.execute(usrReqQ, [profile_dict['id']])
+        usrReqD = cursor.fetchone()
+        if not usrReqD is None:
+            profile_dict['friendRequests'] = usrReqD[0]
+
+        connection.close()
+
         return profile_dict
 
     """
