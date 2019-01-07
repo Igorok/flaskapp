@@ -24,25 +24,6 @@ module.exports = {
 
         chatPrivate: path.resolve(__dirname, 'static_src/chatPrivate.js'),
         chatList: path.resolve(__dirname, 'static_src/chatList.js'),
-
-
-
-
-        // profile: path.resolve(__dirname, 'src/profile.js'),
-        // about: path.resolve(__dirname, 'src/about.js'),
-
-        // blog_list: path.resolve(__dirname, 'src/blog_list.js'),
-        // blog_detail: path.resolve(__dirname, 'src/blog_detail.js'),
-        // post_detail: path.resolve(__dirname, 'src/post_detail.js'),
-
-        // my_blog_list: path.resolve(__dirname, 'src/my_blog_list.js'),
-        // my_blog_detail: path.resolve(__dirname, 'src/my_blog_detail.js'),
-        // my_post_detail: path.resolve(__dirname, 'src/my_post_detail.js'),
-
-        // user_list: path.resolve(__dirname, 'src/user_list.js'),
-        // chat_list: path.resolve(__dirname, 'src/chat_list.js'),
-        // chat_personal: path.resolve(__dirname, 'src/chat_personal.js'),
-        // chat_group: path.resolve(__dirname, 'src/chat_group.js'),
     },
     output: {
         filename: '[name].js',
@@ -77,25 +58,47 @@ module.exports = {
             },
             { test: /bootstrap-sass\/assets\/javascripts\//, use: 'imports-loader?jQuery=jquery' },
             {
-                test: /\.(js|jsx)$/,
-                // exclude: /(node_modules|bower_components)/,
+                test: /\.m?js$/,
+                exclude: /(node_modules|bower_components)/,
                 use: {
                     loader: 'babel-loader',
                     options: {
-                        presets: ['es2015', 'stage-0', 'react'],
-                        plugins: []
+                        presets: [
+                            '@babel/preset-env', 
+                            '@babel/preset-react',
+                        ],
+                        plugins: [
+                            "@babel/plugin-proposal-function-bind",
+
+                            // "@babel/plugin-proposal-class-properties",
+                            // "@babel/plugin-proposal-decorators",
+                            // "@babel/plugin-proposal-do-expressions",
+                            // "@babel/plugin-proposal-export-default-from",
+                            // "@babel/plugin-proposal-export-namespace-from",
+                            // "@babel/plugin-proposal-function-bind",
+                            // "@babel/plugin-proposal-function-sent",
+                            // "@babel/plugin-proposal-json-strings",
+                            // "@babel/plugin-proposal-logical-assignment-operators",
+                            // "@babel/plugin-proposal-nullish-coalescing-operator",
+                            // "@babel/plugin-proposal-numeric-separator",
+                            // "@babel/plugin-proposal-optional-chaining",
+                            // "@babel/plugin-proposal-pipeline-operator",
+                            // "@babel/plugin-proposal-throw-expressions",
+                            // "@babel/plugin-syntax-dynamic-import",
+                            // "@babel/plugin-syntax-import-meta",
+                            // ['@babel/plugin-proposal-decorators', { legacy: true }]
+
+                        ]
                     }
                 }
             }
+
         ]
     },
     plugins: [
         new webpack.optimize.OccurrenceOrderPlugin(),
         new webpack.NoEmitOnErrorsPlugin(),
-        new webpack.optimize.CommonsChunkPlugin({
-            name: 'common',
-            minChunks: 2,
-        }),
+        
         new webpack.ProvidePlugin({
             $: "jquery",
             jQuery: "jquery",
@@ -121,8 +124,6 @@ module.exports = {
     // devtool: cfg.prod ? 'source-map' : 'cheap-module-eval-source-map',
     // watch: ! cfg.prod,
 
-    // devtool: 'cheap-module-eval-source-map',
-
     devtool: 'cheap-module-eval-source-map',
     watch: true,
 
@@ -130,4 +131,15 @@ module.exports = {
     watchOptions: {
         aggregateTimeout: 1000
     },
+
+
+
+
+    optimization: {
+        splitChunks: {
+            chunks: 'all',
+            name: 'common',
+            minChunks: 2
+        }
+    }
 };

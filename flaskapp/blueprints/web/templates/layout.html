@@ -1,10 +1,16 @@
 <!doctype html>
-<title>FlaskApp</title>
-
-<div class="page">
-    {% for message in get_flashed_messages() %}
-        <div class="flash">{{ message }}</div>
-    {% endfor %}
-
-    {% block body %}{% endblock %}
-</div>
+<html lang="en">
+    <head>
+        <title>FlaskApp</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    </head>
+    
+    <div class="page">
+        {% for message in get_flashed_messages() %}
+            <div class="flash">{{ message }}</div>
+        {% endfor %}
+    
+        {% block body %}{% endblock %}
+    </div>
+</html>
