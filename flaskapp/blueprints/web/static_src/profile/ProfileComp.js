@@ -8,25 +8,23 @@ import {AlertMessage} from '../helpers/component'
 class NumInfo extends React.Component {
     render () {
         return <div className="row">
-            <div className="col-sm-3">
-                <div className="panel panel-default">
-                    <div className="panel-heading">
-                        <span className="glyphicon glyphicon-bookmark"></span>&nbsp;&nbsp;
+            <div className="col-sm">
+                <div className="card">
+                    <div className="card-header">
                         <a href="/my-blogs">My blogs</a>
                     </div>
-                    <div className="panel-body">
+                    <div className="card-body">
                         {this.props.profile.countBlogs}
                     </div>
                 </div>
             </div>
 
-            <div className="col-sm-3">
-                <div className="panel panel-default">
-                    <div className="panel-heading">
-                        <span className="glyphicon glyphicon-user"></span>&nbsp;&nbsp;
+            <div className="col-sm">
+                <div className="card">
+                    <div className="card-header">
                         <a href="/friends">My friends</a>
                     </div>
-                    <div className="panel-body">
+                    <div className="card-body">
                         Friends : {this.props.profile.friends}
                         <br/>
                         Requests : {this.props.profile.friendRequests}
@@ -37,13 +35,12 @@ class NumInfo extends React.Component {
                 </div>
             </div>
 
-            <div className="col-sm-3">
-                <div className="panel panel-default">
-                    <div className="panel-heading">
-                        <span className="glyphicon glyphicon-envelope"></span>&nbsp;&nbsp;
+            <div className="col-sm">
+                <div className="card">
+                    <div className="card-header">
                         <a href="/chat-list">My chats</a>
                     </div>
-                    <div className="panel-body">
+                    <div className="card-body">
                         {this.props.profile.countChats}
                     </div>
                 </div>
@@ -104,63 +101,65 @@ class UserInfo extends React.Component {
             formClass = "hidden"
         }
 
-        return <div className="panel panel-default">
-            <div className="panel-heading">
-                <button className={"btn btn-default " + formClass} onClick={::this.setMode} >
-                    <span className="glyphicon glyphicon-user"></span>&nbsp;&nbsp;
-                    View profile
-                </button>
-                <button className={"btn btn-default " + infoClass} onClick={::this.setMode} >
-                    <span className="glyphicon glyphicon-cog"></span>&nbsp;&nbsp;
-                    Edit profile
-                </button>
-            </div>
-            <div className="panel-body">
-                <div className={infoClass}>
-                    <div className="row">
-                        <div className="col-sm-2"><label>Login</label></div>
-                        <div className="col-sm-10">{this.state.login}</div>
+        return <div>
+            <div className="card">
+                <div className="card-header">
+                    <button className={"btn btn-secondary " + formClass} onClick={::this.setMode} >
+                        <i className="fa fa-user"></i>&nbsp;
+                        View profile
+                    </button>
+                    &nbsp;
+                    <button className={"btn btn-secondary " + infoClass} onClick={::this.setMode} >
+                        <i className="fa fa-cog"></i>&nbsp;
+                        Edit profile
+                    </button>
+                </div>
+                <div className="card-body">
+                    <div className={infoClass}>
+                        <div className="row">
+                            <div className="col-2"><label>Login</label></div>
+                            <div className="col-10">{this.state.login}</div>
+                        </div>
+
+                        <div className="row">
+                            <div className="col-2"><label>Email</label></div>
+                            <div className="col-10">{this.state.email}</div>
+                        </div>
                     </div>
 
-                    <div className="row">
-                        <div className="col-sm-2"><label>Email</label></div>
-                        <div className="col-sm-10">{this.state.email}</div>
+                    <div className={formClass}>
+                        <form onSubmit={::this.formSubmit}>
+                            <div className="form-group">
+                                <label htmlFor="login">Login</label>
+                                <input 
+                                    type="text" 
+                                    className="form-control" 
+                                    id="login" 
+                                    placeholder="Login"
+                                    value={this.state.login}
+                                    onChange={::this.fieldChange}
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="email">Email address</label>
+                                <input 
+                                    type="email" 
+                                    className="form-control" 
+                                    id="email" 
+                                    placeholder="Email"
+                                    value={this.state.email}
+                                    onChange={::this.fieldChange}
+                                />
+                            </div>
+                            <button type="submit" className="btn btn-secondary">
+                                <i className="fa fa-save"></i>&nbsp;
+                                Submit
+                            </button>
+                        </form>
                     </div>
                 </div>
-
-                <div className={formClass}>
-                    <form onSubmit={::this.formSubmit}>
-                        <div className="form-group">
-                            <label htmlFor="login">Login</label>
-                            <input 
-                                type="text" 
-                                className="form-control" 
-                                id="login" 
-                                placeholder="Login"
-                                value={this.state.login}
-                                onChange={::this.fieldChange}
-                            />
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="email">Email address</label>
-                            <input 
-                                type="email" 
-                                className="form-control" 
-                                id="email" 
-                                placeholder="Email"
-                                value={this.state.email}
-                                onChange={::this.fieldChange}
-                            />
-                        </div>
-                        <button type="submit" className="btn btn-default">
-                            <span className="glyphicon glyphicon-floppy-disk"></span>&nbsp;
-                            Submit
-                        </button>
-                    </form>
-                </div>
-
-
             </div>
+            <br />
         </div>
     }
 };

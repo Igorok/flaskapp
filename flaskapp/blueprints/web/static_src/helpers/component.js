@@ -107,6 +107,7 @@ class Header extends React.Component {
 
             userItem = <li className={window.localParams.page == 'user' ? 'nav-item active' : 'nav-item'}>
                 <a className="nav-link" href="/users">
+                    <i className="fa fa-users"></i>&nbsp;
                     Users
                     <span className="sr-only">(current)</span>
                 </a>
@@ -125,12 +126,14 @@ class Header extends React.Component {
                     <ul className="navbar-nav mr-auto">
                         <li className={window.localParams.page == 'about' ? 'nav-item active' : 'nav-item'}>
                             <a className="nav-link" href="/">
+                                <i className="fa fa-home"></i>&nbsp;
                                 About
                                 <span className="sr-only">(current)</span>
                             </a>
                         </li>
                         <li className={window.localParams.page == 'blog' ? 'nav-item active' : 'nav-item'}>
                             <a className="nav-link" href="/blogs">
+                                <i class="fa fa-bookmark"></i>&nbsp;
                                 Blogs
                                 <span className="sr-only">(current)</span>
                             </a>

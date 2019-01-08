@@ -1,6 +1,9 @@
 #root {
     padding-top: 75px;
 }
+.hidden {
+    display: none;
+}
 .chat-btn-td {
     width: 150px;
 }
@@ -52,3 +55,6 @@
         }
     }
 }
+
+
+// @import '~font-awesome/scss/font-awesome.scss';
