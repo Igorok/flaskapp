@@ -17,16 +17,16 @@ class BlogListComp extends React.Component {
     componentWillMount () {
         this.props.dispatch(graphql({
             type: 'BLOG_LIST',
-            start: this.props.blogList.start, 
-            perpage: this.props.blogList.perpage, 
+            start: this.props.blogList.start,
+            perpage: this.props.blogList.perpage,
         }));
     }
 
     changePage (start = 0) {
         this.props.dispatch(graphql({
             type: 'BLOG_LIST',
-            start: start, 
-            perpage: this.props.blogList.perpage, 
+            start: start,
+            perpage: this.props.blogList.perpage,
         }));
     }
 
@@ -34,19 +34,17 @@ class BlogListComp extends React.Component {
         let chunkedItems = chunk(this.props.blogList.blogs, 3);
         let blogs = map(chunkedItems, blogs => {
             let partition = map(blogs, blog => {
-                return <div className="col-md-4">
-                    <div className="panel panel-default">
-                        <div className="panel-heading">
-                            <h4 className="panel-title">
-                                <a href = {"/blog/" + blog.id}>
-                                    {blog.title}
-                                </a>
+                return <div className="col-4">
+                    <div className="card">
+                        <div className="card-header">
+                            <h4 className="card-title">
+                                <a href = {"/blog/" + blog.id}>{blog.title}</a>
                             </h4>
                         </div>
-                        <div className="panel-body">
+                        <div className="card-body">
                             {blog.text}
                         </div>
-                        <div className="panel-footer">
+                        <div className="card-footer">
                             <p>
                                 <span className="glyphicon glyphicon-user"></span>&nbsp;
                                 {blog.userName}
@@ -57,16 +55,19 @@ class BlogListComp extends React.Component {
                             </p>
                         </div>
                     </div>
-                </div> 
+                </div>
             });
 
-            return <div className="row">{partition}</div>
+            return <div>
+                <div className="row">{partition}</div>
+                <br />
+            </div>
         });
 
         return blogs;
     }
 
-    
+
 
     render () {
         let alertOpts = null,
@@ -96,7 +97,7 @@ class BlogListComp extends React.Component {
             <AlertMessage opts={alertOpts} />
             <PaginatorLayout param={pagerParam} />
         </div>
-        
+
     }
 }
 const mapStateToProps = (state) => {

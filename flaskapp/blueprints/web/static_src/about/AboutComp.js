@@ -15,11 +15,13 @@ class AboutComp extends React.Component {
         $('.modal').modal('show');
     }
     render () {
-        return <div className="panel panel-default">
-            <div className="panel-heading">About</div>
-            <div className="panel-body">
-                I am web developer. I had planned these few personal pages 
-                for implement and checking some of my ideas. 
+        return <div className="card">
+            <div className="card-header">
+                <h4 className="card-title">About</h4>
+            </div>
+            <div className="card-body">
+                I am web developer. I had planned these few personal pages
+                for implement and checking some of my ideas.
                 Sometimes i write here short notes about my work and development.
             </div>
         </div>

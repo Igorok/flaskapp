@@ -67,20 +67,19 @@ class BlogListComp extends React.Component {
                     </btn>
                 }
 
-
-                return <div className="col-md-4">
-                    <div className="panel panel-default">
-                        <div className="panel-heading">
-                            <h4 className="panel-title">
+                return <div className="col-4">
+                    <div className="card">
+                        <div className="card-header">
+                            <h4 className="card-title">
                                 <a href = {"/my-blog-detail/" + blog.id}>
                                     {blog.title}
                                 </a>
                             </h4>
                         </div>
-                        <div className="panel-body">
+                        <div className="card-body">
                             {blog.text}
                         </div>
-                        <div className="panel-footer">
+                        <div className="card-footer">
                             <p>
                                 <span className="glyphicon glyphicon-user"></span>&nbsp;
                                 {blog.userName}
@@ -101,16 +100,16 @@ class BlogListComp extends React.Component {
                                     <span className="glyphicon glyphicon-plus"></span>&nbsp;
                                     Add post
                                 </a>
-                                
                             </p>
-
-
                         </div>
                     </div>
                 </div>
             });
 
-            return <div className="row">{partition}</div>
+            return <div>
+                <div className="row">{partition}</div>
+                <br />
+            </div>
         });
 
         return blogs;

@@ -87,91 +87,34 @@ export class MathCaptcha extends React.Component {
 
 
 class Header extends React.Component {
-    // componentDidMount () {
-    //     $('.dropdown-toggle').dropdown();
-    // }
-
-
     render () {
         let profileItem = null;
         let userItem = null;
 
         if (this.props.auth.isAuthenticated) {
-            profileItem = <ul className="nav navbar-nav navbar-right">
-                <li className="dropdown">
-                    <a
-                        href="#" 
-                        className="dropdown-toggle" 
-                        data-toggle="dropdown"
-                        role="button" 
-                        aria-haspopup="true" 
-                        aria-expanded="false"
-                    >
-                        <span className="glyphicon glyphicon-home"></span>&nbsp;&nbsp;
-                        <strong>{this.props.auth.login}</strong>&nbsp;&nbsp;
-                        <span className="caret"></span>
-                    </a>
-
-                    <ul className="dropdown-menu">
-                        <li>
-                            <a href="/profile">Profile</a>
-                        </li>
-                        <li>
-                            <a href="/my-blogs">My blogs</a>
-                        </li>
-                        <li>
-                            <a href="/blog-edit/-1">Add blog</a>
-                        </li>
-                        <li>
-                            <a href="/friends">Friends</a>
-                        </li>
-                        <li>
-                            <a href="/chat-list">Chats</a>
-                        </li>
-
-                    </ul>
-                </li>
-            </ul>
-
-            userItem = <li 
-                role="presentation"
-                className={window.localParams.page == 'user' ? 'active' : ''}
-                >
-                <a href="/users"><span className="glyphicon glyphicon-user"></span>&nbsp;&nbsp;Users</a>
-            </li>
-        }
-        /*
-        return <nav className="navbar navbar-default navbar-fixed-top">
-            <div className="container">
-                <div className="navbar-header">
-                    <button type="button" className="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-                        <span className="sr-only">Toggle navigation</span>
-                        <span className="icon-bar"></span>
-                        <span className="icon-bar"></span>
-                        <span className="icon-bar"></span>
-                    </button>
-                    <a className="navbar-brand" href="/">FlaskApp</a>
-                </div>
-
-                <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                    <ul className="nav navbar-nav">
-                        <li className={window.localParams.page == 'about' ? 'active' : ''}>
-                            <a href="/"><span className="glyphicon glyphicon-exclamation-sign"></span>&nbsp;&nbsp;About</a>
-                        </li>
-                        <li className={window.localParams.page == 'blog' ? 'active' : ''}>
-                            <a href="/blogs"><span className="glyphicon glyphicon-bookmark"></span>&nbsp;&nbsp;Blogs</a>
-                        </li>
-                        {userItem}
-                    </ul>
-                    {profileItem}
+            profileItem = <div className="nav-item dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    {this.props.auth.login}
+                </button>
+                <div className="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a className="dropdown-item" href="/profile">Profile</a>
+                    <a className="dropdown-item" href="/my-blogs">My blogs</a>
+                    <a className="dropdown-item" href="/blog-edit/-1">Add blog</a>
+                    <a className="dropdown-item" href="/friends">Friends</a>
+                    <a className="dropdown-item" href="/chat-list">Chats</a>
                 </div>
             </div>
-        </nav>
-        */
 
+            userItem = <li className={window.localParams.page == 'user' ? 'nav-item active' : 'nav-item'}>
+                <a className="nav-link" href="/users">
+                    Users
+                    <span className="sr-only">(current)</span>
+                </a>
+            </li>
+        }
 
-        return <nav className="navbar fixed-top navbar-expand-lg navbar-light bg-light">
-            <div className="container">
+        return <div className="container-fluid">
+            <nav className="navbar fixed-top navbar-expand-lg navbar-light bg-light">
                 <a className="navbar-brand" href="#">FlaskApp</a>
 
                 <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -180,30 +123,24 @@ class Header extends React.Component {
 
                 <div className="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul className="navbar-nav mr-auto">
-                        <li className="nav-item active">
-                            <a className="nav-link" href="#">Home <span className="sr-only">(current)</span></a>
-                        </li>
-                        <li className="nav-item">
-                            <a className="nav-link" href="#">Link</a>
-                        </li>
-                        <li className="nav-item dropdown">
-                            <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Dropdown
+                        <li className={window.localParams.page == 'about' ? 'nav-item active' : 'nav-item'}>
+                            <a className="nav-link" href="/">
+                                About
+                                <span className="sr-only">(current)</span>
                             </a>
-                            <div className="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a className="dropdown-item" href="#">Action</a>
-                                <a className="dropdown-item" href="#">Another action</a>
-                                <div className="dropdown-divider"></div>
-                                <a className="dropdown-item" href="#">Something else here</a>
-                            </div>
                         </li>
-                        <li className="nav-item">
-                            <a className="nav-link disabled" href="#">Disabled</a>
+                        <li className={window.localParams.page == 'blog' ? 'nav-item active' : 'nav-item'}>
+                            <a className="nav-link" href="/blogs">
+                                Blogs
+                                <span className="sr-only">(current)</span>
+                            </a>
                         </li>
+                        { userItem }
                     </ul>
+                    { profileItem }
                 </div>
-            </div>
-        </nav>
+            </nav>
+        </div>
     }
 };
 
@@ -235,7 +172,7 @@ export function layout (opts) {
             return (
                 <div>
                     <Header auth={this.props.auth} />
-                    <div className="container">
+                    <div className="container-fluid">
                         <Component />
                     </div>
                 </div>
@@ -320,7 +257,7 @@ export class PaginatorLayout extends React.Component {
                 "?perpage=" + perpage +
                 "&start=" + btnStart;
 
-            let cName = "";
+            let cName = "page-item ";
             if (btnActive) {
                 cName += "active";
             }
@@ -329,6 +266,7 @@ export class PaginatorLayout extends React.Component {
             }
             btns.push(<li className = {cName} >
                 <a
+                    className="page-link"
                     href = {btnHref}
                     data-start={btnStart}
                     onClick={(e) => {
@@ -343,20 +281,20 @@ export class PaginatorLayout extends React.Component {
         }
 
         // move to first page
-        let firstBtnClass = startBtn - showStep <= 0 ? "disabled" : "";
-        let lastBtnClass = startBtn + showStep >= pageCount - 1 ? "disabled" : "";
+        let firstBtnClass = startBtn - showStep <= 0 ? "page-item disabled" : "page-item";
+        let lastBtnClass = startBtn + showStep >= pageCount - 1 ? "page-item disabled" : "page-item";
         if (pageCount == showBtns) {
-            firstBtnClass = lastBtnClass = "disabled";
+            firstBtnClass = lastBtnClass = "page-item disabled";
         }
         const firstBtn = <li className = {firstBtnClass}>
-                <a href="#" aria-label="Previous">
-                    <span aria-hidden="true">&laquo;</span>
+                <a href="#" className="page-link">
+                    <span>&laquo;</span>
                 </a>
             </li>
         // move to last page
         const lastBtn = <li className = {lastBtnClass}>
-                <a href="#" aria-label="Next">
-                    <span aria-hidden="true">&raquo;</span>
+                <a href="#" className="page-link">
+                    <span>&raquo;</span>
                 </a>
             </li>
 
