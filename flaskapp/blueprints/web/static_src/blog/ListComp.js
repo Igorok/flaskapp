@@ -46,11 +46,11 @@ class BlogListComp extends React.Component {
                         </div>
                         <div className="card-footer">
                             <p>
-                                <span className="glyphicon glyphicon-user"></span>&nbsp;
+                                <i class="fa fa-user"></i>&nbsp;
                                 {blog.userName}
                             </p>
                             <p>
-                                <span className="glyphicon glyphicon-time"></span>&nbsp;
+                                <i class="fa fa-clock-o"></i>&nbsp;
                                 {blog.date}
                             </p>
                         </div>

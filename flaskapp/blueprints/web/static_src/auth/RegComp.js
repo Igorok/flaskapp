@@ -15,7 +15,7 @@ class LoginComp extends React.Component {
     }
 
     formSubmit (e) {
-        e.preventDefault();	
+        e.preventDefault();
         if (
             ! this.state.email || this.state.email.length < 1 ||
             ! this.state.password || this.state.password.length < 1
@@ -49,7 +49,7 @@ class LoginComp extends React.Component {
             }, 1000);
         }
     }
-    
+
     fieldChange (e) {
         e.preventDefault();
         let update = {};
@@ -60,7 +60,7 @@ class LoginComp extends React.Component {
     render () {
         let disabled = null,
             alertOpts = null;
-    
+
         if (this.props.registration.status === 'error') {
             alertOpts = {
                 className: 'danger',
@@ -79,22 +79,22 @@ class LoginComp extends React.Component {
             }
         }
 
-        return <div className="row">
-            <div className="col-lg-offset-3 col-lg-6">
-                <div className="panel panel-default">
-                    <div className="panel-heading">
-                        <h3 className="panel-title">Registration</h3>
+        return <div className="row justify-content-md-center">
+            <div className="col-4">
+                <div className="card">
+                    <div className="card-header">
+                        <h3 className="card-title">Registration</h3>
                     </div>
-                    <div className="panel-body">
+                    <div className="card-body">
                         <form onSubmit={::this.formSubmit}>
                             <div className="form-group">
                                 <label htmlFor="email">Email</label>
-                                <input 
+                                <input
                                     type="email"
                                     required
-                                    className="form-control" 
-                                    id="email" 
-                                    placeholder="Email" 
+                                    className="form-control"
+                                    id="email"
+                                    placeholder="Email"
                                     defaultValue={this.props.registration.email}
                                     onChange={::this.fieldChange}
                                     disabled={disabled}
@@ -102,12 +102,12 @@ class LoginComp extends React.Component {
                             </div>
                             <div className="form-group">
                                 <label htmlFor="password">Password</label>
-                                <input 
-                                    type="password" 
+                                <input
+                                    type="password"
                                     required
-                                    className="form-control" 
-                                    id="password" 
-                                    placeholder="Password" 
+                                    className="form-control"
+                                    id="password"
+                                    placeholder="Password"
                                     defaultValue={this.props.registration.password}
                                     onChange={::this.fieldChange}
                                     disabled={disabled}
@@ -115,21 +115,21 @@ class LoginComp extends React.Component {
                             </div>
                             <div className="form-group">
                                 <label htmlFor="confirmPassword">Confirm password</label>
-                                <input 
+                                <input
                                     type="password"
                                     required
-                                    className="form-control" 
-                                    id="confirmPassword" 
-                                    placeholder="Confirm password" 
+                                    className="form-control"
+                                    id="confirmPassword"
+                                    placeholder="Confirm password"
                                     defaultValue={this.props.registration.confirmPassword}
                                     onChange={::this.fieldChange}
                                     disabled={disabled}
                                 />
                             </div>
                             <AlertMessage opts={alertOpts} />
-                            <button 
-                                type="submit" 
-                                className="btn btn-default btn-block"
+                            <button
+                                type="submit"
+                                className="btn btn-secondary btn-block"
                                 disabled={disabled}
                             >Registration</button>
                         </form>
@@ -137,7 +137,7 @@ class LoginComp extends React.Component {
                         <p className='text-center'>
                             <a href='/login'>Login</a>
                         </p>
-                        
+
                     </div>
                 </div>
             </div>

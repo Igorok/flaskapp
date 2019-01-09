@@ -14,7 +14,7 @@ class DetailComp extends React.Component {
         if (this.state.id === -1) {
             return;
         }
-        
+
         this.props.dispatch(graphql({
             type: 'POST_GET',
             id: this.state.id,
@@ -39,7 +39,7 @@ class DetailComp extends React.Component {
 
     render () {
         let alertOpts = null;
-    
+
         if (this.props.postDetail.status === 'error') {
             alertOpts = {
                 className: 'danger',
@@ -53,24 +53,27 @@ class DetailComp extends React.Component {
         }
 
         return <div>
-            <ol className="breadcrumb">
-                <li><a href="/blogs">Blogs</a></li>
-                <li><a href={"/blog/" + this.props.postDetail.blogId}>Blog</a></li>
-                <li className="active">{this.state.title || 'Post detail'}</li>
-            </ol>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li className="breadcrumb-item"><a href="/blogs">Blogs</a></li>
+                    <li className="breadcrumb-item"><a href={"/blog/" + this.props.postDetail.blogId}>Blog</a></li>
+                    <li className="breadcrumb-item active">{this.state.title || 'Post detail'}</li>
+                </ol>
+            </nav>
+            
             <AlertMessage opts={alertOpts} />
-            <div className="panel panel-default">
-                <div className="panel-heading">
-                    <h4 className="panel-title">
+            <div className="card">
+                <div className="card-header">
+                    <h4 className="card-title">
                         {this.props.postDetail.title}
                     </h4>
                 </div>
-                <div className="panel-body">
+                <div className="card-body">
                     <p>
-                        <span className="glyphicon glyphicon-user"></span>&nbsp;
+                        <i class="fa fa-user"></i>&nbsp;
                         {this.props.postDetail.userName}
                         &nbsp;|&nbsp;
-                        <span className="glyphicon glyphicon-time"></span>&nbsp;
+                        <i class="fa fa-clock-o"></i>&nbsp;
                         {this.props.postDetail.date}
                     </p>
                     <p>
@@ -91,4 +94,3 @@ const mapStateToProps = (state) => {
 }
 DetailComp = connect(mapStateToProps)(DetailComp)
 export default DetailComp
-

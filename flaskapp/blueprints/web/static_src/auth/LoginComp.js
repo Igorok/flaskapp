@@ -16,7 +16,7 @@ class LoginComp extends React.Component {
     }
 
     formSubmit (e) {
-        e.preventDefault();	
+        e.preventDefault();
 
         if (! this.state.captcha) {
             return this.props.dispatch({
@@ -47,7 +47,7 @@ class LoginComp extends React.Component {
     render () {
         let disabled = null,
             alertOpts = null;
-    
+
         if (this.props.status === 'error') {
             alertOpts = {
                 className: 'danger',
@@ -66,43 +66,41 @@ class LoginComp extends React.Component {
             }
         }
 
-        return <div className="row">
-            <div className="col-lg-offset-3 col-lg-6">
-                <div className="panel panel-default">
-                    <div className="panel-heading">
-                        <h3 className="panel-title">Authentication</h3>
+        return <div className="row justify-content-md-center">
+            <div className="col-4">
+                <div className="card">
+                    <div className="card-header">
+                        <h4 className="card-title">Authentication</h4>
                     </div>
-                    <div className="panel-body">
-                        
-
+                    <div className="card-body">
                         <form onSubmit={::this.formSubmit}>
                             <div className="form-group">
                                 <label htmlFor="loginInput">Login</label>
-                                <input 
-                                    type="text" 
-                                    className="form-control" 
-                                    id="loginInput" 
-                                    placeholder="Login" 
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    id="loginInput"
+                                    placeholder="Login"
                                     defaultValue={this.props.login}
                                     disabled={disabled}
                                 />
                             </div>
                             <div className="form-group">
                                 <label htmlFor="passwordInput">Password</label>
-                                <input 
-                                    type="password" 
-                                    className="form-control" 
-                                    id="passwordInput" 
-                                    placeholder="Password" 
+                                <input
+                                    type="password"
+                                    className="form-control"
+                                    id="passwordInput"
+                                    placeholder="Password"
                                     defaultValue={this.props.password}
                                     disabled={disabled}
                                 />
                             </div>
                             <MathCaptcha cb={::this.checkCaptcha} />
                             <AlertMessage opts={alertOpts} />
-                            <button 
-                                type="submit" 
-                                className="btn btn-default btn-block"
+                            <button
+                                type="submit"
+                                className="btn btn-secondary btn-block"
                                 disabled={disabled}
                             >Login</button>
                         </form>
@@ -110,7 +108,6 @@ class LoginComp extends React.Component {
                         <p className='text-center'>
                             <a href='/registration'>Registration</a>
                         </p>
-                        
                     </div>
                 </div>
             </div>

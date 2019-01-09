@@ -57,13 +57,13 @@ class BlogListComp extends React.Component {
                 }
                 if (blog.public) {
                     hideBtn = <btn className="btn btn-default" onClick={pubBlog} data-id={blog.id}>
-                        <span className="glyphicon glyphicon-remove"></span>&nbsp;
-                        hide
+                        <i class="fa fa-eye-slash"></i>&nbsp;
+                        Hide
                     </btn>
                 } else {
                     hideBtn = <btn className="btn btn-default" onClick={pubBlog} data-id={blog.id}>
-                        <span className="glyphicon glyphicon-ok"></span>&nbsp;
-                        show
+                        <i class="fa fa-eye"></i>&nbsp;
+                        Show
                     </btn>
                 }
 
@@ -81,23 +81,23 @@ class BlogListComp extends React.Component {
                         </div>
                         <div className="card-footer">
                             <p>
-                                <span className="glyphicon glyphicon-user"></span>&nbsp;
+                                <i class="fa fa-user"></i>&nbsp;
                                 {blog.userName}
                             </p>
                             <p>
-                                <span className="glyphicon glyphicon-time"></span>&nbsp;
+                                <i class="fa fa-clock-o"></i>&nbsp;
                                 {blog.date}
                             </p>
                             <p>
                                 <a href={"/blog-edit/" + blog.id} className="btn btn-default">
-                                    <span className="glyphicon glyphicon-pencil"></span>&nbsp;
-                                    edit
+                                    <i class="fa fa-pencil"></i>&nbsp;
+                                    Edit
                                 </a>
                                 &nbsp;
                                 {hideBtn}
                                 &nbsp;
                                 <a href={"/post-edit/" + blog.id + "/-1"} className="btn btn-default">
-                                    <span className="glyphicon glyphicon-plus"></span>&nbsp;
+                                    <i class="fa fa-plus"></i>&nbsp;
                                     Add post
                                 </a>
                             </p>

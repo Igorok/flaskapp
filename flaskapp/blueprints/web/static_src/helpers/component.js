@@ -57,28 +57,26 @@ export class MathCaptcha extends React.Component {
         });
     }
     render () {
-        let formClass = 'form-group';
+        let inputClass = 'form-control';
         if (this.state.isValid === true) {
-            formClass += ' has-success';
+            inputClass += ' is-valid';
         } else if (this.state.isValid === false) {
-            formClass += ' has-error';
+            inputClass += ' is-invalid';
         }
 
         return <div>
             <div className='form-inline'>
-                <div className={formClass}>
-                    <label htmlFor="sum" className='control-label'>
-                        {this.state.v1} + {this.state.v2} =
-                        &nbsp;&nbsp;
-                    </label>
-                    <input
-                        type="number"
-                        className="form-control"
-                        id="sum"
-                        placeholder="Sum"
-                        onChange={::this.changeSum}
-                    />
-                </div>
+                <label htmlFor="sum" className='control-label'>
+                    {this.state.v1} + {this.state.v2} =
+                    &nbsp;&nbsp;
+                </label>
+                <input
+                    type="number"
+                    className={inputClass}
+                    id="sum"
+                    placeholder="Sum"
+                    onChange={::this.changeSum}
+                />
             </div>
             <br />
         </div>

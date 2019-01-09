@@ -9,35 +9,29 @@ class BlogComp extends React.Component {
         var self = this;
         var tpl = null;
         if (this.props.blog) {
-
-            tpl = <div className="panel panel-default">
-                    <div className="panel-heading">
-                        <h4 className="panel-title">
-                            {this.props.blog.title}
-                        </h4>
-                    </div>
-                    <div className="panel-body">
-                        {this.props.blog.text}
-                        {/* <div dangerouslySetInnerHTML={{__html: this.props.blog.text}} /> */}
-                    </div>
-                    <div className="panel-footer">
-                        <p>
-                            <span className="glyphicon glyphicon-user"></span>&nbsp;
-                            {this.props.blog.userName}
-                            &nbsp;|&nbsp;
-                            <span className="glyphicon glyphicon-time"></span>&nbsp;
-                            {this.props.blog.date}
-                        </p>
-                    </div>
+            tpl = <div className="card">
+                <div className="card-header">
+                    <h4 className="card-title">
+                        {this.props.blog.title}
+                    </h4>
                 </div>
+                <div className="card-body">
+                    {this.props.blog.text}
+                </div>
+                <div className="card-footer">
+                    <p>
+                        <i class="fa fa-user"></i>&nbsp;
+                        {this.props.blog.userName}
+                        &nbsp;|&nbsp;
+                        <i class="fa fa-clock-o"></i>&nbsp;
+                        {this.props.blog.date}
+                    </p>
+                </div>
+            </div>
         }
         return tpl;
     }
 }
-
-
-
-
 
 class ListComp extends React.Component {
     constructor(props) {
@@ -66,7 +60,7 @@ class ListComp extends React.Component {
     getPostItems () {
         var self = this;
         if (
-            ! self.props.postList.posts || 
+            ! self.props.postList.posts ||
             ! self.props.postList.posts.length
         ) {
             return null;
@@ -75,32 +69,35 @@ class ListComp extends React.Component {
         let chunkedItems = chunk(this.props.postList.posts, 3);
         let posts = map(chunkedItems, posts => {
             let partition = map(posts, post => {
-                return <div className="col-md-4">
-                    <div className="panel panel-default">
-                        <div className="panel-heading">
-                            <h4 className="panel-title">
+                return <div className="col-4">
+                    <div className="card">
+                        <div className="card-header">
+                            <h4 className="card-title">
                                 <a href = {"/post/" + self.props.postList.blog.id + "/" + post.id}>
                                     {post.title}
                                 </a>
                             </h4>
                         </div>
-                        <div className="panel-body">
-                            {post.description} 
+                        <div className="card-body">
+                            {post.description}
                         </div>
-                        <div className="panel-footer">
+                        <div className="card-footer">
                             <p>
-                                <span className="glyphicon glyphicon-user"></span>&nbsp;
+                                <i class="fa fa-user"></i>&nbsp;
                                 {post.userName}
                             </p>
                             <p>
-                                <span className="glyphicon glyphicon-time"></span>&nbsp;
+                                <i class="fa fa-clock-o"></i>&nbsp;
                                 {post.date}
                             </p>
                         </div>
                     </div>
                 </div>
             });
-            return <div className="row">{partition}</div>
+            return <div>
+                <div className="row">{partition}</div>
+                <br />
+            </div>
         });
         return posts;
     }
@@ -120,7 +117,7 @@ class ListComp extends React.Component {
                 text: 'Loading, please wait',
             }
         }
-        
+
        let pagerParam = {
             start: this.props.postList.start,
             perpage: this.props.postList.perpage,
@@ -128,14 +125,17 @@ class ListComp extends React.Component {
             items: this.getPostItems(),
             changePage: ::this.changePage,
         };
-        
+
         return <div>
                 <AlertMessage opts={alertOpts} />
-                <ol className="breadcrumb">
-                    <li><a href="/blogs">Blogs</a></li>
-                    <li className="active">{this.props.postList.blog ? this.props.postList.blog.title : null}</li>
-                </ol>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/blogs">Blogs</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">{this.props.postList.blog ? this.props.postList.blog.title : null}</li>
+                    </ol>
+                </nav>
                 <BlogComp blog={this.props.postList.blog} />
+                <br />
                 <PaginatorLayout param={pagerParam} />
             </div>
     }

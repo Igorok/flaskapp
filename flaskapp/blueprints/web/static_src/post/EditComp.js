@@ -19,7 +19,7 @@ class EditComp extends React.Component {
         if (this.state.id === -1) {
             return;
         }
-        
+
         this.props.dispatch(graphql({
             type: 'MY_POST_GET',
             id: this.state.id,
@@ -79,7 +79,7 @@ class EditComp extends React.Component {
 
     render () {
         let alertOpts = null;
-    
+
         if (this.props.postEdit.status === 'error') {
             alertOpts = {
                 className: 'danger',
@@ -110,24 +110,24 @@ class EditComp extends React.Component {
             <form onSubmit={::this.formSubmit} >
                 <div className="form-group">
                     <label htmlFor="title">Title</label>
-                    <input 
+                    <input
                         required
-                        type="text" 
-                        className="form-control" 
-                        id="title" 
-                        placeholder="Title" 
+                        type="text"
+                        className="form-control"
+                        id="title"
+                        placeholder="Title"
                         onChange={::this.fieldChange}
                         value={this.state.title}
                     />
                 </div>
                 <div className="form-group">
                     <label htmlFor="description">Description</label>
-                    <input 
+                    <input
                         required
-                        type="text" 
-                        className="form-control" 
-                        id="description" 
-                        placeholder="Description" 
+                        type="text"
+                        className="form-control"
+                        id="description"
+                        placeholder="Description"
                         onChange={::this.fieldChange}
                         value={this.state.description}
                     />
@@ -146,10 +146,10 @@ class EditComp extends React.Component {
                 </div>
                 <div className="checkbox">
                     <label>
-                        <input 
-                            type="checkbox" 
-                            id='public' 
-                            onChange={::this.fieldChange} 
+                        <input
+                            type="checkbox"
+                            id='public'
+                            onChange={::this.fieldChange}
                             checked = {!! this.state.public}
                         /> Public
                     </label>
@@ -160,7 +160,7 @@ class EditComp extends React.Component {
                 <hr />
                 <div >
                     <button type="submit" className="btn btn-primary">
-                        <span className='glyphicon glyphicon-floppy-disk'></span>&nbsp;
+                        <i class="fa fa-save"></i>&nbsp;
                         Save
                     </button>
                 </div>
@@ -175,4 +175,3 @@ const mapStateToProps = (state) => {
 }
 EditComp = connect(mapStateToProps)(EditComp)
 export default EditComp
-
