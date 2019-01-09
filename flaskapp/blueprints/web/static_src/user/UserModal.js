@@ -41,28 +41,28 @@ export class UserRemoveModal extends React.Component {
     render () {
         let login = this.props.user ? this.props.user.login : null;
 
-        return <div className="user-remove-modal modal fade" tabindex="-1" role="dialog">
-            <div className="modal-dialog" role="document">
-                <div className="modal-content">
-                    <div className="modal-header">
-                        <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+        return <div class="modal user-remove-modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Confirm of removing</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
-                        <h4 className="modal-title">Confirm of removing</h4>
                     </div>
-                    <div className="modal-body">
+                    <div class="modal-body">
                         <p>Would you like to remove {login} from the friends?</p>
                     </div>
-                    <div className="modal-footer">
-                        <button 
-                            type="button" 
-                            className="btn btn-default" 
+                    <div class="modal-footer">
+                        <button
+                            type="button"
+                            className="btn btn-secondary"
                             onClick={::this.cancelRemove}
                         >
                             Cancel
                         </button>
-                        <button 
-                            type="button" 
+                        <button
+                            type="button"
                             className="btn btn-danger"
                             onClick={::this.approveRemove}
                         >
@@ -113,28 +113,28 @@ export class UserApproveModal extends React.Component {
     render () {
         let login = this.props.user ? this.props.user.login : null;
 
-        return <div className="user-approve-modal modal fade" tabindex="-1" role="dialog">
-            <div className="modal-dialog" role="document">
-                <div className="modal-content">
-                    <div className="modal-header">
-                        <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+        return <div class="modal user-approve-modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Confirm of friend</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
-                        <h4 className="modal-title">Confirm of friend</h4>
                     </div>
-                    <div className="modal-body">
+                    <div class="modal-body">
                         <p>Would you like to add {login} to the friends?</p>
                     </div>
-                    <div className="modal-footer">
-                        <button 
-                            type="button" 
-                            className="btn btn-default" 
+                    <div class="modal-footer">
+                        <button
+                            type="button"
+                            className="btn btn-secondary"
                             onClick={::this.cancelAdd}
                         >
                             Cancel
                         </button>
-                        <button 
-                            type="button" 
+                        <button
+                            type="button"
                             className="btn btn-success"
                             onClick={::this.approveAdd}
                         >

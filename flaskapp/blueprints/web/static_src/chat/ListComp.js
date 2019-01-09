@@ -12,8 +12,8 @@ class ChatListComp extends React.Component {
     changePage (start = 0) {
         this.props.dispatch(graphql({
             type: 'CHAT_LIST',
-            start: start, 
-            perpage: this.props.chatList.perpage, 
+            start: start,
+            perpage: this.props.chatList.perpage,
         }));
     }
 
@@ -24,8 +24,8 @@ class ChatListComp extends React.Component {
                     {chat.userLogin}, {chat.friendLogin}
                 </td>
                 <td className="text-right">
-                    <a href={"/chat-private/" + chat.linkId} className="btn btn-default" >
-                        <span className="glyphicon glyphicon-envelope"></span>&nbsp;
+                    <a href={"/chat-private/" + chat.linkId} className="btn btn-secondary" >
+                        <i class="fa fa-envelope"></i>&nbsp;
                         Send message
                     </a>
                 </td>

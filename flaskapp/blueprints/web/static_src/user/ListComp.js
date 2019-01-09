@@ -34,35 +34,35 @@ class UserItemComp extends React.Component {
             this.props.user.selfFriendId !== null &&
             this.props.user.friendUserId !== null
         ) {
-            friendBtn = <button className="btn btn-default" onClick={::this.showRemove} >
-                <span className="glyphicon glyphicon-minus"></span>
+            friendBtn = <button className="btn btn-secondary" onClick={::this.showRemove} >
+                <i class="fa fa-minus"></i>
                 &nbsp;
                 Remove from friends
             </button>
-            msgBtn = <a className="btn btn-default" href={"/chat-private/" + this.props.user.id}>
-                <span className="glyphicon glyphicon-envelope"></span>
+            msgBtn = <a className="btn btn-secondary" href={"/chat-private/" + this.props.user.id}>
+                <i class="fa fa-envelope"></i>
                 &nbsp;
                 Send message
             </a>
         }
         // if this row sended request to current user
         else if (this.props.user.selfFriendId !== null) {
-            friendBtn = <button className="btn btn-default" onClick={::this.showAdd} >
-                <span className="glyphicon glyphicon-plus"></span>
+            friendBtn = <button className="btn btn-secondary" onClick={::this.showAdd} >
+                <i class="fa fa-plus"></i>
                 &nbsp;
                 Approve friend
             </button>
         }
         // if current user sended request to current row
         else if (this.props.user.friendUserId !== null) {
-            friendBtn = <button disabled className="btn btn-default" onClick={::this.showAdd} >
-                <span className="glyphicon glyphicon-plus"></span>
+            friendBtn = <button disabled className="btn btn-secondary" onClick={::this.showAdd} >
+                <i class="fa fa-plus"></i>
                 &nbsp;
                 Add to friends
             </button>
         } else {
-            friendBtn = <button className="btn btn-default" onClick={::this.showAdd} >
-                <span className="glyphicon glyphicon-plus"></span>
+            friendBtn = <button className="btn btn-secondary" onClick={::this.showAdd} >
+                <i class="fa fa-plus"></i>
                 &nbsp;
                 Add to friends
             </button>
@@ -70,7 +70,7 @@ class UserItemComp extends React.Component {
 
         return <tr className={textClass}>
             <td>
-                <span className="glyphicon glyphicon-user"></span>
+                <i class="fa fa-user"></i>
                 &nbsp;
                 <span>{this.props.user.login}</span>
             </td>
@@ -156,7 +156,7 @@ class UserListComp extends React.Component {
             </tbody>
         </table>
     }
-    
+
     render () {
         let alertOpts = null;
         let users = null;
@@ -184,13 +184,13 @@ class UserListComp extends React.Component {
         return <div>
             <AlertMessage opts={alertOpts} />
             <PaginatorLayout param={pagerParam} />
-            <UserApproveModal 
-                user={this.state.addUsr} 
+            <UserApproveModal
+                user={this.state.addUsr}
                 cancelAdd={::this.cancelAdd}
                 approveAdd={::this.approveAdd}
             />
-            <UserRemoveModal 
-                user={this.state.rmUsr} 
+            <UserRemoveModal
+                user={this.state.rmUsr}
                 cancelRemove={::this.cancelRemove}
                 approveRemove={::this.approveRemove}
             />

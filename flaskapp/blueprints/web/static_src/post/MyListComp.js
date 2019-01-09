@@ -18,49 +18,52 @@ class BlogComp extends React.Component {
                 });
             }
             if (this.props.blog.public) {
-                hideBtn = <btn className="btn btn-default" onClick={pubBlog} data-id={this.props.blog.id}>
-                    <span className="glyphicon glyphicon-remove"></span>&nbsp;
-                    hide
+                hideBtn = <btn className="btn btn-secondary" onClick={pubBlog} data-id={this.props.blog.id}>
+                    <i class="fa fa-eye-slash"></i>&nbsp;
+                    Hide
                 </btn>
             } else {
-                hideBtn = <btn className="btn btn-default" onClick={pubBlog} data-id={this.props.blog.id}>
-                    <span className="glyphicon glyphicon-ok"></span>&nbsp;
-                    show
+                hideBtn = <btn className="btn btn-secondary" onClick={pubBlog} data-id={this.props.blog.id}>
+                    <i class="fa fa-eye"></i>&nbsp;
+                    Show
                 </btn>
             }
 
-            tpl = <div className="panel panel-default">
-                    <div className="panel-heading">
-                        <h4 className="panel-title">
+            tpl = <div>
+                <div className="card">
+                    <div className="card-header">
+                        <h4 className="card-title">
                             {this.props.blog.title}
                         </h4>
                     </div>
-                    <div className="panel-body">
+                    <div className="card-body">
                         <div dangerouslySetInnerHTML={{__html: this.props.blog.text}} />
                     </div>
-                    <div className="panel-footer">
+                    <div className="card-footer">
                         <p>
-                            <span className="glyphicon glyphicon-user"></span>&nbsp;
+                            <i class="fa fa-user"></i>&nbsp;
                             {this.props.blog.userName}
                             &nbsp;|&nbsp;
-                            <span className="glyphicon glyphicon-time"></span>&nbsp;
+                            <i class="fa fa-clock-o"></i>&nbsp;
                             {this.props.blog.date}
                         </p>
                         <p>
-                            <a href={"/blog-edit/" + this.props.blog.id} className="btn btn-default">
-                                <span className="glyphicon glyphicon-pencil"></span>&nbsp;
-                                edit
+                            <a href={"/blog-edit/" + this.props.blog.id} className="btn btn-secondary">
+                                <i class="fa fa-pencil"></i>&nbsp;
+                                Edit
                             </a>
                             &nbsp;
                             {hideBtn}
                             &nbsp;
-                            <a href={"/post-edit/" + this.props.blog.id + "/-1"} className="btn btn-default">
-                                <span className="glyphicon glyphicon-plus"></span>&nbsp;
+                            <a href={"/post-edit/" + this.props.blog.id + "/-1"} className="btn btn-secondary">
+                                <i class="fa fa-plus"></i>&nbsp;
                                 Add post
                             </a>
                         </p>
                     </div>
                 </div>
+                <br />
+            </div>
         }
         return tpl;
     }
@@ -110,7 +113,7 @@ class MyListComp extends React.Component {
     getPostItems () {
         var self = this;
         if (
-            ! self.props.myPostList.posts || 
+            ! self.props.myPostList.posts ||
             ! self.props.myPostList.posts.length
         ) {
             return null;
@@ -119,32 +122,35 @@ class MyListComp extends React.Component {
         let chunkedItems = chunk(this.props.myPostList.posts, 3);
         let posts = map(chunkedItems, posts => {
             let partition = map(posts, post => {
-                return <div className="col-md-4">
-                    <div className="panel panel-default">
-                        <div className="panel-heading">
-                            <h4 className="panel-title">
+                return <div className="col-4">
+                    <div className="card">
+                        <div className="card-header">
+                            <h4 className="card-title">
                                 <a href = {"/post-edit/" + self.props.myPostList.blog.id + "/" + post.id}>
                                     {post.title}
                                 </a>
                             </h4>
                         </div>
-                        <div className="panel-body">
-                            {post.description} 
+                        <div className="card-body">
+                            {post.description}
                         </div>
-                        <div className="panel-footer">
+                        <div className="card-footer">
                             <p>
-                                <span className="glyphicon glyphicon-user"></span>&nbsp;
+                                <i class="fa fa-user"></i>&nbsp;
                                 {post.userName}
                             </p>
                             <p>
-                                <span className="glyphicon glyphicon-time"></span>&nbsp;
+                                <i class="fa fa-clock-o"></i>&nbsp;
                                 {post.date}
                             </p>
                         </div>
                     </div>
                 </div>
             });
-            return <div className="row">{partition}</div>
+            return <div>
+                <div className="row">{partition}</div>
+                <br />
+            </div>
         });
         return posts;
     }
@@ -164,7 +170,7 @@ class MyListComp extends React.Component {
                 text: 'Loading, please wait',
             }
         }
-        
+
        let pagerParam = {
             start: this.props.myPostList.start,
             perpage: this.props.myPostList.perpage,
@@ -172,16 +178,19 @@ class MyListComp extends React.Component {
             items: this.getPostItems(),
             changePage: ::this.changePage,
         };
-        
+
         return <div>
-                <AlertMessage opts={alertOpts} />
-                <ol className="breadcrumb">
-                    <li><a href="/my-blogs">My blogs</a></li>
-                    <li className="active">{this.props.myPostList.blog ? this.props.myPostList.blog.title : null}</li>
+            <AlertMessage opts={alertOpts} />
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li className="breadcrumb-item"><a href="/profile">Profile</a></li>
+                    <li className="breadcrumb-item"><a href="/my-blogs">My blogs</a></li>
+                    <li className="breadcrumb-item active">{this.props.myPostList.blog ? this.props.myPostList.blog.title : null}</li>
                 </ol>
-                <BlogComp blog={this.props.myPostList.blog} publicBlog={::this.publicBlog}/>
-                <PaginatorLayout param={pagerParam} />
-            </div>
+            </nav>
+            <BlogComp blog={this.props.myPostList.blog} publicBlog={::this.publicBlog}/>
+            <PaginatorLayout param={pagerParam} />
+        </div>
     }
 }
 

@@ -101,11 +101,14 @@ class EditComp extends React.Component {
         }
 
         return <div>
-            <ol className="breadcrumb">
-                <li><a href="/my-blogs">My blogs</a></li>
-                <li><a href={"/my-blog-detail/" + this.props.postEdit.blogId}>Blog</a></li>
-                <li className="active">{this.state.title || 'Edit post'}</li>
-            </ol>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li className="breadcrumb-item"><a href="/profile">Profile</a></li>
+                    <li className="breadcrumb-item"><a href="/my-blogs">My blogs</a></li>
+                    <li className="breadcrumb-item"><a href={"/my-blog-detail/" + this.props.postEdit.blogId}>Blog</a></li>
+                    <li className="breadcrumb-item active">{this.state.title || 'Edit post'}</li>
+                </ol>
+            </nav>
 
             <form onSubmit={::this.formSubmit} >
                 <div className="form-group">

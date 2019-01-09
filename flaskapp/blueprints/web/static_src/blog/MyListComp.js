@@ -56,12 +56,12 @@ class BlogListComp extends React.Component {
                     });
                 }
                 if (blog.public) {
-                    hideBtn = <btn className="btn btn-default" onClick={pubBlog} data-id={blog.id}>
+                    hideBtn = <btn className="btn btn-secondary" onClick={pubBlog} data-id={blog.id}>
                         <i class="fa fa-eye-slash"></i>&nbsp;
                         Hide
                     </btn>
                 } else {
-                    hideBtn = <btn className="btn btn-default" onClick={pubBlog} data-id={blog.id}>
+                    hideBtn = <btn className="btn btn-secondary" onClick={pubBlog} data-id={blog.id}>
                         <i class="fa fa-eye"></i>&nbsp;
                         Show
                     </btn>
@@ -89,14 +89,14 @@ class BlogListComp extends React.Component {
                                 {blog.date}
                             </p>
                             <p>
-                                <a href={"/blog-edit/" + blog.id} className="btn btn-default">
+                                <a href={"/blog-edit/" + blog.id} className="btn btn-secondary">
                                     <i class="fa fa-pencil"></i>&nbsp;
                                     Edit
                                 </a>
                                 &nbsp;
                                 {hideBtn}
                                 &nbsp;
-                                <a href={"/post-edit/" + blog.id + "/-1"} className="btn btn-default">
+                                <a href={"/post-edit/" + blog.id + "/-1"} className="btn btn-secondary">
                                     <i class="fa fa-plus"></i>&nbsp;
                                     Add post
                                 </a>
@@ -144,6 +144,12 @@ class BlogListComp extends React.Component {
 
         return <div>
             <AlertMessage opts={alertOpts} />
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li className="breadcrumb-item"><a href="/profile">Profile</a></li>
+                    <li className="breadcrumb-item active">My blogs</li>
+                </ol>
+            </nav>
             <PaginatorLayout param={pagerParam} />
         </div>
 

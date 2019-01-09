@@ -47,7 +47,7 @@ class PostItem (Model):
             __wrongFields.append('userId')
 
         if (
-            self.title is None or 
+            self.title is None or
             len(self.title) == 0 or
             len(self.title) > 128
         ):
@@ -73,7 +73,7 @@ class PostItem (Model):
 class PostModel (Model):
     TABLE = 'post'
 
-    
+
     # edit current post
     def editPost (self, *args, **kwargs):
         uModel = UserModel()
@@ -95,15 +95,15 @@ class PostModel (Model):
             return self.addPost(**postItem.__dict__)
 
         postRows = ('id', 'title', 'description', 'text', 'public', 'date', self.TABLE)
-        postSql = '''select 
+        postSql = '''select
             "{0}", "{1}", "{2}", "{3}", "{4}", "{5}" from "{6}"
             where id = %s and blog_id = %s and user_id = %s'''.format(*postRows)
 
         connection = self.connect_postgres()
         cursor = connection.cursor()
         cursor.execute(postSql, (
-            postItem.id, 
-            postItem.blogId, 
+            postItem.id,
+            postItem.blogId,
             postItem.userId
         ))
         postData = cursor.fetchone()
@@ -138,7 +138,7 @@ class PostModel (Model):
     def addPost(self, *args, **kwargs):
         postItem = PostItem(**kwargs)
 
-        blogSql = '''select "id" from "{0}" 
+        blogSql = '''select "id" from "{0}"
             where "id" = %s and "user_id" = %s
             '''.format(BlogModel.TABLE)
 
@@ -159,10 +159,10 @@ class PostModel (Model):
         cursor.execute(insertSql, [
             postItem.blogId,
             postItem.userId,
-            postItem.title, 
-            postItem.description, 
-            postItem.text, 
-            postItem.public, 
+            postItem.title,
+            postItem.description,
+            postItem.text,
+            postItem.public,
             postItem.date
         ])
 
@@ -185,8 +185,8 @@ class PostModel (Model):
         uModel = UserModel()
         # check authentication and get data of current user
         profileDict = uModel.getUserByToken(**kwargs)
-        
-        postSql = '''select 
+
+        postSql = '''select
             blog.id as blogId,
             blog.user_id as userId,
             post.id as id,
@@ -198,15 +198,15 @@ class PostModel (Model):
             from blog
             left join post
             on blog.id = post.blog_id
-            where blog.id = %s and blog.user_id = %s and post.id = %s and post.user_id = %s 
+            where blog.id = %s and blog.user_id = %s and post.id = %s and post.user_id = %s
             ;'''.format(BlogModel.TABLE, self.TABLE)
 
         connection = self.connect_postgres()
         cursor = connection.cursor()
         cursor.execute(postSql, [
-            kwargs["blogId"], 
+            kwargs["blogId"],
             profileDict["id"],
-            kwargs["id"], 
+            kwargs["id"],
             profileDict["id"]
         ])
         postData = cursor.fetchone()
@@ -221,8 +221,8 @@ class PostModel (Model):
         postDict = self.list_to_dict(postRows)(postData)
 
         if (
-            postDict is None or 
-            postDict["blogId"] is None or 
+            postDict is None or
+            postDict["blogId"] is None or
             postDict["id"] is None
         ):
             raise Exception('Post not found')
@@ -250,7 +250,7 @@ class PostModel (Model):
         profileDict = uModel.getUserByToken(**kwargs)
 
         blogRows = ('id', 'title', 'text', 'public', 'date', 'userId', 'userName')
-        blogSql = '''select 
+        blogSql = '''select
             blog.id as "{0}",
             blog.title as "{1}",
             blog.text as "{2}",
@@ -275,10 +275,10 @@ class PostModel (Model):
         listResult['blog'] = self.list_to_dict(blogRows)(blogData)
 
         postRows = (
-            'id', 'blogId', 'title', 'description', 'public', 'date', 
+            'id', 'blogId', 'title', 'description', 'public', 'date',
             'userId', 'userName'
         )
-        postSql = '''select 
+        postSql = '''select
             post.id as {0},
             post.blog_id as {1},
             post.title as {2},
@@ -289,12 +289,13 @@ class PostModel (Model):
             uTable.login as {7}
             from post
             left join "user" as uTable on post.user_id = uTable.id
-            where post.blog_id = %s and post.user_id = %s
+            where post.blog_id = %s
+                and post.user_id = %s
             order by post.{0} desc limit %s offset %s;
             ;'''.format(*postRows)
 
         cursor.execute(postSql, (
-            kwargs['blogId'], 
+            kwargs['blogId'],
             profileDict['id'],
             perpage,
             start
@@ -303,11 +304,11 @@ class PostModel (Model):
 
         countSql = 'select count(id) from post where blog_id = %s and user_id = %s;'
         cursor.execute(countSql, (
-            kwargs['blogId'], 
+            kwargs['blogId'],
             profileDict['id']
         ))
         countData = cursor.fetchone()
-        
+
         if (countData != None):
             listResult['count'] = countData[0]
 
@@ -333,7 +334,7 @@ class PostModel (Model):
         }
 
         blogRows = ('id', 'title', 'text', 'public', 'date', 'userId', 'userName')
-        blogSql = '''select 
+        blogSql = '''select
             blog.id as "{0}",
             blog.title as "{1}",
             blog.text as "{2}",
@@ -358,10 +359,10 @@ class PostModel (Model):
         listResult['blog'] = self.list_to_dict(blogRows)(blogData)
 
         postRows = (
-            'id', 'blogId', 'title', 'description', 'public', 'date', 
+            'id', 'blogId', 'title', 'description', 'public', 'date',
             'userId', 'userName'
         )
-        postSql = '''select 
+        postSql = '''select
             post.id as {0},
             post.blog_id as {1},
             post.title as {2},
@@ -373,6 +374,7 @@ class PostModel (Model):
             from post
             left join "user" as uTable on post.user_id = uTable.id
             where post.blog_id = %s
+                and post.public = true
             order by post.{0} desc limit %s offset %s;
             ;'''.format(*postRows)
 
@@ -388,7 +390,7 @@ class PostModel (Model):
             kwargs['blogId']
         ])
         countData = cursor.fetchone()
-        
+
         if (countData != None):
             listResult['count'] = countData[0]
 
@@ -406,7 +408,7 @@ class PostModel (Model):
         if (not 'id' in kwargs):
             raise Exception('Post not found')
 
-        postSql = '''select 
+        postSql = '''select
             blog.id as blogId,
             blog.user_id as userId,
             "user".login as userName,
@@ -443,8 +445,8 @@ class PostModel (Model):
         postDict = self.list_to_dict(postRows)(postData)
 
         if (
-            postDict is None or 
-            postDict["blogId"] is None or 
+            postDict is None or
+            postDict["blogId"] is None or
             postDict["id"] is None
         ):
             raise Exception('Post not found')

@@ -22,19 +22,19 @@ class UserItemComp extends React.Component {
             this.props.user.selfFriendId !== null &&
             this.props.user.friendUserId !== null
         ) {
-            friendBtn = <button className="btn btn-default" onClick={::this.showRemove} >
-                <span className="glyphicon glyphicon-minus"></span>
+            friendBtn = <button className="btn btn-secondary" onClick={::this.showRemove} >
+                <i class="fa fa-minus"></i>
                 &nbsp;
                 Remove from friends
             </button>
-            msgBtn = <a className="btn btn-default" href={"/chat-private/" + this.props.user.id}>
-                <span className="glyphicon glyphicon-envelope"></span>
+            msgBtn = <a className="btn btn-secondary" href={"/chat-private/" + this.props.user.id}>
+                <i class="fa fa-envelope"></i>
                 &nbsp;
                 Send message
             </a>
         } else {
-            friendBtn = <button className="btn btn-default" >
-                <span className="glyphicon glyphicon-plus"></span>
+            friendBtn = <button className="btn btn-secondary" >
+                <i class="fa fa-plus"></i>
                 &nbsp;
                 Add to friends
             </button>
@@ -42,7 +42,7 @@ class UserItemComp extends React.Component {
 
         return <tr className={textClass}>
             <td>
-                <span className="glyphicon glyphicon-user"></span>
+                <i class="fa fa-user"></i>
                 &nbsp;
                 <span>{this.props.user.login}</span>
             </td>
@@ -139,8 +139,8 @@ class FriendListComp extends React.Component {
         return <div>
             <AlertMessage opts={alertOpts} />
             <PaginatorLayout param={pagerParam} />
-            <UserRemoveModal 
-                user={this.state.rmUsr} 
+            <UserRemoveModal
+                user={this.state.rmUsr}
                 cancelRemove={::this.cancelRemove}
                 approveRemove={::this.approveRemove}
             />
