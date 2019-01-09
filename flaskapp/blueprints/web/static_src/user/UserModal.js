@@ -56,7 +56,7 @@ export class UserRemoveModal extends React.Component {
                     <div class="modal-footer">
                         <button
                             type="button"
-                            className="btn btn-secondary"
+                            className="btn btn-primary"
                             onClick={::this.cancelRemove}
                         >
                             Cancel
@@ -128,7 +128,7 @@ export class UserApproveModal extends React.Component {
                     <div class="modal-footer">
                         <button
                             type="button"
-                            className="btn btn-secondary"
+                            className="btn btn-primary"
                             onClick={::this.cancelAdd}
                         >
                             Cancel

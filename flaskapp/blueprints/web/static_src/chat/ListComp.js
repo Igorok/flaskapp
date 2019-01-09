@@ -24,7 +24,7 @@ class ChatListComp extends React.Component {
                     {chat.userLogin}, {chat.friendLogin}
                 </td>
                 <td className="text-right">
-                    <a href={"/chat-private/" + chat.linkId} className="btn btn-secondary" >
+                    <a href={"/chat-private/" + chat.linkId} className="btn btn-primary" >
                         <i class="fa fa-envelope"></i>&nbsp;
                         Send message
                     </a>

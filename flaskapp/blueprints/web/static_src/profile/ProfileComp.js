@@ -104,12 +104,12 @@ class UserInfo extends React.Component {
         return <div>
             <div className="card">
                 <div className="card-header">
-                    <button className={"btn btn-secondary " + formClass} onClick={::this.setMode} >
+                    <button className={"btn btn-primary " + formClass} onClick={::this.setMode} >
                         <i className="fa fa-user"></i>&nbsp;
                         View profile
                     </button>
                     &nbsp;
-                    <button className={"btn btn-secondary " + infoClass} onClick={::this.setMode} >
+                    <button className={"btn btn-primary " + infoClass} onClick={::this.setMode} >
                         <i className="fa fa-cog"></i>&nbsp;
                         Edit profile
                     </button>
@@ -151,7 +151,7 @@ class UserInfo extends React.Component {
                                     onChange={::this.fieldChange}
                                 />
                             </div>
-                            <button type="submit" className="btn btn-secondary">
+                            <button type="submit" className="btn btn-primary">
                                 <i className="fa fa-save"></i>&nbsp;
                                 Submit
                             </button>

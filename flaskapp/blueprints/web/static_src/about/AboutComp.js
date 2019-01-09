@@ -10,14 +10,10 @@ class AboutComp extends React.Component {
         super(props);
         this.state = {...this.props};
     }
-
-    showModal () {
-        $('.modal').modal('show');
-    }
     render () {
-        return <div className="card">
+        return <div className="card bg-secondary text-white">
             <div className="card-header">
-                <h4 className="card-title">About</h4>
+                <h5 className="card-title">About</h5>
             </div>
             <div className="card-body">
                 I am web developer. I had planned these few personal pages

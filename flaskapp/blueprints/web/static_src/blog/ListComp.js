@@ -35,7 +35,7 @@ class BlogListComp extends React.Component {
         let blogs = map(chunkedItems, blogs => {
             let partition = map(blogs, blog => {
                 return <div className="col-4">
-                    <div className="card">
+                    <div className="card bg-secondary text-white">
                         <div className="card-header">
                             <h4 className="card-title">
                                 <a href = {"/blog/" + blog.id}>{blog.title}</a>

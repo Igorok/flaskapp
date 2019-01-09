@@ -56,12 +56,12 @@ class BlogListComp extends React.Component {
                     });
                 }
                 if (blog.public) {
-                    hideBtn = <btn className="btn btn-secondary" onClick={pubBlog} data-id={blog.id}>
+                    hideBtn = <btn className="btn btn-primary" onClick={pubBlog} data-id={blog.id}>
                         <i class="fa fa-eye-slash"></i>&nbsp;
                         Hide
                     </btn>
                 } else {
-                    hideBtn = <btn className="btn btn-secondary" onClick={pubBlog} data-id={blog.id}>
+                    hideBtn = <btn className="btn btn-primary" onClick={pubBlog} data-id={blog.id}>
                         <i class="fa fa-eye"></i>&nbsp;
                         Show
                     </btn>
@@ -89,14 +89,14 @@ class BlogListComp extends React.Component {
                                 {blog.date}
                             </p>
                             <p>
-                                <a href={"/blog-edit/" + blog.id} className="btn btn-secondary">
+                                <a href={"/blog-edit/" + blog.id} className="btn btn-primary">
                                     <i class="fa fa-pencil"></i>&nbsp;
                                     Edit
                                 </a>
                                 &nbsp;
                                 {hideBtn}
                                 &nbsp;
-                                <a href={"/post-edit/" + blog.id + "/-1"} className="btn btn-secondary">
+                                <a href={"/post-edit/" + blog.id + "/-1"} className="btn btn-primary">
                                     <i class="fa fa-plus"></i>&nbsp;
                                     Add post
                                 </a>

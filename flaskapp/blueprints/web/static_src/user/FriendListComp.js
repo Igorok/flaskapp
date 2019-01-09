@@ -22,18 +22,18 @@ class UserItemComp extends React.Component {
             this.props.user.selfFriendId !== null &&
             this.props.user.friendUserId !== null
         ) {
-            friendBtn = <button className="btn btn-secondary" onClick={::this.showRemove} >
+            friendBtn = <button className="btn btn-primary" onClick={::this.showRemove} >
                 <i class="fa fa-minus"></i>
                 &nbsp;
                 Remove from friends
             </button>
-            msgBtn = <a className="btn btn-secondary" href={"/chat-private/" + this.props.user.id}>
+            msgBtn = <a className="btn btn-primary" href={"/chat-private/" + this.props.user.id}>
                 <i class="fa fa-envelope"></i>
                 &nbsp;
                 Send message
             </a>
         } else {
-            friendBtn = <button className="btn btn-secondary" >
+            friendBtn = <button className="btn btn-primary" >
                 <i class="fa fa-plus"></i>
                 &nbsp;
                 Add to friends

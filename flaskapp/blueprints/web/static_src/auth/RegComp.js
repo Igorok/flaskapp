@@ -129,7 +129,7 @@ class LoginComp extends React.Component {
                             <AlertMessage opts={alertOpts} />
                             <button
                                 type="submit"
-                                className="btn btn-secondary btn-block"
+                                className="btn btn-primary btn-block"
                                 disabled={disabled}
                             >Registration</button>
                         </form>

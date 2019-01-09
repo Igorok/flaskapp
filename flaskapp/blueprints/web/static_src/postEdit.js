@@ -3,7 +3,6 @@ import { render } from 'react-dom'
 import { Provider } from 'react-redux'
 
 import 'font-awesome/scss/font-awesome.scss';
-import 'bootstrap/dist/css/bootstrap.css';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import './styles/index.scss'
 

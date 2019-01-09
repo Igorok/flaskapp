@@ -34,12 +34,12 @@ class UserItemComp extends React.Component {
             this.props.user.selfFriendId !== null &&
             this.props.user.friendUserId !== null
         ) {
-            friendBtn = <button className="btn btn-secondary" onClick={::this.showRemove} >
+            friendBtn = <button className="btn btn-primary" onClick={::this.showRemove} >
                 <i class="fa fa-minus"></i>
                 &nbsp;
                 Remove from friends
             </button>
-            msgBtn = <a className="btn btn-secondary" href={"/chat-private/" + this.props.user.id}>
+            msgBtn = <a className="btn btn-primary" href={"/chat-private/" + this.props.user.id}>
                 <i class="fa fa-envelope"></i>
                 &nbsp;
                 Send message
@@ -47,7 +47,7 @@ class UserItemComp extends React.Component {
         }
         // if this row sended request to current user
         else if (this.props.user.selfFriendId !== null) {
-            friendBtn = <button className="btn btn-secondary" onClick={::this.showAdd} >
+            friendBtn = <button className="btn btn-primary" onClick={::this.showAdd} >
                 <i class="fa fa-plus"></i>
                 &nbsp;
                 Approve friend
@@ -55,13 +55,13 @@ class UserItemComp extends React.Component {
         }
         // if current user sended request to current row
         else if (this.props.user.friendUserId !== null) {
-            friendBtn = <button disabled className="btn btn-secondary" onClick={::this.showAdd} >
+            friendBtn = <button disabled className="btn btn-primary" onClick={::this.showAdd} >
                 <i class="fa fa-plus"></i>
                 &nbsp;
                 Add to friends
             </button>
         } else {
-            friendBtn = <button className="btn btn-secondary" onClick={::this.showAdd} >
+            friendBtn = <button className="btn btn-primary" onClick={::this.showAdd} >
                 <i class="fa fa-plus"></i>
                 &nbsp;
                 Add to friends
@@ -150,7 +150,7 @@ class UserListComp extends React.Component {
                 />
         });
 
-        return <table className="table table-hover">
+        return <table className="table table-dark table-hover">
             <tbody>
                 {items}
             </tbody>

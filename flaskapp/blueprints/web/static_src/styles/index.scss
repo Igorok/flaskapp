@@ -1,60 +1,42 @@
-#root {
-    padding-top: 75px;
-}
+/*
+
+@import 'bootstrap/scss/_functions.scss';
+@import 'bootstrap/scss/_variables.scss';
+$theme-colors: (
+    primary: theme-color-level(primary, 4)
+);
+
+$navbar-dark-color: $primary;
+
+*/
+
+@import 'bootstrap/scss/bootstrap.scss';
+
 .hidden {
     display: none;
 }
-.chat-btn-td {
-    width: 150px;
-}
-.chatMsgForm {
-    margin-top: 14px;
-}
-.msg-table {
-    margin: 0;
-}
-.msg-case {
-    overflow-y: scroll;
-}
-.td-date {
-    width: 150px;
-}
-.td-login {
-    width: 150px;
-}
-.text-center {
-    text-align: center;
-}
-.textEditor {
-    min-height: 250px;
-    overflow-y: auto;
-}
-.dropdown-menu > li > a.colorItem {
-    display: inline-block;
-    width: 25px;
-    height: 25px;
-    padding: 0;
-    margin: 0 2px;
 
-}
+#root {
+    padding-top: 75px;
 
-.chat-page {
-    .user-list {
-        .label {
-            margin-right: 10px;
+    .chat-page {
+        .user-list {
+            .badge {
+                margin-right: 10px;
+            }
         }
-    }
-    textarea {
-        resize: none;
-    }
-    .message-list {
-        overflow: auto;
-        margin-bottom: 20px;
-        .table {
-            margin-bottom: 0;
+        textarea {
+            resize: none;
+        }
+        .message-list {
+            overflow: auto;
+            margin-bottom: 20px;
+            .table {
+                margin-bottom: 0;
+            }
         }
     }
 }
 
 
-// @import '~font-awesome/scss/font-awesome.scss';
+

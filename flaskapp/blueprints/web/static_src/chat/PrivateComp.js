@@ -13,17 +13,17 @@ class UsersComp extends React.Component {
         let users = null;
         if (this.props.users) {
             users = map(this.props.users, u => {
-                let onlineClass = 'label ';
+                let onlineClass = 'badge ';
                 if (u.online) {
-                    onlineClass += 'label-success';
+                    onlineClass += 'badge-success';
                 } else {
-                    onlineClass += 'label-default';
+                    onlineClass += 'badge-secondary';
                 }
                 return <span className={onlineClass}>{u.login}</span>
             });
         }
 
-        return <div className='h4 user-list'>{users}</div>
+        return <div className='h5 user-list'>{users}</div>
     }
 }
 
@@ -42,11 +42,11 @@ class MessagesComp extends React.Component {
 
     changeHeinght () {
         let wHeight = $(window).height();
-        let mHeight = wHeight - 50 -20 - 
-            36 - 20 -
-            10 - 20 -10 -
+        let mHeight = wHeight - 56 -20 - 
+            48 - 20 -
+            25 - 10 -
             20 -
-            75 - 20
+            86 - 20
             ;
 
         this.setState({mHeight: mHeight});
@@ -182,18 +182,20 @@ class PrivateComp extends React.Component {
         }
 
         return <div className='chat-page'>
-            <ol className="breadcrumb">
-                <li><a href="/users">Users</a></li>
-                <li className="active">Chat</li>
-            </ol>
-            
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li className="breadcrumb-item"><a href="/users">Users</a></li>
+                    <li className="breadcrumb-item active">Chat</li>
+                </ol>
+            </nav>
+
             <UsersComp users={this.props.chatPrivate.users} />
             <MessagesComp messages={this.props.chatPrivate.messages}/>
             <AlertMessage opts={alertOpts} />
 
             <form className='chat-form' onSubmit={::this.sendMsg} >
                 <div className="row">
-                    <div className="col-md-10">
+                    <div className="col-10">
                         <textarea
                             className="form-control"
                             rows="3"
@@ -202,9 +204,9 @@ class PrivateComp extends React.Component {
                             disabled={formDisabled}
                         ></textarea>
                     </div>
-                    <div className="col-md-2">
-                        <button className="btn btn-default" disabled={formDisabled}>
-                            <span className="glyphicon glyphicon-send"></span>
+                    <div className="col-2">
+                        <button className="btn btn-primary" disabled={formDisabled}>
+                            <i class="fa fa-envelope"></i>
                         </button>
                     </div>
                 </div>

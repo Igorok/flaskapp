@@ -18,12 +18,12 @@ class BlogComp extends React.Component {
                 });
             }
             if (this.props.blog.public) {
-                hideBtn = <btn className="btn btn-secondary" onClick={pubBlog} data-id={this.props.blog.id}>
+                hideBtn = <btn className="btn btn-primary" onClick={pubBlog} data-id={this.props.blog.id}>
                     <i class="fa fa-eye-slash"></i>&nbsp;
                     Hide
                 </btn>
             } else {
-                hideBtn = <btn className="btn btn-secondary" onClick={pubBlog} data-id={this.props.blog.id}>
+                hideBtn = <btn className="btn btn-primary" onClick={pubBlog} data-id={this.props.blog.id}>
                     <i class="fa fa-eye"></i>&nbsp;
                     Show
                 </btn>
@@ -48,14 +48,14 @@ class BlogComp extends React.Component {
                             {this.props.blog.date}
                         </p>
                         <p>
-                            <a href={"/blog-edit/" + this.props.blog.id} className="btn btn-secondary">
+                            <a href={"/blog-edit/" + this.props.blog.id} className="btn btn-primary">
                                 <i class="fa fa-pencil"></i>&nbsp;
                                 Edit
                             </a>
                             &nbsp;
                             {hideBtn}
                             &nbsp;
-                            <a href={"/post-edit/" + this.props.blog.id + "/-1"} className="btn btn-secondary">
+                            <a href={"/post-edit/" + this.props.blog.id + "/-1"} className="btn btn-primary">
                                 <i class="fa fa-plus"></i>&nbsp;
                                 Add post
                             </a>
