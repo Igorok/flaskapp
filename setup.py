@@ -18,7 +18,8 @@ setup(
         'graphene',
         'pylint',
         'gevent',
-        'flask-socketio'
+        'flask-socketio',
+        'gunicorn'
     ],
     setup_requires=[
         'pytest-runner',

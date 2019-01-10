@@ -9,7 +9,7 @@ class Model:
             host=current_app.config['DB_HOST'],
             user=current_app.config['DB_USER'],
             password=current_app.config['DB_PASSWORD'],
-            db=current_app.config['DB_DB'],
+            db=current_app.config['DB_NAME'],
             charset='utf8mb4',
             cursorclass=pymysql.cursors.DictCursor
         )
@@ -18,7 +18,7 @@ class Model:
     def connect_postgres(self):
         pg_str = "host = '{0}' dbname = '{1}' user = '{2}' password = '{3}'".format(
             current_app.config['DB_HOST'],
-            current_app.config['DB_DB'],
+            current_app.config['DB_NAME'],
             current_app.config['DB_USER'],
             current_app.config['DB_PASSWORD']
         )
