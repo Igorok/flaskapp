@@ -70,11 +70,11 @@ class BlogListComp extends React.Component {
                 return <div className="col-4">
                     <div className="card">
                         <div className="card-header">
-                            <h4 className="card-title">
+                            <h5>
                                 <a href = {"/my-blog-detail/" + blog.id}>
                                     {blog.title}
                                 </a>
-                            </h4>
+                            </h5>
                         </div>
                         <div className="card-body">
                             {blog.text}

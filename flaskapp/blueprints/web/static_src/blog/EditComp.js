@@ -87,57 +87,64 @@ class EditComp extends React.Component {
                 <ol class="breadcrumb">
                     <li className="breadcrumb-item"><a href="/profile">Profile</a></li>
                     <li className="breadcrumb-item"><a href="/my-blogs">My blogs</a></li>
-                    <li className="breadcrumb-item active">{this.state.title ? this.state.title : null}</li>
+                    <li className="breadcrumb-item active">{this.state.title ? this.state.title : 'Edit blog'}</li>
                 </ol>
             </nav>
 
-            <form onSubmit={::this.formSubmit} >
-                <div className="form-group">
-                    <label htmlFor="title">Title</label>
-                    <input
-                        required
-                        type="text"
-                        className="form-control"
-                        id="title"
-                        placeholder="Title"
-                        onChange={::this.fieldChange}
-                        value={this.state.title}
-                    />
+            <div className="card">
+                <div className="card-header">
+                    {this.state.title ? this.state.title : 'Edit blog'}
                 </div>
-                <div className="form-group">
-                    <label htmlFor="text">Text</label>
-                    <textarea
-                        required
-                        className="form-control"
-                        id='text'
-                        placeholder='Text'
-                        onChange={::this.fieldChange}
-                        value={this.state.text}
-                    />
+                <div className="card-body">
+                    <form onSubmit={::this.formSubmit} >
+                        <div className="form-group">
+                            <label htmlFor="title">Title</label>
+                            <input
+                                required
+                                type="text"
+                                className="form-control"
+                                id="title"
+                                placeholder="Title"
+                                onChange={::this.fieldChange}
+                                value={this.state.title}
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="text">Text</label>
+                            <textarea
+                                required
+                                className="form-control"
+                                id='text'
+                                placeholder='Text'
+                                onChange={::this.fieldChange}
+                                value={this.state.text}
+                            />
 
-                </div>
-                <div className="checkbox">
-                    <label>
-                        <input
-                            type="checkbox"
-                            id='public'
-                            onChange={::this.fieldChange}
-                            checked = {!! this.state.public}
-                        /> Public
-                    </label>
-                </div>
+                        </div>
+                        <div className="checkbox">
+                            <label>
+                                <input
+                                    type="checkbox"
+                                    id='public'
+                                    onChange={::this.fieldChange}
+                                    checked = {!! this.state.public}
+                                /> Public
+                            </label>
+                        </div>
 
-                <AlertMessage opts={alertOpts} />
+                        <AlertMessage opts={alertOpts} />
 
-                <hr />
-                <div >
-                    <button type="submit" className="btn btn-primary">
-                        <i class="fa fa-save"></i>&nbsp;
-                        Save
-                    </button>
+                        <hr />
+                        <div >
+                            <button type="submit" className="btn btn-primary">
+                                <i class="fa fa-save"></i>&nbsp;
+                                Save
+                            </button>
+                        </div>
+                    </form>
                 </div>
-                <br />
-            </form>
+            </div>
+
         </div>
 
     }

@@ -112,7 +112,7 @@ class Header extends React.Component {
             </li>
         }
 
-        return <nav className="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
+        return <nav className="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
             <a className="navbar-brand" href="#">FlaskApp</a>
 
             <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -254,10 +254,10 @@ export class PaginatorLayout extends React.Component {
 
             let cName = "page-item ";
             if (btnActive) {
-                cName += "active";
+                cName += " active";
             }
             if (! btnVisible) {
-                cName += "hidden";
+                cName += " hidden";
             }
             btns.push(<li className = {cName} >
                 <a

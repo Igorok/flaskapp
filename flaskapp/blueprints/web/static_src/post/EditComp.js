@@ -110,65 +110,71 @@ class EditComp extends React.Component {
                 </ol>
             </nav>
 
-            <form onSubmit={::this.formSubmit} >
-                <div className="form-group">
-                    <label htmlFor="title">Title</label>
-                    <input
-                        required
-                        type="text"
-                        className="form-control"
-                        id="title"
-                        placeholder="Title"
-                        onChange={::this.fieldChange}
-                        value={this.state.title}
-                    />
+            <div className="card">
+                <div className="card-header">
+                    {this.state.title ? this.state.title : 'Edit post'}
                 </div>
-                <div className="form-group">
-                    <label htmlFor="description">Description</label>
-                    <input
-                        required
-                        type="text"
-                        className="form-control"
-                        id="description"
-                        placeholder="Description"
-                        onChange={::this.fieldChange}
-                        value={this.state.description}
-                    />
-                </div>
-                <div className="form-group">
-                    <label htmlFor="text">Text</label>
-                    <Editor
-                        editorState={this.state.editorState}
-                        editorClassName="form-control"
-                        onEditorStateChange={::this.onEditorStateChange}
-                        toolbar={{
-                            options: ['inline', 'list', 'fontSize', 'fontFamily', 'textAlign', 'link', 'history', 'colorPicker'],
-                        }}
-                    />
+                <div className="card-body">
+                    <form onSubmit={::this.formSubmit} >
+                        <div className="form-group">
+                            <label htmlFor="title">Title</label>
+                            <input
+                                required
+                                type="text"
+                                className="form-control"
+                                id="title"
+                                placeholder="Title"
+                                onChange={::this.fieldChange}
+                                value={this.state.title}
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="description">Description</label>
+                            <input
+                                required
+                                type="text"
+                                className="form-control"
+                                id="description"
+                                placeholder="Description"
+                                onChange={::this.fieldChange}
+                                value={this.state.description}
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="text">Text</label>
+                            <Editor
+                                editorState={this.state.editorState}
+                                onEditorStateChange={::this.onEditorStateChange}
+                                toolbar={{
+                                    options: ['inline', 'list', 'fontSize', 'fontFamily', 'textAlign', 'link', 'history', 'colorPicker'],
+                                }}
+                            />
 
-                </div>
-                <div className="checkbox">
-                    <label>
-                        <input
-                            type="checkbox"
-                            id='public'
-                            onChange={::this.fieldChange}
-                            checked = {!! this.state.public}
-                        /> Public
-                    </label>
-                </div>
+                        </div>
+                        <div className="checkbox">
+                            <label>
+                                <input
+                                    type="checkbox"
+                                    id='public'
+                                    onChange={::this.fieldChange}
+                                    checked = {!! this.state.public}
+                                /> Public
+                            </label>
+                        </div>
 
-                <AlertMessage opts={alertOpts} />
+                        <AlertMessage opts={alertOpts} />
 
-                <hr />
-                <div >
-                    <button type="submit" className="btn btn-primary">
-                        <i class="fa fa-save"></i>&nbsp;
-                        Save
-                    </button>
+                        <hr />
+                        <div >
+                            <button type="submit" className="btn btn-primary">
+                                <i class="fa fa-save"></i>&nbsp;
+                                Save
+                            </button>
+                        </div>
+                    </form>
                 </div>
-                <br />
-            </form>
+            </div>
+
         </div>
     }
 }

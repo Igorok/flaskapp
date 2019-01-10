@@ -32,11 +32,21 @@ class ChatListComp extends React.Component {
             </tr>
         });
 
-        return <table className="table table-hover">
-            <tbody>
-                {items}
-            </tbody>
-        </table>
+        return <div>
+            <div className="card">
+                <div className="card-header">
+                    <h5>Chats</h5>
+                </div>
+                <div className="card-body">
+                    <table className="table">
+                        <tbody>
+                            {items}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <br />
+        </div>
     }
 
     render () {

@@ -83,7 +83,7 @@ class LoginComp extends React.Component {
             <div className="col-4">
                 <div className="card">
                     <div className="card-header">
-                        <h3 className="card-title">Registration</h3>
+                        <h5>Registration</h5>
                     </div>
                     <div className="card-body">
                         <form onSubmit={::this.formSubmit}>

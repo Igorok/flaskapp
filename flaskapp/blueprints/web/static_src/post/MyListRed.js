@@ -22,32 +22,23 @@ const myPostList = (state = initState, action) => {
             data.count = action.data.getMyBlogDetail.count;
             data.blog = action.data.getMyBlogDetail.blog;
             data.posts = action.data.getMyBlogDetail.posts;
-            
+
             return data;
         case 'MY_BLOG_DETAIL_ERROR':
             data.status = 'error';
             data.error = action.error;
             return data;
-
-        
         case 'MY_BLOG_PUBLIC_SEND':
-            data.start = action.start;
             data.status = 'send';
             return data;
         case 'MY_BLOG_PUBLIC_SUCCESS':
             data.status = 'success';
             data.blog.public = action.data.publicMyBlog.public;
-
-            console.log(
-                'action.data.publicMyBlog', action.data.publicMyBlog
-            )
-
             return data;
         case 'MY_BLOG_PUBLIC_ERROR':
             data.status = 'error';
             data.error = action.error;
             return data;
-
         default:
             return state
     }

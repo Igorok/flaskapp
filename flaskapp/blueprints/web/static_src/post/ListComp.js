@@ -11,9 +11,7 @@ class BlogComp extends React.Component {
         if (this.props.blog) {
             tpl = <div className="card">
                 <div className="card-header">
-                    <h4 className="card-title">
-                        {this.props.blog.title}
-                    </h4>
+                    <h5>{this.props.blog.title}</h5>
                 </div>
                 <div className="card-body">
                     {this.props.blog.text}
@@ -72,11 +70,11 @@ class ListComp extends React.Component {
                 return <div className="col-4">
                     <div className="card">
                         <div className="card-header">
-                            <h4 className="card-title">
+                            <h5>
                                 <a href = {"/post/" + self.props.postList.blog.id + "/" + post.id}>
                                     {post.title}
                                 </a>
-                            </h4>
+                            </h5>
                         </div>
                         <div className="card-body">
                             {post.description}

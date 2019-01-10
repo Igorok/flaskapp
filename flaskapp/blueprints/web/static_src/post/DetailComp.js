@@ -60,13 +60,11 @@ class DetailComp extends React.Component {
                     <li className="breadcrumb-item active">{this.state.title || 'Post detail'}</li>
                 </ol>
             </nav>
-            
+
             <AlertMessage opts={alertOpts} />
             <div className="card">
                 <div className="card-header">
-                    <h4 className="card-title">
-                        {this.props.postDetail.title}
-                    </h4>
+                    <h5>{this.props.postDetail.title}</h5>
                 </div>
                 <div className="card-body">
                     <p>

@@ -105,11 +105,21 @@ class FriendListComp extends React.Component {
             />
         });
 
-        return <table className="table table-hover">
-            <tbody>
-                {items}
-            </tbody>
-        </table>
+        return <div>
+            <div className="card">
+                <div className="card-header">
+                    <h5>Friends</h5>
+                </div>
+                <div className="card-body">
+                    <table className="table table-hover">
+                        <tbody>
+                            {items}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <br />
+        </div>
     }
 
     render () {

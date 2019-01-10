@@ -26,7 +26,6 @@ const myBlogList = (state = initState, action) => {
             return data;
 
         case 'MY_BLOG_PUBLIC_SEND':
-            data.start = action.start;
             data.status = 'send';
             return data;
         case 'MY_BLOG_PUBLIC_SUCCESS':
@@ -36,14 +35,11 @@ const myBlogList = (state = initState, action) => {
                     blog.public = action.data.publicMyBlog.public;
                 }
             });
-
-
             return data;
         case 'MY_BLOG_PUBLIC_ERROR':
             data.status = 'error';
             data.error = action.error;
             return data;
-
         default:
             return state
     }

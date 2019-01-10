@@ -42,7 +42,7 @@ class MessagesComp extends React.Component {
 
     changeHeinght () {
         let wHeight = $(window).height();
-        let mHeight = wHeight - 56 -20 - 
+        let mHeight = wHeight - 56 -20 -
             48 - 20 -
             25 - 10 -
             20 -
@@ -140,21 +140,25 @@ class PrivateComp extends React.Component {
     }
 
     sendMsg (e) {
-        e.preventDefault();
-        if (this.state.msg === null) {
-            return;
+        if (e.target.value && e.target.value.length) {
+            this.setState({msg: e.target.value});
         }
-        this.socket.emit('messagePrivate', {
-            token: this.props.auth.token,
-            chatId: this.props.chatPrivate.id,
-            text: this.state.msg
-        });
 
-        this.props.dispatch({
-            type: 'PRIVATE_MSG_SEND'
-        });
+        if (e.which === 13 && this.state.msg) {
+            this.socket.emit('messagePrivate', {
+                token: this.props.auth.token,
+                chatId: this.props.chatPrivate.id,
+                text: this.state.msg
+            });
 
+            this.setState({msg: null});
+
+            this.props.dispatch({
+                type: 'PRIVATE_MSG_SEND'
+            });
+        }
     }
+
     changeMsg (e) {
         this.setState({
             msg: e.target.value
@@ -164,7 +168,7 @@ class PrivateComp extends React.Component {
     render () {
         let alertOpts = null;
         let formDisabled = false;
-        
+
         if (this.props.chatPrivate.status === 'error') {
             alertOpts = {
                 className: 'danger',
@@ -193,25 +197,16 @@ class PrivateComp extends React.Component {
             <MessagesComp messages={this.props.chatPrivate.messages}/>
             <AlertMessage opts={alertOpts} />
 
-            <form className='chat-form' onSubmit={::this.sendMsg} >
-                <div className="row">
-                    <div className="col-10">
-                        <textarea
-                            className="form-control"
-                            rows="3"
-                            value={this.state.msg}
-                            onChange={::this.changeMsg}
-                            disabled={formDisabled}
-                        ></textarea>
-                    </div>
-                    <div className="col-2">
-                        <button className="btn btn-primary" disabled={formDisabled}>
-                            <i class="fa fa-envelope"></i>
-                        </button>
-                    </div>
-                </div>
-            </form>
+            <textarea
+                className="form-control"
+                rows="3"
 
+                value={this.state.msg}
+                onKeyPress={::this.sendMsg}
+                onChange={::this.changeMsg}
+                disabled={formDisabled}
+            ></textarea>
+            <br />
         </div>
     }
 }

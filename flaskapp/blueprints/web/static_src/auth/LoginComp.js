@@ -70,7 +70,7 @@ class LoginComp extends React.Component {
             <div className="col-4">
                 <div className="card">
                     <div className="card-header">
-                        <h4 className="card-title">Authentication</h4>
+                        <h5>Authentication</h5>
                     </div>
                     <div className="card-body">
                         <form onSubmit={::this.formSubmit}>

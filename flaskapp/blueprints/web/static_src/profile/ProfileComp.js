@@ -131,10 +131,10 @@ class UserInfo extends React.Component {
                         <form onSubmit={::this.formSubmit}>
                             <div className="form-group">
                                 <label htmlFor="login">Login</label>
-                                <input 
-                                    type="text" 
-                                    className="form-control" 
-                                    id="login" 
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    id="login"
                                     placeholder="Login"
                                     value={this.state.login}
                                     onChange={::this.fieldChange}
@@ -142,10 +142,10 @@ class UserInfo extends React.Component {
                             </div>
                             <div className="form-group">
                                 <label htmlFor="email">Email address</label>
-                                <input 
-                                    type="email" 
-                                    className="form-control" 
-                                    id="email" 
+                                <input
+                                    type="email"
+                                    className="form-control"
+                                    id="email"
                                     placeholder="Email"
                                     value={this.state.email}
                                     onChange={::this.fieldChange}
@@ -192,7 +192,7 @@ class ProfileComp extends React.Component {
                 text: 'The profile updated successfully',
             }
         }
-        
+
         return <div>
             <AlertMessage opts={alertOpts} />
             <UserInfo profile={this.props.profile} dispatch={this.props.dispatch} />
