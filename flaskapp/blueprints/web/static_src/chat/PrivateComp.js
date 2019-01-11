@@ -94,12 +94,11 @@ class PrivateComp extends React.Component {
         super(props);
         let self = this;
         self.props = self.props || {};
-        self.socket = io.connect('http://' + document.domain + ':' + location.port);
+        self.socket = io.connect(window.location.origin);
 
         self.state = {
             msg: null
         };
-
 
         self.socket.on('connect', () => {
             self.socket.emit('joinPrivateGroup', {
