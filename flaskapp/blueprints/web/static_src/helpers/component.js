@@ -94,7 +94,7 @@ class Header extends React.Component {
                 <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     {this.props.auth.login}
                 </button>
-                <div className="dropdown-menu" aria-labelledby="navbarDropdown">
+                <div className="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                     <a className="dropdown-item" href="/profile">Profile</a>
                     <a className="dropdown-item" href="/my-blogs">My blogs</a>
                     <a className="dropdown-item" href="/blog-edit/-1">Add blog</a>
@@ -113,33 +113,31 @@ class Header extends React.Component {
         }
 
         return <nav className="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
-            <div class="container">
-                <a className="navbar-brand" href="#">FlaskApp</a>
+            <a className="navbar-brand" href="#">FlaskApp</a>
 
-                <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                    <span className="navbar-toggler-icon"></span>
-                </button>
+            <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span className="navbar-toggler-icon"></span>
+            </button>
 
-                <div className="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul className="navbar-nav mr-auto">
-                        <li className={window.localParams.page == 'about' ? 'nav-item active' : 'nav-item'}>
-                            <a className="nav-link" href="/">
-                                <i className="fa fa-home"></i>&nbsp;
-                                About
-                                <span className="sr-only">(current)</span>
-                            </a>
-                        </li>
-                        <li className={window.localParams.page == 'blog' ? 'nav-item active' : 'nav-item'}>
-                            <a className="nav-link" href="/blogs">
-                                <i class="fa fa-bookmark"></i>&nbsp;
-                                Blogs
-                                <span className="sr-only">(current)</span>
-                            </a>
-                        </li>
-                        { userItem }
-                    </ul>
-                    { profileItem }
-                </div>
+            <div className="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul className="navbar-nav mr-auto">
+                    <li className={window.localParams.page == 'about' ? 'nav-item active' : 'nav-item'}>
+                        <a className="nav-link" href="/">
+                            <i className="fa fa-home"></i>&nbsp;
+                            About
+                            <span className="sr-only">(current)</span>
+                        </a>
+                    </li>
+                    <li className={window.localParams.page == 'blog' ? 'nav-item active' : 'nav-item'}>
+                        <a className="nav-link" href="/blogs">
+                            <i class="fa fa-bookmark"></i>&nbsp;
+                            Blogs
+                            <span className="sr-only">(current)</span>
+                        </a>
+                    </li>
+                    { userItem }
+                </ul>
+                { profileItem }
             </div>
         </nav>
     }
@@ -170,9 +168,9 @@ export function layout (opts) {
             }
         }
         render() {
-            return <div>
+            return <div class="container-fluid">
                 <Header auth={this.props.auth} />
-                <div class="container"><Component /></div>
+                <Component />
             </div>
         }
     }

@@ -19,7 +19,8 @@ setup(
         'pylint',
         'gevent',
         'flask-socketio',
-        'gunicorn'
+        'gunicorn',
+        'eventlet'
     ],
     setup_requires=[
         'pytest-runner',
