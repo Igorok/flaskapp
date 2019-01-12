@@ -505,35 +505,8 @@ class UserModel (Model):
             'userId': profile_dict["id"]
         }
 
-
-
-
     # list of friends
     def getFriendList (self, *args, **kwargs):
-
-        '''
-        select uTable.id, uTable.login ,
-            selfReq.friend_id as selfFriendId,
-            usrReq.user_id as friendUserId
-
-        from "user" as uTable
-
-        left join friends as selfReq
-            on uTable.id = selfReq.user_id
-            and selfReq.friend_id = 1
-
-        left join friends as usrReq
-            on uTable.id = usrReq.friend_id
-            and usrReq.user_id = 1
-
-        where uTable.id <> 1
-            and selfReq.friend_id is not null
-            and usrReq.user_id is not null
-        ;
-
-
-        '''
-
         # check authentication and get data of current user
         profile_dict = self.getUserByToken(**kwargs)
 
@@ -645,3 +618,21 @@ class UserModel (Model):
             listResult['count'] = countData[0]
 
         return listResult
+
+    '''
+    logout
+    @param {string} toke - token of current user
+    '''
+    def logout (self, *args, **kwargs):
+        if (not 'token' in kwargs):
+            raise Exception('User not found')
+
+        logSql = 'delete from token where token.token = %s;'
+
+        connection = self.connect_postgres()
+        cursor = connection.cursor()
+        cursor.execute(logSql, [kwargs['token']])
+        connection.commit()
+        connection.close()
+
+        return {'success': True}

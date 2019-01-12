@@ -47,3 +47,6 @@ class FriendRequest (graphene.ObjectType):
 class FriendListGraph (graphene.ObjectType):
     count = graphene.Int()
     friends = graphene.List(UserDetailGraph)
+
+class LogoutGraph (graphene.ObjectType):
+    success = graphene.Boolean()

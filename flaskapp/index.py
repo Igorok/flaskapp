@@ -17,11 +17,8 @@ socketio = SocketIO(app)
 getChat(socketio)
 
 app.config.update(dict(
-    DATABASE=os.path.join(app.root_path, 'flaskapp.db'),
     DEBUG=True,
-    SECRET_KEY=b'_5#y2L"F4Q8z\n\xec]/',
-    USERNAME='admin',
-    PASSWORD='default',
+    SECRET_KEY=os.environ.get('SEKRET', '_5#y2L"F4Q8z\n\xec]/'),
     DB_USER= os.environ.get('DB_USER', config['POSTGRES']['USER']),
     DB_PASSWORD= os.environ.get('DB_PASSWORD', config['POSTGRES']['PASSWORD']),
     DB_NAME= os.environ.get('DB_NAME', config['POSTGRES']['NAME']),

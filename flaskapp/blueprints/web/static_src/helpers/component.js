@@ -1,6 +1,8 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import { graphql } from '../helpers/action';
 import {Alert, Dropdown} from 'bootstrap'
+
 import 'jquery';
 
 /**
@@ -85,6 +87,10 @@ export class MathCaptcha extends React.Component {
 
 
 class Header extends React.Component {
+    logout (e) {
+        e.preventDefault();
+        this.props.logout();
+    }
     render () {
         let profileItem = null;
         let userItem = null;
@@ -100,6 +106,7 @@ class Header extends React.Component {
                     <a className="dropdown-item" href="/blog-edit/-1">Add blog</a>
                     <a className="dropdown-item" href="/friends">Friends</a>
                     <a className="dropdown-item" href="/chat-list">Chats</a>
+                    <a className="dropdown-item" href="#" onClick={::this.logout}>Logout</a>
                 </div>
             </div>
 
@@ -152,9 +159,14 @@ class Header extends React.Component {
  */
 export function layout (opts) {
     let Component = opts.comp;
-    let forAuthenticated = opts.forAuthenticated;
+    let forAuth = opts.forAuth;
 
     class Layout extends React.Component {
+        logout () {
+            this.props.dispatch(graphql({
+                type: 'LOGOUT'
+            }));
+        }
         componentWillMount() {
             this.checkAuth(this.props.auth)
         }
@@ -163,13 +175,13 @@ export function layout (opts) {
         }
         checkAuth(auth) {
             // if this page only for authenticated users and the storage has no isAuthenticated
-            if (forAuthenticated && ! auth.isAuthenticated) {
+            if (forAuth && ! auth.isAuthenticated) {
                 return window.location = '/';
             }
         }
         render() {
             return <div class="container-fluid">
-                <Header auth={this.props.auth} />
+                <Header auth={this.props.auth} logout={::this.logout} />
                 <Component />
             </div>
         }
@@ -180,7 +192,6 @@ export function layout (opts) {
             auth: state.auth
         }
     }
-
     return connect(mapStateToProps)(Layout)
 }
 

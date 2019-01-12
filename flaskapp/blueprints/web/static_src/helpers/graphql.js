@@ -483,9 +483,27 @@ const CHAT_LIST = (opts) => {
     return JSON.stringify(q);
 };
 
+const LOGOUT = (opts) => {
+    let q = {
+        query: compress(`
+            query logout ($token: String, $device: String!) {
+                logout (token: $token, device: $device) {
+                    success
+                }
+            }
+        `),
+        variables: {
+            token: opts.token || '',
+            device: opts.device
+        },
+    };
+    return JSON.stringify(q);
+}
+
 export const query = {
     REG: REG,
     AUTH: AUTH,
+    LOGOUT: LOGOUT,
     PROFILE: PROFILE,
     PROFILE_EDIT: PROFILE_EDIT,
 

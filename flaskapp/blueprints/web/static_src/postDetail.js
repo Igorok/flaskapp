@@ -19,7 +19,7 @@ let store = configureStore({
 	postDetail: postDetail,
 });
 
-let Comp = layout({comp: DetailComp, forAuth: false});
+let Comp = layout({comp: DetailComp});
 render(
 	<Provider store={store}>
 		<Comp />

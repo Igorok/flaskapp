@@ -4,7 +4,7 @@ from flaskapp.blueprints.web.models.blog import BlogModel
 from flaskapp.blueprints.web.models.post import PostModel
 from flaskapp.blueprints.web.models.chat import ChatModel
 
-from flaskapp.blueprints.web.graphql.user import RegGraph, AuthGraph, ProfileGraph, EditProfileGraph, UserDetailGraph, UserListGraph, FriendRequest, FriendListGraph
+from flaskapp.blueprints.web.graphql.user import RegGraph, AuthGraph, ProfileGraph, EditProfileGraph, UserDetailGraph, UserListGraph, FriendRequest, FriendListGraph, LogoutGraph
 from flaskapp.blueprints.web.graphql.blog import BlogGraph, BlogListGraph, PostGraph, MyBlogDetailGraph, BlogDetailGraph
 from flaskapp.blueprints.web.graphql.chat import ChatPrivateGraph, ChatListGraph
 
@@ -319,6 +319,17 @@ class Query(graphene.ObjectType):
             'chatGroup': map(lambda __cPr: ChatPrivateGraph(**__cPr), __cList['chatGroup'])
         }
         return ChatListGraph(**__cResult)
+
+    #logout
+    logout = graphene.Field(
+        LogoutGraph,
+        token = graphene.String(),
+        device = graphene.String()
+    )
+    def resolve_logout (self, info, *args, **kwargs):
+        __u = UserModel()
+        __log = __u.logout(**kwargs)
+        return LogoutGraph(**__log)
 
 # init query
 schema = graphene.Schema(query=Query)

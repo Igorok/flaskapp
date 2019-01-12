@@ -68,7 +68,7 @@ export const api = (opts) => {
 
 
 export const graphql = (opts) => {
-    return (dispatch) => {
+    return dispatch => {
         let type = opts.type;
         delete opts.type;
 

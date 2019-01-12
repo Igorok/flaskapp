@@ -26,6 +26,7 @@ const success = (state, action) => {
 
 
 const auth = (state = initState, action) => {
+    let data = {...state};
     switch (action.type) {
         case 'AUTH_SEND':
             return {
@@ -39,6 +40,23 @@ const auth = (state = initState, action) => {
                 status: 'error',
                 error: action.error,
             };
+
+        case 'LOGOUT_SEND':
+            data.status = 'send';
+            return data;
+        case 'LOGOUT_SUCCESS':
+            localStorage.removeItem('user');
+            return {
+                status: 'logout_success',
+                error: null,
+            }
+        case 'LOGOUT_ERROR':
+            localStorage.removeItem('user');
+            return {
+                status: 'error',
+                error: action.error,
+            };
+            
         default:
             return state
     }

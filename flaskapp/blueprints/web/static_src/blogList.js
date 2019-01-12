@@ -18,7 +18,7 @@ let store = configureStore({
 	blogList: blogList,
 });
 
-let Comp = layout({comp: ListComp, forAuth: true});
+let Comp = layout({comp: ListComp});
 render(
 	<Provider store={store}>
 		<Comp />
