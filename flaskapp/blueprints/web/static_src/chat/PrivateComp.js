@@ -75,7 +75,7 @@ class MessagesComp extends React.Component {
                 return <tr>
                     <td>{m.userLogin}</td>
                     <td>{m.text}</td>
-                    <td className='text-right'>{m.date}</td>
+                    <td className='dt-td'>{m.date}</td>
                 </tr>
             });
         }

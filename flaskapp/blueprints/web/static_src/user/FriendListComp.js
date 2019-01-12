@@ -14,7 +14,7 @@ class UserItemComp extends React.Component {
     }
 
     render () {
-        let textClass = this.props.user.online ? 'success' : 'active';
+        let actClass = this.props.user.online ? "badge badge-success" : '';
         let friendBtn = null;
         let msgBtn = null;
         // if both users sended friend requests
@@ -40,11 +40,13 @@ class UserItemComp extends React.Component {
             </button>
         }
 
-        return <tr className={textClass}>
+        return <tr>
             <td>
-                <i class="fa fa-user"></i>
-                &nbsp;
-                <span>{this.props.user.login}</span>
+                <span class={actClass}>
+                    <i class="fa fa-user"></i>
+                    &nbsp;
+                    {this.props.user.login}
+                </span>
             </td>
             <td>
                 {this.props.user.dtActive}
@@ -111,7 +113,7 @@ class FriendListComp extends React.Component {
                     <h5>Friends</h5>
                 </div>
                 <div className="card-body">
-                    <table className="table table-hover">
+                    <table className="table table-hover user-table">
                         <tbody>
                             {items}
                         </tbody>
