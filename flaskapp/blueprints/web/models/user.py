@@ -70,8 +70,7 @@ class UserModel (Model):
 
         user_id = kwargs['id'] if kwargs['id'] != None else -1
 
-        connection = self.connect_postgres()
-        cursor = connection.cursor()
+        cursor = self.connection.cursor()
 
         sql = '''select count(id) from "{0}"
             where (login = %s or email = %s)
@@ -79,7 +78,6 @@ class UserModel (Model):
 
         cursor.execute(sql, [kwargs['login'], kwargs['email'], user_id])
         result = cursor.fetchone()
-        connection.close()
 
         if (result[0] != 0):
             raise Exception('Login or email already exists')
@@ -99,11 +97,9 @@ class UserModel (Model):
             ("login", "password", "email", "role", "date_reg")
             values (%s, %s, %s, %s, %s);'''.format(self.TABLE)
 
-        connection = self.connect_postgres()
-        cursor = connection.cursor()
+        cursor = self.connection.cursor()
         cursor.execute(sql, [user.login, password, user.email, user.role, user.date_reg])
-        connection.commit()
-        connection.close()
+        self.connection.commit()
 
         return dict(
             login=user.login,
@@ -127,8 +123,7 @@ class UserModel (Model):
         password = self.hash_password(kwargs['password'])
         sql_rows = ['id', 'login', 'email', 'role', self.TABLE]
 
-        connection = self.connect_postgres()
-        cursor = connection.cursor()
+        cursor = self.connection.cursor()
 
         sql_select = '''select {0}, {1}, {2}, {3}
             from "{4}"
@@ -140,7 +135,6 @@ class UserModel (Model):
 
         #user not found
         if (found_user == None):
-            connection.close()
             raise Exception('Wrong login or password')
 
         # conver result to dict
@@ -159,8 +153,7 @@ class UserModel (Model):
             "token" = excluded.token;'''.format(self.TABLE_TOKEN)
 
         cursor.execute(sql_update, [auth_user['id'], auth_type, auth_date, auth_token])
-        connection.commit()
-        connection.close()
+        self.connection.commit()
 
         auth_user['token'] = auth_token
 
@@ -185,15 +178,13 @@ class UserModel (Model):
         tokenRows = ['id', 'token', 'user_id', 'date', self.TABLE_TOKEN]
         tokenQuery = 'select {0}, {1}, {2}, {3} from {4} where token = %s and "type" = %s'.format(*tokenRows)
 
-        connection = self.connect_postgres()
-        cursor = connection.cursor()
+        cursor = self.connection.cursor()
 
         cursor.execute(tokenQuery, [tokenVal, tokenType])
         tokenFound = cursor.fetchone()
 
         # if token not found, access denied
         if (tokenFound == None):
-            connection.close()
             raise Exception(403)
 
         # create a dictionary from list of values
@@ -205,7 +196,6 @@ class UserModel (Model):
         dateEnd = tokenDict['date'] + timedelta(days = config['TOKEN_LIFETIME'])
 
         if dateNow > dateEnd:
-            connection.close()
             raise Exception(403)
 
         # get user by user_id from token table
@@ -217,7 +207,6 @@ class UserModel (Model):
 
         # if user not found, access denied
         if (userFound == None):
-            connection.close()
             raise Exception(403)
 
         # create a dictionary from list of values
@@ -230,8 +219,7 @@ class UserModel (Model):
             datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
             userDict['id']
         ])
-        connection.commit()
-        connection.close()
+        self.connection.commit()
 
         return userDict
 
@@ -272,8 +260,7 @@ class UserModel (Model):
                 and friends.user_id = approve.friend_id
             where approve.friend_id = %s and friends.user_id is null;
         '''
-        connection = self.connect_postgres()
-        cursor = connection.cursor()
+        cursor = self.connection.cursor()
         cursor.execute(blogQ, [profile_dict['id']])
         blogD = cursor.fetchone()
         if not blogD is None:
@@ -298,8 +285,6 @@ class UserModel (Model):
         usrReqD = cursor.fetchone()
         if not usrReqD is None:
             profile_dict['friendRequests'] = usrReqD[0]
-
-        connection.close()
 
         return profile_dict
 
@@ -342,11 +327,9 @@ class UserModel (Model):
 
         update_query = 'update "{0}" set "login" = %s, "email" = %s where "id" = %s;'.format(self.TABLE)
 
-        connection = self.connect_postgres()
-        cursor = connection.cursor()
+        cursor = self.connection.cursor()
         cursor.execute(update_query, [login, email, profile_dict['id']])
-        connection.commit()
-        connection.close()
+        self.connection.commit()
 
         return dict(
             login = login,
@@ -398,8 +381,8 @@ class UserModel (Model):
             where uTable.id != %s
             order by uTable.id asc limit %s offset %s;
         '''.format(*userRows)
-        connection = self.connect_postgres()
-        cursor = connection.cursor()
+
+        cursor = self.connection.cursor()
         cursor.execute(userSql, [
             profile_dict['id'],
             profile_dict['id'],
@@ -411,7 +394,6 @@ class UserModel (Model):
 
         # format users data for frontend
         if (userData is None):
-            connection.close()
             return listResult
         else:
             ltd = self.list_to_dict(userRows)
@@ -437,7 +419,6 @@ class UserModel (Model):
             profile_dict['id']
         ])
         countData = cursor.fetchone()
-        connection.close()
 
         if (countData != None):
             listResult['count'] = countData[0]
@@ -458,8 +439,7 @@ class UserModel (Model):
         id = int(kwargs['id']) if ('id' in kwargs) else 0
         dt = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
-        connection = self.connect_postgres()
-        cursor = connection.cursor()
+        cursor = self.connection.cursor()
 
         sqlUpdate = '''insert into "friends" ("user_id", "friend_id", "date")
             values (%s, %s, %s)
@@ -468,8 +448,7 @@ class UserModel (Model):
         '''
 
         cursor.execute(sqlUpdate, [profile_dict["id"], id, dt])
-        connection.commit()
-        connection.close()
+        self.connection.commit()
 
         return {
             'success': True,
@@ -490,14 +469,12 @@ class UserModel (Model):
         id = int(kwargs['id']) if ('id' in kwargs) else 0
         dt = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
-        connection = self.connect_postgres()
-        cursor = connection.cursor()
+        cursor = self.connection.cursor()
 
         sqlRemove = 'delete from "friends" where user_id=%s and friend_id=%s;'
 
         cursor.execute(sqlRemove, [profile_dict["id"], id])
-        connection.commit()
-        connection.close()
+        self.connection.commit()
 
         return {
             'success': True,
@@ -549,8 +526,7 @@ class UserModel (Model):
             order by uTable.id asc limit %s offset %s;
         '''.format(*userRows)
 
-        connection = self.connect_postgres()
-        cursor = connection.cursor()
+        cursor = self.connection.cursor()
         cursor.execute(userSql, [
             profile_dict['id'],
             profile_dict['id'],
@@ -564,7 +540,6 @@ class UserModel (Model):
 
         # format users data for frontend
         if (userData is None):
-            connection.close()
             return listResult
         else:
             ltd = self.list_to_dict(userRows)
@@ -612,7 +587,6 @@ class UserModel (Model):
             profile_dict['id']
         ])
         countData = cursor.fetchone()
-        connection.close()
 
         if (countData != None):
             listResult['count'] = countData[0]
@@ -629,10 +603,8 @@ class UserModel (Model):
 
         logSql = 'delete from token where token.token = %s;'
 
-        connection = self.connect_postgres()
-        cursor = connection.cursor()
+        cursor = self.connection.cursor()
         cursor.execute(logSql, [kwargs['token']])
-        connection.commit()
-        connection.close()
+        self.connection.commit()
 
         return {'success': True}

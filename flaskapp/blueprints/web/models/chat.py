@@ -28,8 +28,8 @@ class ChatModel (Model):
 
         selGrByIdSql = 'select {0}, {1}, {2}, {3} from "chat_private" where {0}=%s;'.format(*selGrRows)
         # try to get private group with friendId and current user id
-        connection = self.connect_postgres()
-        cursor = connection.cursor()
+        
+        cursor = self.connection.cursor()
         cursor.execute(selGrSql, [
             profileDict['id'],
             kwargs['friendId'],
@@ -45,7 +45,7 @@ class ChatModel (Model):
                 datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             ])
             grId = cursor.fetchone()[0]
-            connection.commit()
+            self.connection.commit()
             cursor.execute(selGrByIdSql, [grId])
             selGrData = cursor.fetchone()
 
@@ -96,7 +96,6 @@ class ChatModel (Model):
             100
         ])
         selMsgData = cursor.fetchall()
-        connection.close()
 
         msgList = []
         if (not selMsgData is None):
@@ -150,8 +149,7 @@ class ChatModel (Model):
             and (user_id = %s or friend_id = %s)
             ;'''.format(*grRows)
 
-        connection = self.connect_postgres()
-        cursor = connection.cursor()
+        cursor = self.connection.cursor()
         cursor.execute(grSql, [
             kwargs['chatId'],
             profileDict['id'],
@@ -160,7 +158,6 @@ class ChatModel (Model):
         grId = cursor.fetchone()
 
         if (grId is None):
-            connection.close()
             raise Exception('Message not saved')
 
         # insert message and return dict with id
@@ -182,8 +179,7 @@ class ChatModel (Model):
             insDict['date'],
         ])
         insDict['id'] = cursor.fetchone()[0]
-        connection.commit()
-        connection.close()
+        self.connection.commit()
 
         insDict['userLogin'] = profileDict['login']
         insDict['date'] = datetime.strptime(insDict['date'], '%Y-%m-%d %H:%M:%S').strftime('%Y-%m-%d %H:%M')
@@ -231,8 +227,7 @@ class ChatModel (Model):
         order by chat_private.id desc
         limit %s offset %s;'''.format(*chatRows)
 
-        connection = self.connect_postgres()
-        cursor = connection.cursor()
+        cursor = self.connection.cursor()
         cursor.execute(chatSql, (
             profileDict['id'],
             profileDict['id'],
@@ -247,7 +242,6 @@ class ChatModel (Model):
             profileDict['id']
         ))
         countData = cursor.fetchone()
-        connection.close()
 
         if (countData != None):
             listResult['count'] = countData[0]

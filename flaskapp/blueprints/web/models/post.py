@@ -99,8 +99,7 @@ class PostModel (Model):
             "{0}", "{1}", "{2}", "{3}", "{4}", "{5}" from "{6}"
             where id = %s and blog_id = %s and user_id = %s'''.format(*postRows)
 
-        connection = self.connect_postgres()
-        cursor = connection.cursor()
+        cursor = self.connection.cursor()
         cursor.execute(postSql, (
             postItem.id,
             postItem.blogId,
@@ -109,7 +108,6 @@ class PostModel (Model):
         postData = cursor.fetchone()
 
         if (postData is None):
-            connection.close()
             raise Exception('Blog not found')
 
         selectDict = self.list_to_dict(postRows)(postData)
@@ -119,7 +117,6 @@ class PostModel (Model):
             postItem.text == selectDict['text'] and
             postItem.public == selectDict['public']
         ):
-            connection.close()
             raise Exception('Nothing to update')
 
         updateSql = '''update "{0}"
@@ -128,8 +125,7 @@ class PostModel (Model):
             ;'''.format(self.TABLE)
 
         cursor.execute(updateSql, [postItem.title, postItem.description, postItem.text, postItem.public, postItem.date, postItem.id])
-        connection.commit()
-        connection.close()
+        self.connection.commit()
 
         return postItem.__dict__
 
@@ -142,13 +138,11 @@ class PostModel (Model):
             where "id" = %s and "user_id" = %s
             '''.format(BlogModel.TABLE)
 
-        connection = self.connect_postgres()
-        cursor = connection.cursor()
+        cursor = self.connection.cursor()
         cursor.execute(blogSql, [postItem.blogId, postItem.userId])
         idRes = cursor.fetchone()
 
         if (idRes is None or idRes[0] is None):
-            connection.close()
             raise Exception('Blog not found')
 
         insertSql = '''insert into "{0}"
@@ -167,8 +161,7 @@ class PostModel (Model):
         ])
 
         postId = cursor.fetchone()[0]
-        connection.commit()
-        connection.close()
+        self.connection.commit()
         postItem.id = postId
         return postItem.__dict__
 
@@ -201,8 +194,7 @@ class PostModel (Model):
             where blog.id = %s and blog.user_id = %s and post.id = %s and post.user_id = %s
             ;'''.format(BlogModel.TABLE, self.TABLE)
 
-        connection = self.connect_postgres()
-        cursor = connection.cursor()
+        cursor = self.connection.cursor()
         cursor.execute(postSql, [
             kwargs["blogId"],
             profileDict["id"],
@@ -210,7 +202,6 @@ class PostModel (Model):
             profileDict["id"]
         ])
         postData = cursor.fetchone()
-        connection.close()
 
         if (postData is None):
             raise Exception('Blog not found')
@@ -263,13 +254,11 @@ class PostModel (Model):
             where blog.id = %s and blog.user_id = %s
             ;'''.format(*blogRows)
 
-        connection = self.connect_postgres()
-        cursor = connection.cursor()
+        cursor = self.connection.cursor()
         cursor.execute(blogSql, (kwargs['blogId'], profileDict['id']))
         blogData = cursor.fetchone()
 
         if (blogData is None):
-            connection.close()
             return listResult
 
         listResult['blog'] = self.list_to_dict(blogRows)(blogData)
@@ -347,13 +336,11 @@ class PostModel (Model):
             where blog.id = %s
             ;'''.format(*blogRows)
 
-        connection = self.connect_postgres()
-        cursor = connection.cursor()
+        cursor = self.connection.cursor()
         cursor.execute(blogSql, [kwargs['blogId']])
         blogData = cursor.fetchone()
 
         if (blogData is None):
-            connection.close()
             return listResult
 
         listResult['blog'] = self.list_to_dict(blogRows)(blogData)
@@ -427,14 +414,12 @@ class PostModel (Model):
             where post.id = %s and blog.id = %s
             ;'''.format(BlogModel.TABLE, self.TABLE)
 
-        connection = self.connect_postgres()
-        cursor = connection.cursor()
+        cursor = self.connection.cursor()
         cursor.execute(postSql, [
             kwargs["id"],
             kwargs["blogId"]
         ])
         postData = cursor.fetchone()
-        connection.close()
 
         if (postData is None):
             raise Exception('Blog not found')

@@ -84,14 +84,12 @@ class BlogModel (Model):
 
         blogSql += ' order by id desc limit %s offset %s;'
 
-        connection = self.connect_postgres()
-        cursor = connection.cursor()
+        cursor = self.connection.cursor()
         cursor.execute(blogSql, blogParam)
         blogData = cursor.fetchall()
 
         cursor.execute(countSql)
         countData = cursor.fetchone()
-        connection.close()
 
         listResult = {
             'count': 0,
@@ -119,8 +117,7 @@ class BlogModel (Model):
         # check authentication and get data of current user
         profileDict = uModel.getUserByToken(**kwargs)
 
-        connection = self.connect_postgres()
-        cursor = connection.cursor()
+        cursor = self.connection.cursor()
 
         blogRows = [
             'id', 'user_id', 'title', 'text', 'date', 'public',
@@ -137,7 +134,6 @@ class BlogModel (Model):
 
         cursor.execute(blogSql, [kwargs["id"]])
         blogData = cursor.fetchone()
-        connection.close()
 
         if (blogData is None):
             raise Exception('Blog not found')
@@ -178,8 +174,7 @@ class BlogModel (Model):
             returning "id"
             ;'''.format(self.TABLE)
 
-        connection = self.connect_postgres()
-        cursor = connection.cursor()
+        cursor = self.connection.cursor()
         cursor.execute(sql, [
             blogItem.title, 
             blogItem.text, 
@@ -188,8 +183,8 @@ class BlogModel (Model):
             blogItem.date
         ])
         ids = cursor.fetchone()[0]
-        connection.commit()
-        connection.close()
+        self.connection.commit()
+
         blogItem.id = ids
         return blogItem.__dict__
 
@@ -214,15 +209,14 @@ class BlogModel (Model):
 
         selectRows = ['id', 'user_id', 'text', 'title', 'public', self.TABLE]
         selectSql = 'select "{0}", "{1}", "{2}", "{3}", "{4}" from "{5}" where id = %s'.format(*selectRows);
-        connection = self.connect_postgres()
-        cursor = connection.cursor()
+
+        cursor = self.connection.cursor()
         cursor.execute(selectSql, [blogItem.id])
         selectItem = cursor.fetchone()
 
         selectDict = self.list_to_dict(selectRows)(selectItem)
 
         if (selectDict is None or selectDict["user_id"] != profileDict["id"]):
-            connection.close()
             raise Exception('Blog not found')
 
         if (
@@ -230,7 +224,6 @@ class BlogModel (Model):
             blogItem.text == selectDict['text'] and
             blogItem.public == selectDict['public']
         ):
-            connection.close()
             raise Exception('Nothing to update')
 
         updateSql = '''update "{0}"
@@ -239,8 +232,7 @@ class BlogModel (Model):
             ;'''.format(self.TABLE)
 
         cursor.execute(updateSql, [blogItem.title, blogItem.text, blogItem.public, blogItem.date, blogItem.id])
-        connection.commit()
-        connection.close()
+        self.connection.commit()
 
         return blogItem.__dict__
 
@@ -273,14 +265,12 @@ class BlogModel (Model):
         countSql = 'select count(id) from {0} where user_id = %s;'.format(self.TABLE)
         blogKeys = ['id', 'userId', 'title', 'text', 'date', 'public', 'userName', 'userEmail']
 
-        connection = self.connect_postgres()
-        cursor = connection.cursor()
+        cursor = self.connection.cursor()
         cursor.execute(blogSql, blogParam)
         blogData = cursor.fetchall()
 
         cursor.execute(countSql, countParam)
         countData = cursor.fetchone()
-        connection.close()
 
         listResult = {
             'count': 0,
@@ -310,19 +300,16 @@ class BlogModel (Model):
         selectRows = ['id', 'user_id', 'public', self.TABLE]
         selectSql = 'select "{0}", "{1}", "{2}" from "{3}" where id = %s and user_id = %s;'.format(*selectRows)
 
-        connection = self.connect_postgres()
-        cursor = connection.cursor()
+        cursor = self.connection.cursor()
         cursor.execute(selectSql, [id, profileDict.get('id')])
         selectItem = cursor.fetchone()
 
         selectDict = self.list_to_dict(selectRows)(selectItem)
 
         if (selectDict is None):
-            connection.close()
             raise Exception('Blog not found')
 
         if (selectDict.get("public") == public):
-            connection.close()
             return {
                 'id': id,
                 'public': public
@@ -334,8 +321,7 @@ class BlogModel (Model):
             ;'''.format(self.TABLE)
 
         cursor.execute(updateSql, [public, id])
-        connection.commit()
-        connection.close()
+        self.connection.commit()
 
         return {
             'id': id,
