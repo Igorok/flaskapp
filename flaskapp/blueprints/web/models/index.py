@@ -1,13 +1,14 @@
 import pymysql.cursors
 import psycopg2
 from flask import g, current_app
-from flaskapp.blueprints.web.models.db import getPostgresConnection
+from flaskapp.db import Postgres
 
 class Model:
     connection = None
 
     def __init__(self):
-        self.connection = getPostgresConnection()
+        p = Postgres()
+        self.connection = p.getConnection()
 
     def list_to_dict(self, keys):
         def map_func (values):
