@@ -3,38 +3,26 @@ import { connect } from 'react-redux'
 import {api, graphql} from '../helpers/action'
 import {AlertMessage} from '../helpers/component'
 
+import highlightjs from 'highlightjs';
+import 'jquery'
+/*
+import hljs from 'highlightjs/lib/highlight';
+import javascript from 'highlightjs/lib/languages/javascript';
+hljs.registerLanguage('javascript', javascript);
+*/
+
+console.log(
+    'highlightjs', highlightjs
+);
 
 class DetailComp extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {...props.postDetail};
-    }
 
     componentWillMount () {
-        if (this.state.id === -1) {
-            return;
-        }
-
         this.props.dispatch(graphql({
             type: 'POST_GET',
-            id: this.state.id,
-            blogId: this.state.blogId
+            id: this.props.postDetail.id,
+            blogId: this.props.postDetail.blogId
         }));
-    }
-
-    componentWillReceiveProps(nextProps) {
-        if (nextProps.postDetail.status == 'success_get') {
-            this.setState({
-                userId: nextProps.postDetail.userId,
-                userName: nextProps.postDetail.userName,
-                userEmail: nextProps.postDetail.userEmail,
-                title: nextProps.postDetail.title,
-                description: nextProps.postDetail.description,
-                text: nextProps.postDetail.text,
-                date: nextProps.postDetail.date,
-                public: nextProps.postDetail.public,
-            });
-        }
     }
 
     render () {
@@ -52,12 +40,24 @@ class DetailComp extends React.Component {
             }
         }
 
+        // try to highlight
+        let text = '';
+        if (this.props.postDetail.text && this.props.postDetail.text.length) {
+            text = $('<div></div>').html(this.props.postDetail.text);
+            text.find('code')
+                .each(function () {
+                    $(this).addClass('hljs python')
+                    highlightjs.highlightBlock($(this)[0])
+                });
+            text = text.html();
+        }
+
         return <div>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li className="breadcrumb-item"><a href="/blogs">Blogs</a></li>
                     <li className="breadcrumb-item"><a href={"/blog/" + this.props.postDetail.blogId}>Blog</a></li>
-                    <li className="breadcrumb-item active">{this.state.title || 'Post detail'}</li>
+                    <li className="breadcrumb-item active">{this.props.postDetail.title || 'Post detail'}</li>
                 </ol>
             </nav>
 
@@ -80,7 +80,7 @@ class DetailComp extends React.Component {
                         </em>
                     </p>
                     <br />
-                    <div dangerouslySetInnerHTML={{__html: this.props.postDetail.text}} />
+                    <div dangerouslySetInnerHTML={{__html: text}} />
                 </div>
             </div>
         </div>

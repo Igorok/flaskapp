@@ -2,6 +2,7 @@ import React from 'react'
 import { render } from 'react-dom'
 import { Provider } from 'react-redux'
 
+import 'highlightjs/styles/vs2015.css'
 import 'font-awesome/scss/font-awesome.scss';
 import './styles/index.scss'
 
