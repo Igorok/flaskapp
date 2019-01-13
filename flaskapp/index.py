@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 
 import os
-from flask import Flask
+from flask import Flask, g
 
 from werkzeug.utils import find_modules, import_string
 from flaskapp.blueprints.web.index import web
 from flaskapp.blueprints.web.chat import getChat
+from flaskapp.blueprints.web.models.db import getPostgresConnection
 
 from flaskapp.config import config
 
@@ -24,7 +25,12 @@ app.config.update(dict(
     DB_NAME= os.environ.get('DB_NAME', config['POSTGRES']['NAME']),
     DB_HOST= os.environ.get('DB_HOST', config['POSTGRES']['HOST'])
 ))
-app.config.from_envvar('FLASAPP_SETTINGS', silent=True)
+app.config.from_envvar('FLASKAPP_SETTINGS', silent=True)
 
 
+@app.teardown_appcontext
+def close_db(error):
+    """Closes the database again at the end of the request."""
+    if hasattr(g, 'pg_connection'):
+        g.pg_connection.close()
 

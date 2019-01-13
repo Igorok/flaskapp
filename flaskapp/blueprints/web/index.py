@@ -5,6 +5,7 @@ from flask import request, session, g, redirect, url_for, abort, \
     render_template, flash, current_app, jsonify
 from flaskapp.blueprints.web.graphql.query import schema
 
+
 web = Blueprint(
         'web',
         __name__,
@@ -21,7 +22,6 @@ def getParams (keys, args):
             params.append({'name': key, 'val': args.get(key)})
 
     return params
-
 
 @web.route('/graphql', methods=['POST'])
 def graphql():
