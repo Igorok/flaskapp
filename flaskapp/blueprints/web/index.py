@@ -48,147 +48,162 @@ def graphql():
         abort(jsonify(error = err_dict))
 
 
-# GET routes
 @web.route('/')
-def index():
+def updated():
     params = [
-        {'name': 'page', 'val': 'about'}
+        {'name': 'page', 'val': 'updated'}
     ]
-    return render_template('view.html', scripts=['about'], params=params )
+    return render_template('view.html', scripts=['updated'], params=params )
 
-@web.route('/profile')
-def profile():
+@web.route('/<path>')
+def for_all(path):
     params = [
-        {'name': 'page', 'val': 'profile'}
+        {'name': 'page', 'val': 'updated'}
     ]
-    return render_template('view.html', scripts=['profile'], params=params)
+    return render_template('view.html', scripts=['updated'], params=params )
 
-@web.route('/login')
-def login():
-    return render_template('view.html', scripts=['login'])
 
-@web.route('/registration')
-def registration():
-    return render_template('view.html', scripts=['registration'])
+# GET routes
+# @web.route('/')
+# def index():
+#     params = [
+#         {'name': 'page', 'val': 'about'}
+#     ]
+#     return render_template('view.html', scripts=['about'], params=params )
 
-@web.route('/blogs')
-def blogList():
-    params = getParams(['userId', 'start', 'perpage'], request.args)
-    params.append({'name': 'page', 'val': 'blog'})
-    return render_template(
-        'view.html',
-        scripts = ['blogList'],
-        params = params
-    )
+# @web.route('/profile')
+# def profile():
+#     params = [
+#         {'name': 'page', 'val': 'profile'}
+#     ]
+#     return render_template('view.html', scripts=['profile'], params=params)
 
-@web.route('/blog/<blogId>')
-def blogDetail(blogId):
-    params = getParams(['start', 'perpage'], request.args)
-    params.append({'name': 'page', 'val': 'blog'})
-    params.append({'name': 'blogId', 'val': blogId})
+# @web.route('/login')
+# def login():
+#     return render_template('view.html', scripts=['login'])
 
-    return render_template(
-        'view.html',
-        scripts = ['blogDetail'],
-        params = params
-    )
+# @web.route('/registration')
+# def registration():
+#     return render_template('view.html', scripts=['registration'])
 
-@web.route('/my-blogs')
-def myBlogList():
-    params = getParams(['start', 'perpage'], request.args)
-    params.append({'name': 'page', 'val': 'blog'})
-    return render_template(
-        'view.html',
-        scripts = ['myBlogList'],
-        params = params
-    )
+# @web.route('/blogs')
+# def blogList():
+#     params = getParams(['userId', 'start', 'perpage'], request.args)
+#     params.append({'name': 'page', 'val': 'blog'})
+#     return render_template(
+#         'view.html',
+#         scripts = ['blogList'],
+#         params = params
+#     )
 
-@web.route('/blog-edit/<blogId>')
-def blogEdit(blogId):
-    return render_template(
-        'view.html',
-        scripts = ['blogEdit'],
-        params = [
-            {'name': 'blogId', 'val': blogId},
-            {'name': 'page', 'val': 'blog'}
-        ]
-    )
+# @web.route('/blog/<blogId>')
+# def blogDetail(blogId):
+#     params = getParams(['start', 'perpage'], request.args)
+#     params.append({'name': 'page', 'val': 'blog'})
+#     params.append({'name': 'blogId', 'val': blogId})
 
-@web.route('/my-blog-detail/<blogId>')
-def myBlogDetail(blogId):
-    params = getParams(['start', 'perpage'], request.args)
-    params.append({'name': 'page', 'val': 'blog'})
-    params.append({'name': 'blogId', 'val': blogId})
+#     return render_template(
+#         'view.html',
+#         scripts = ['blogDetail'],
+#         params = params
+#     )
 
-    return render_template(
-        'view.html',
-        scripts = ['myBlogDetail'],
-        params = params
-    )
+# @web.route('/my-blogs')
+# def myBlogList():
+#     params = getParams(['start', 'perpage'], request.args)
+#     params.append({'name': 'page', 'val': 'blog'})
+#     return render_template(
+#         'view.html',
+#         scripts = ['myBlogList'],
+#         params = params
+#     )
 
-@web.route('/post-edit/<blogId>/<postId>')
-def postEdit(blogId, postId):
-    return render_template(
-        'view.html',
-        scripts = ['postEdit'],
-        params = [
-            {'name': 'blogId', 'val': blogId},
-            {'name': 'postId', 'val': postId},
-            {'name': 'page', 'val': 'blog'}
-        ]
-    )
+# @web.route('/blog-edit/<blogId>')
+# def blogEdit(blogId):
+#     return render_template(
+#         'view.html',
+#         scripts = ['blogEdit'],
+#         params = [
+#             {'name': 'blogId', 'val': blogId},
+#             {'name': 'page', 'val': 'blog'}
+#         ]
+#     )
 
-@web.route('/post/<blogId>/<postId>')
-def postDetail(blogId, postId):
-    return render_template(
-        'view.html',
-        scripts = ['postDetail'],
-        params = [
-            {'name': 'blogId', 'val': blogId},
-            {'name': 'postId', 'val': postId},
-            {'name': 'page', 'val': 'blog'}
-        ]
-    )
+# @web.route('/my-blog-detail/<blogId>')
+# def myBlogDetail(blogId):
+#     params = getParams(['start', 'perpage'], request.args)
+#     params.append({'name': 'page', 'val': 'blog'})
+#     params.append({'name': 'blogId', 'val': blogId})
 
-@web.route('/users')
-def userList():
-    params = getParams(['start', 'perpage'], request.args)
-    params.append({'name': 'page', 'val': 'user'})
-    return render_template(
-        'view.html',
-        scripts = ['userList'],
-        params = params
-    )
+#     return render_template(
+#         'view.html',
+#         scripts = ['myBlogDetail'],
+#         params = params
+#     )
 
-@web.route('/friends')
-def friendList():
-    params = getParams(['start', 'perpage'], request.args)
-    params.append({'name': 'page', 'val': 'friend'})
-    return render_template(
-        'view.html',
-        scripts = ['friendList'],
-        params = params
-    )
+# @web.route('/post-edit/<blogId>/<postId>')
+# def postEdit(blogId, postId):
+#     return render_template(
+#         'view.html',
+#         scripts = ['postEdit'],
+#         params = [
+#             {'name': 'blogId', 'val': blogId},
+#             {'name': 'postId', 'val': postId},
+#             {'name': 'page', 'val': 'blog'}
+#         ]
+#     )
 
-@web.route('/chat-private/<friendId>')
-def chatPrivate(friendId):
-    params = [
-        {'name': 'page', 'val': 'chatList'},
-        {'name': 'friendId', 'val': friendId}
-    ]
-    return render_template(
-        'view.html',
-        scripts = ['chatPrivate'],
-        params = params
-    )
+# @web.route('/post/<blogId>/<postId>')
+# def postDetail(blogId, postId):
+#     return render_template(
+#         'view.html',
+#         scripts = ['postDetail'],
+#         params = [
+#             {'name': 'blogId', 'val': blogId},
+#             {'name': 'postId', 'val': postId},
+#             {'name': 'page', 'val': 'blog'}
+#         ]
+#     )
 
-@web.route('/chat-list')
-def chatList():
-    params = [
-        {'name': 'page', 'val': 'chatList'}
-    ]
-    return render_template(
-        'view.html',
-        scripts = ['chatList'],
-        params = params
-    )
+# @web.route('/users')
+# def userList():
+#     params = getParams(['start', 'perpage'], request.args)
+#     params.append({'name': 'page', 'val': 'user'})
+#     return render_template(
+#         'view.html',
+#         scripts = ['userList'],
+#         params = params
+#     )
+
+# @web.route('/friends')
+# def friendList():
+#     params = getParams(['start', 'perpage'], request.args)
+#     params.append({'name': 'page', 'val': 'friend'})
+#     return render_template(
+#         'view.html',
+#         scripts = ['friendList'],
+#         params = params
+#     )
+
+# @web.route('/chat-private/<friendId>')
+# def chatPrivate(friendId):
+#     params = [
+#         {'name': 'page', 'val': 'chatList'},
+#         {'name': 'friendId', 'val': friendId}
+#     ]
+#     return render_template(
+#         'view.html',
+#         scripts = ['chatPrivate'],
+#         params = params
+#     )
+
+# @web.route('/chat-list')
+# def chatList():
+#     params = [
+#         {'name': 'page', 'val': 'chatList'}
+#     ]
+#     return render_template(
+#         'view.html',
+#         scripts = ['chatList'],
+#         params = params
+#     )
