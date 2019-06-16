@@ -1,9 +1,5 @@
-import {forEach} from 'lodash';
-
 let initState = {
-    blogId: window.localParams.blogId ? parseInt(window.localParams.blogId) : null,
-    start: window.localParams.start ? parseInt(window.localParams.start) : 0,
-    perpage: window.localParams.perpage ? parseInt(window.localParams.perpage) : 9,
+    blogId: null,
     count: 0,
     blog: null,
     posts: [],
@@ -14,7 +10,6 @@ const postList = (state = initState, action) => {
     let data = {...state};
     switch (action.type) {
         case 'BLOG_DETAIL_SEND':
-            data.start = action.start;
             data.status = 'send';
             return data;
         case 'BLOG_DETAIL_SUCCESS':

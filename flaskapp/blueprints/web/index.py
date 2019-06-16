@@ -55,7 +55,7 @@ def updated():
     ]
     return render_template('view.html', scripts=['updated'], params=params )
 
-@web.route('/<path>')
+@web.route('/<path:path>')
 def for_all(path):
     params = [
         {'name': 'page', 'val': 'updated'}

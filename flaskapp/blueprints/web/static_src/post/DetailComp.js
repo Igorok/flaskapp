@@ -5,23 +5,15 @@ import {AlertMessage} from '../helpers/component'
 
 import highlightjs from 'highlightjs';
 import 'jquery'
-/*
-import hljs from 'highlightjs/lib/highlight';
-import javascript from 'highlightjs/lib/languages/javascript';
-hljs.registerLanguage('javascript', javascript);
-*/
+import { Link } from 'react-router-dom/cjs/react-router-dom';
 
-console.log(
-    'highlightjs', highlightjs
-);
-
-class DetailComp extends React.Component {
+class PostDetailComp extends React.Component {
 
     componentWillMount () {
         this.props.dispatch(graphql({
             type: 'POST_GET',
-            id: this.props.postDetail.id,
-            blogId: this.props.postDetail.blogId
+            id: this.props.postId,
+            blogId: this.props.blogId
         }));
     }
 
@@ -55,8 +47,8 @@ class DetailComp extends React.Component {
         return <div>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
-                    <li className="breadcrumb-item"><a href="/blogs">Blogs</a></li>
-                    <li className="breadcrumb-item"><a href={"/blog/" + this.props.postDetail.blogId}>Blog</a></li>
+                    <li className="breadcrumb-item"><Link to="/blogs">Blogs</Link></li>
+                    <li className="breadcrumb-item"><Link to={"/blog/" + this.props.postDetail.blogId}>Blog</Link></li>
                     <li className="breadcrumb-item active">{this.props.postDetail.title || 'Post detail'}</li>
                 </ol>
             </nav>
@@ -88,7 +80,11 @@ class DetailComp extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-    return {...state}
+    return Object.assign({
+        auth: state.auth,
+        router: state.router,
+        postDetail: state.postDetail,
+    });
 }
-DetailComp = connect(mapStateToProps)(DetailComp)
-export default DetailComp
+PostDetailComp = connect(mapStateToProps)(PostDetailComp)
+export default PostDetailComp

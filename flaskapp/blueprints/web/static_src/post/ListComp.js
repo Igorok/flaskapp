@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 import { graphql } from '../helpers/action';
 import {forEach, chunk, map} from 'lodash';
 import {AlertMessage, PaginatorLayout} from '../helpers/component';
+import queryString from 'query-string';
+import { Link } from 'react-router-dom/cjs/react-router-dom.min';
 
 class BlogComp extends React.Component {
     render () {
@@ -31,14 +33,14 @@ class BlogComp extends React.Component {
     }
 }
 
-class ListComp extends React.Component {
+class PostListComp extends React.Component {
     constructor(props) {
         super(props);
 
+        let search = queryString.parse(this.props.router.location.search);
         this.state = {
-            start: this.props.postList.start,
-            blog: this.props.postList.blog,
-            posts: this.props.postList.posts,
+            start: search.start || 0,
+            perpage: search.perpage || 9
         }
     }
 
@@ -46,12 +48,12 @@ class ListComp extends React.Component {
         this.changePage();
     }
 
-    changePage (start = 0) {
+    changePage () {
         this.props.dispatch(graphql({
             type: 'BLOG_DETAIL',
-            start: start,
-            perpage: this.props.postList.perpage,
-            blogId: this.props.postList.blogId,
+            start: this.state.start,
+            perpage: this.state.perpage,
+            blogId: this.props.blogId,
         }));
     }
 
@@ -71,9 +73,9 @@ class ListComp extends React.Component {
                     <div className="card">
                         <div className="card-header">
                             <h5>
-                                <a href = {"/post/" + self.props.postList.blog.id + "/" + post.id}>
+                                <Link to={"/post/" + self.props.postList.blog.id + "/" + post.id}>
                                     {post.title}
-                                </a>
+                                </Link>
                             </h5>
                         </div>
                         <div className="card-body">
@@ -117,8 +119,8 @@ class ListComp extends React.Component {
         }
 
        let pagerParam = {
-            start: this.props.postList.start,
-            perpage: this.props.postList.perpage,
+            start: this.state.start,
+            perpage: this.state.perpage,
             count: this.props.postList.count,
             items: this.getPostItems(),
             changePage: ::this.changePage,
@@ -128,7 +130,7 @@ class ListComp extends React.Component {
                 <AlertMessage opts={alertOpts} />
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="/blogs">Blogs</a></li>
+                        <li class="breadcrumb-item"><Link to="/blogs">Blogs</Link></li>
                         <li class="breadcrumb-item active" aria-current="page">{this.props.postList.blog ? this.props.postList.blog.title : null}</li>
                     </ol>
                 </nav>
@@ -140,8 +142,12 @@ class ListComp extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-    return {...state}
+    return Object.assign({
+        auth: state.auth,
+        postList: state.postList,
+        router: state.router
+    });
 }
-ListComp = connect(mapStateToProps)(ListComp)
+PostListComp = connect(mapStateToProps)(PostListComp)
 
-export default ListComp
+export default PostListComp

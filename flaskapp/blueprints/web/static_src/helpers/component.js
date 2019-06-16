@@ -3,6 +3,8 @@ import { connect } from 'react-redux'
 import { graphql } from '../helpers/action';
 import {Alert, Dropdown} from 'bootstrap'
 
+import { Link } from 'react-router-dom'
+
 import 'jquery';
 
 /**
@@ -101,26 +103,26 @@ class Header extends React.Component {
                     {this.props.auth.login}
                 </button>
                 <div className="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                    <a className="dropdown-item" href="/profile">Profile</a>
-                    <a className="dropdown-item" href="/my-blogs">My blogs</a>
-                    <a className="dropdown-item" href="/blog-edit/-1">Add blog</a>
-                    <a className="dropdown-item" href="/friends">Friends</a>
-                    <a className="dropdown-item" href="/chat-list">Chats</a>
-                    <a className="dropdown-item" href="#" onClick={::this.logout}>Logout</a>
+                    <Link className="dropdown-item" to="/profile">Profile</Link>
+                    <Link className="dropdown-item" to="/my-blogs">My blogs</Link>
+                    <Link className="dropdown-item" to="/blog-edit/-1">Add blog</Link>
+                    <Link className="dropdown-item" to="/friends">Friends</Link>
+                    <Link className="dropdown-item" to="/chat-list">Chats</Link>
+                    <Link className="dropdown-item" to="#" onClick={::this.logout}>Logout</Link>
                 </div>
             </div>
 
             userItem = <li className={window.localParams.page == 'user' ? 'nav-item active' : 'nav-item'}>
-                <a className="nav-link" href="/users">
+                <Link className="nav-link" to="/users">
                     <i className="fa fa-users"></i>&nbsp;
                     Users
                     <span className="sr-only">(current)</span>
-                </a>
+                </Link>
             </li>
         }
 
         return <nav className="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
-            <a className="navbar-brand" href="#">FlaskApp</a>
+            <Link className="navbar-brand" to="#">FlaskApp</Link>
 
             <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span className="navbar-toggler-icon"></span>
@@ -128,20 +130,22 @@ class Header extends React.Component {
 
             <div className="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul className="navbar-nav mr-auto">
+
                     <li className={window.localParams.page == 'about' ? 'nav-item active' : 'nav-item'}>
-                        <a className="nav-link" href="/">
+                        <Link className="nav-link" to="/">
                             <i className="fa fa-home"></i>&nbsp;
                             About
                             <span className="sr-only">(current)</span>
-                        </a>
+                        </Link>
                     </li>
                     <li className={window.localParams.page == 'blog' ? 'nav-item active' : 'nav-item'}>
-                        <a className="nav-link" href="/blogs">
+                        <Link className="nav-link" to="/blogs">
                             <i class="fa fa-bookmark"></i>&nbsp;
                             Blogs
                             <span className="sr-only">(current)</span>
-                        </a>
+                        </Link>
                     </li>
+
                     { userItem }
                 </ul>
                 { profileItem }
@@ -157,11 +161,11 @@ class Header extends React.Component {
  * @param {Class} opts.comp - React.Component that need to render
  * @param {Boolean} opts.forAuth - this component only for authenticated users
  */
-export function layout (opts) {
+export const layout = opts => {
     let Component = opts.comp;
     let forAuth = opts.forAuth;
 
-    class Layout extends React.Component {
+    class Layout extends React.Component {        
         logout () {
             this.props.dispatch(graphql({
                 type: 'LOGOUT'
@@ -182,7 +186,7 @@ export function layout (opts) {
         render() {
             return <div class="container-fluid">
                 <Header auth={this.props.auth} logout={::this.logout} />
-                <Component />
+                <Component {...this.props.match.params} />
             </div>
         }
     }
@@ -271,9 +275,9 @@ export class PaginatorLayout extends React.Component {
                 cName += " hidden";
             }
             btns.push(<li className = {cName} >
-                <a
+                <Link
                     className="page-link"
-                    href = {btnHref}
+                    to = {btnHref}
                     data-start={btnStart}
                     onClick={(e) => {
                         e.preventDefault();
@@ -282,7 +286,7 @@ export class PaginatorLayout extends React.Component {
                     }}
                 >
                     {btnText}
-                </a>
+                </Link>
             </li>);
         }
 
@@ -293,15 +297,15 @@ export class PaginatorLayout extends React.Component {
             firstBtnClass = lastBtnClass = "page-item disabled";
         }
         const firstBtn = <li className = {firstBtnClass}>
-                <a href="#" className="page-link">
+                <Link to="#" className="page-link">
                     <span>&laquo;</span>
-                </a>
+                </Link>
             </li>
         // move to last page
         const lastBtn = <li className = {lastBtnClass}>
-                <a href="#" className="page-link">
+                <Link to="#" className="page-link">
                     <span>&raquo;</span>
-                </a>
+                </Link>
             </li>
 
         btns.unshift(firstBtn);

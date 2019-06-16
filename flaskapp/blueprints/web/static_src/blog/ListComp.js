@@ -3,30 +3,29 @@ import { connect } from 'react-redux';
 import { graphql } from '../helpers/action';
 import {forEach, chunk, map} from 'lodash';
 import {AlertMessage, PaginatorLayout} from '../helpers/component';
+import { Link } from 'react-router-dom';
+import queryString from 'query-string';
 
 class BlogListComp extends React.Component {
     constructor(props) {
         super(props);
 
+        let search = queryString.parse(this.props.router.location.search);
         this.state = {
-            start: this.props.blogList.start,
-            blogs: this.props.blogList.blogs,
+            start: search.start || 0,
+            perpage: search.perpage || 9
         }
     }
 
     componentWillMount () {
-        this.props.dispatch(graphql({
-            type: 'BLOG_LIST',
-            start: this.props.blogList.start,
-            perpage: this.props.blogList.perpage,
-        }));
+        this.changePage();
     }
 
-    changePage (start = 0) {
+    changePage () {
         this.props.dispatch(graphql({
             type: 'BLOG_LIST',
-            start: start,
-            perpage: this.props.blogList.perpage,
+            start: this.state.start,
+            perpage: this.state.perpage,
         }));
     }
 
@@ -38,7 +37,7 @@ class BlogListComp extends React.Component {
                     <div className="card">
                         <div className="card-header">
                             <h5>
-                                <a href = {"/blog/" + blog.id}>{blog.title}</a>
+                                <Link to={"/blog/" + blog.id}>{blog.title}</Link>
                             </h5>
                         </div>
                         <div className="card-body">
@@ -86,8 +85,8 @@ class BlogListComp extends React.Component {
         }
 
         let pagerParam = {
-            start: this.props.blogList.start,
-            perpage: this.props.blogList.perpage,
+            start: this.state.start,
+            perpage: this.state.perpage,
             count: this.props.blogList.count,
             items: this.getBlogItems(),
             changePage: ::this.changePage,
@@ -101,7 +100,11 @@ class BlogListComp extends React.Component {
     }
 }
 const mapStateToProps = (state) => {
-    return {...state}
+    return Object.assign({
+        auth: state.auth,
+        router: state.router,
+        blogList: state.blogList
+    });
 }
 BlogListComp = connect(mapStateToProps)(BlogListComp)
 

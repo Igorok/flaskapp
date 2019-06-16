@@ -11,7 +11,7 @@ const initState = {
     status: null
 };
 
-const PrivateRed = (state = initState, action) => {
+const chatPrivate = (state = initState, action) => {
     let data = {...state};
 
     switch (action.type) {
@@ -51,4 +51,4 @@ const PrivateRed = (state = initState, action) => {
     }
 };
 
-export default PrivateRed;
+export default chatPrivate;

@@ -73,9 +73,6 @@ class Query(graphene.ObjectType):
         id = graphene.Int(),
     )
     def resolve_getBlog (self, info, *args, **kwargs):
-        print(
-            '**kwargs', kwargs, 'BlogGraph', BlogGraph
-        )
         __b = BlogModel()
         __blog = __b.getBlog(**kwargs)
         return BlogGraph(**__blog)

@@ -113,7 +113,7 @@ module.exports = {
     // devtool: cfg.prod ? 'source-map' : 'cheap-module-eval-source-map',
     // watch: ! cfg.prod,
 
-    devtool: 'cheap-module-eval-source-map',
+    devtool: 'eval-source-map',
     watch: true,
 
 
