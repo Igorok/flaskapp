@@ -201,7 +201,10 @@ class ProfileComp extends React.Component {
     }
 }
 const mapStateToProps = (state) => {
-    return {...state}
+    return {
+        auth: state.auth,
+        profile: state.profile
+    }
 }
 ProfileComp = connect(mapStateToProps)(ProfileComp)
 

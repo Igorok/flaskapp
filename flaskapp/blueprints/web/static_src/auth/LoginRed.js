@@ -1,5 +1,9 @@
-let user = localStorage.getItem('user');
-if (user) user = JSON.parse(user);
+let user = window.localStorage.getItem('user');
+try {
+    user = JSON.parse(user);
+} catch (e) {
+    console.log(e);
+}
 
 const initState = {
     id: user ? user.id : null,
@@ -10,21 +14,6 @@ const initState = {
     error: null,
 };
 
-
-const success = (state, action) => {
-    user = {...action.data.auth};
-    localStorage.setItem('user', JSON.stringify(user));
-    return {
-        id: user.id,
-        token: user.token,
-        login: user.login,
-        isAuthenticated: (user && user.id),
-        status: 'success',
-        error: null,
-    }
-}
-
-
 const auth = (state = initState, action) => {
     let data = {...state};
     switch (action.type) {
@@ -33,9 +22,19 @@ const auth = (state = initState, action) => {
                 status: 'send',
             };
         case 'AUTH_SUCCESS':
-            return success(state, action);
+            user = {...action.data.auth};
+            window.localStorage.setItem('user', JSON.stringify(user));
+
+            return {
+                id: user.id,
+                token: user.token,
+                login: user.login,
+                isAuthenticated: (user && user.id),
+                status: 'success',
+                error: null,
+            }
         case 'AUTH_ERROR':
-            localStorage.removeItem('user')
+            window.localStorage.removeItem('user')
             return {
                 status: 'error',
                 error: action.error,
@@ -45,13 +44,13 @@ const auth = (state = initState, action) => {
             data.status = 'send';
             return data;
         case 'LOGOUT_SUCCESS':
-            localStorage.removeItem('user');
+            window.localStorage.removeItem('user');
             return {
                 status: 'logout_success',
                 error: null,
             }
         case 'LOGOUT_ERROR':
-            localStorage.removeItem('user');
+            window.localStorage.removeItem('user');
             return {
                 status: 'error',
                 error: action.error,

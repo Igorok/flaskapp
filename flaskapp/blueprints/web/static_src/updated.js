@@ -13,11 +13,15 @@ import configureStore, { history } from './helpers/configureStore'
 import 'font-awesome/scss/font-awesome.scss';
 import './styles/index.scss'
 
-import {layout} from './helpers/component';
+import { layout } from './helpers/component';
+import LoginComp from './auth/LoginComp'
+import RegistrationComp from './auth/RegComp';
+
 import AboutComp from './about/AboutComp';
 import BlogListComp from './blog/ListComp';
 import PostListComp from './post/ListComp';
 import PostDetailComp from './post/DetailComp';
+import ProfileComp from './profile/ProfileComp';
 
 
 const store = configureStore(/* provide initial state if any */)
@@ -28,9 +32,31 @@ render(
             <> { /* your usual react-router v4/v5 routing */ }
                 <Switch>
                     <Route exact path="/" component={ layout({comp: AboutComp}) } />
-                    <Route exact path="/blogs" component={ layout({comp: BlogListComp}) } />
+                    <Route exact path="/blogs" component={ layout({comp: BlogListComp }) } />
                     <Route exact path="/blog/:blogId" component={ layout({comp: PostListComp})} />
                     <Route exact path="/post/:blogId/:postId" component={ layout({comp: PostDetailComp})} />
+
+                    <Route 
+                        exact path="/login" 
+                        component={ 
+                            layout({comp: LoginComp, forNotAuth: true}) 
+                        }
+                    />
+                    <Route 
+                        exact path="/registration" 
+                        component={ 
+                            layout({comp: RegistrationComp, forNotAuth: true}) 
+                        }
+                    />
+                    <Route 
+                        exact path="/profile" 
+                        component={ 
+                            layout({comp: ProfileComp, forAuth: true}) 
+                        }
+                    />
+
+
+                    
                     <Route render={ () => {
                         return <p>Not found</p>
                     }} />
@@ -42,32 +68,6 @@ render(
 )
 /*
 
-
-
-# @web.route('/post/<blogId>/<postId>')
-# def postDetail(blogId, postId):
-#     return render_template(
-#         'view.html',
-#         scripts = ['postDetail'],
-#         params = [
-#             {'name': 'blogId', 'val': blogId},
-#             {'name': 'postId', 'val': postId},
-#             {'name': 'page', 'val': 'blog'}
-#         ]
-#     )
-
-
-
-*/
-
-/*
-
-
-
-
-/*
-
-
 # @web.route('/profile')
 # def profile():
 #     params = [
@@ -75,13 +75,18 @@ render(
 #     ]
 #     return render_template('view.html', scripts=['profile'], params=params)
 
-# @web.route('/login')
-# def login():
-#     return render_template('view.html', scripts=['login'])
 
-# @web.route('/registration')
-# def registration():
-#     return render_template('view.html', scripts=['registration'])
+
+*/
+
+
+
+
+
+
+/*
+
+
 
 
 
@@ -181,32 +186,6 @@ render(
 
 
 
-
-import React from 'react'
-import { render } from 'react-dom'
-import { Provider } from 'react-redux'
-
-import 'font-awesome/scss/font-awesome.scss';
-import './styles/index.scss'
-
-import {layout} from './helpers/component'
-import AboutComp from './about/AboutComp'
-
-import auth from './auth/LoginRed'
-
-import {configureStore} from './helpers/configureStore'
-
-let store = configureStore({
-	auth: auth,
-});
-
-let Comp = layout({comp: AboutComp});
-render(
-	<Provider store={store}>
-		<Comp />
-	</Provider>,
-	document.getElementById('root')
-)
 
 
 

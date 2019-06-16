@@ -163,9 +163,8 @@ class Header extends React.Component {
  */
 export const layout = opts => {
     let Component = opts.comp;
-    let forAuth = opts.forAuth;
 
-    class Layout extends React.Component {        
+    class Layout extends React.Component {
         logout () {
             this.props.dispatch(graphql({
                 type: 'LOGOUT'
@@ -179,9 +178,15 @@ export const layout = opts => {
         }
         checkAuth(auth) {
             // if this page only for authenticated users and the storage has no isAuthenticated
-            if (forAuth && ! auth.isAuthenticated) {
-                return window.location = '/';
+            if (opts.forAuth && ! auth.isAuthenticated) {
+                // return window.location = '/';
+                return this.props.history.push('/');
             }
+            // for not authorized users, login, registration
+            else if (opts.forNotAuth && auth.isAuthenticated) {
+                return this.props.history.push('/');
+            }
+
         }
         render() {
             return <div class="container-fluid">

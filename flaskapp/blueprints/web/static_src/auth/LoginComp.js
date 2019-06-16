@@ -1,7 +1,9 @@
 import React from 'react'
+import {Link} from 'react-router-dom'
 import { connect } from 'react-redux'
-import {api, graphql} from '../helpers/action'
-import {AlertMessage, MathCaptcha} from '../helpers/component'
+import { graphql} from '../helpers/action'
+import { AlertMessage, MathCaptcha } from '../helpers/component'
+
 
 
 class LoginComp extends React.Component {
@@ -10,9 +12,6 @@ class LoginComp extends React.Component {
         this.state = {
             captcha: null,
         };
-    }
-    componentDidMount() {
-        if (this.props.isAuthenticated) return window.location = '/';
     }
 
     formSubmit (e) {
@@ -32,37 +31,26 @@ class LoginComp extends React.Component {
         }));
     }
 
-    componentDidUpdate () {
-        if (this.props.status === 'success') {
-            setTimeout(() => {
-                return window.location = '/';
-            }, 1000);
-        }
-    }
     checkCaptcha (v) {
         this.setState({
             captcha: v,
         })
     }
-    render () {
-        let disabled = null,
-            alertOpts = null;
 
-        if (this.props.status === 'error') {
+    render () {
+        let disabled = null;
+        let alertOpts = null;
+
+        if (this.props.auth.status === 'error') {
             alertOpts = {
                 className: 'danger',
-                text: this.props.error || 'Error, wrong login or password'
+                text: this.props.auth.error || 'Error, wrong login or password'
             }
-        } else if (this.props.status === 'send') {
+        } else if (this.props.auth.status === 'send') {
             disabled = 'disabled';
             alertOpts = {
                 className: 'info',
                 text: 'Loading, please wait',
-            }
-        } else if (this.props.status === 'success') {
-            alertOpts = {
-                className: 'success',
-                text: 'Loginned successfully',
             }
         }
 
@@ -81,7 +69,7 @@ class LoginComp extends React.Component {
                                     className="form-control"
                                     id="loginInput"
                                     placeholder="Login"
-                                    defaultValue={this.props.login}
+                                    defaultValue={this.props.auth.login}
                                     disabled={disabled}
                                 />
                             </div>
@@ -92,7 +80,7 @@ class LoginComp extends React.Component {
                                     className="form-control"
                                     id="passwordInput"
                                     placeholder="Password"
-                                    defaultValue={this.props.password}
+                                    defaultValue={this.props.auth.password}
                                     disabled={disabled}
                                 />
                             </div>
@@ -106,7 +94,7 @@ class LoginComp extends React.Component {
                         </form>
                         <br />
                         <p className='text-center'>
-                            <a href='/registration'>Registration</a>
+                            <Link to='/registration'>Registration</Link>
                         </p>
                     </div>
                 </div>
@@ -115,7 +103,9 @@ class LoginComp extends React.Component {
     }
 }
 const mapStateToProps = (state) => {
-    return {...state.auth}
+    return Object.assign({
+        auth: state.auth
+    })
 }
 LoginComp = connect(mapStateToProps)(LoginComp)
 

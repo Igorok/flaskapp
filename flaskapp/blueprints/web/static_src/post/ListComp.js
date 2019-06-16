@@ -4,7 +4,7 @@ import { graphql } from '../helpers/action';
 import {forEach, chunk, map} from 'lodash';
 import {AlertMessage, PaginatorLayout} from '../helpers/component';
 import queryString from 'query-string';
-import { Link } from 'react-router-dom/cjs/react-router-dom.min';
+import { Link } from 'react-router-dom';
 
 class BlogComp extends React.Component {
     render () {

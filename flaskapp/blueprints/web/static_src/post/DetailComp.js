@@ -4,8 +4,9 @@ import {api, graphql} from '../helpers/action'
 import {AlertMessage} from '../helpers/component'
 
 import highlightjs from 'highlightjs';
+import 'highlightjs/styles/vs2015.css'
 import 'jquery'
-import { Link } from 'react-router-dom/cjs/react-router-dom';
+import { Link } from 'react-router-dom';
 
 class PostDetailComp extends React.Component {
 

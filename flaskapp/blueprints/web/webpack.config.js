@@ -4,32 +4,6 @@ const webpack = require('webpack');
 
 module.exports = {
     entry: {
-        /*
-
-        registration: path.resolve(__dirname, 'static_src/registration.js'),
-        login: path.resolve(__dirname, 'static_src/login.js'),
-
-        about: path.resolve(__dirname, 'static_src/about.js'),
-
-        profile: path.resolve(__dirname, 'static_src/profile.js'),
-        userList: path.resolve(__dirname, 'static_src/userList.js'),
-        friendList: path.resolve(__dirname, 'static_src/friendList.js'),
-
-        blogList: path.resolve(__dirname, 'static_src/blogList.js'),
-        blogDetail: path.resolve(__dirname, 'static_src/blogDetail.js'),
-        myBlogList: path.resolve(__dirname, 'static_src/myBlogList.js'),
-        myBlogDetail: path.resolve(__dirname, 'static_src/myBlogDetail.js'),
-        blogEdit: path.resolve(__dirname, 'static_src/blogEdit.js'),
-
-        postEdit: path.resolve(__dirname, 'static_src/postEdit.js'),
-        postDetail: path.resolve(__dirname, 'static_src/postDetail.js'),
-
-        chatPrivate: path.resolve(__dirname, 'static_src/chatPrivate.js'),
-        chatList: path.resolve(__dirname, 'static_src/chatList.js'),
-
-        */
-
-
         updated: path.resolve(__dirname, 'static_src/updated.js'),
     },
     output: {

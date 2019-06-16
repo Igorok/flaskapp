@@ -2,9 +2,10 @@ import React from 'react'
 import { connect } from 'react-redux'
 import {graphql} from '../helpers/action'
 import {AlertMessage} from '../helpers/component'
+import { Link } from 'react-router-dom';
 
 
-class LoginComp extends React.Component {
+class RegistrationComp extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -40,14 +41,6 @@ class LoginComp extends React.Component {
             password: this.state.password,
             confirmPassword: this.state.confirmPassword,
         }));
-    }
-
-    componentDidUpdate () {
-        if (this.props.registration.status === 'success') {
-            setTimeout(() => {
-                return window.location = '/login';
-            }, 1000);
-        }
     }
 
     fieldChange (e) {
@@ -135,7 +128,7 @@ class LoginComp extends React.Component {
                         </form>
                         <br />
                         <p className='text-center'>
-                            <a href='/login'>Login</a>
+                            <Link to='/login'>Login</Link>
                         </p>
 
                     </div>
@@ -145,8 +138,11 @@ class LoginComp extends React.Component {
     }
 }
 const mapStateToProps = (state) => {
-    return {...state}
+    return Object.assign({
+        auth: state.auth,
+        registration: state.registration
+    });
 }
-LoginComp = connect(mapStateToProps)(LoginComp)
+RegistrationComp = connect(mapStateToProps)(RegistrationComp)
 
-export default LoginComp
+export default RegistrationComp
