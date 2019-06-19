@@ -1,9 +1,7 @@
-import {forEach} from 'lodash';
-
 let initState = {
-    blogId: window.localParams.blogId ? parseInt(window.localParams.blogId) : null,
-    start: window.localParams.start ? parseInt(window.localParams.start) : 0,
-    perpage: window.localParams.perpage ? parseInt(window.localParams.perpage) : 9,
+    blogId: null,
+    start: 0,
+    perpage: 9,
     count: 0,
     blog: null,
     posts: [],

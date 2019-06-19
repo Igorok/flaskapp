@@ -267,8 +267,12 @@ export class PaginatorLayout extends React.Component {
             let btnText = i + 1;
             let btnVisible = checkVisible(i);
             let btnActive = i * perpage == start;
-            let btnHref = window.location.origin +
-                window.location.pathname +
+            // let btnHref = window.location.origin +
+            //     window.location.pathname +
+            //     "?perpage=" + perpage +
+            //     "&start=" + btnStart;
+
+            let btnHref = window.location.pathname +
                 "?perpage=" + perpage +
                 "&start=" + btnStart;
 

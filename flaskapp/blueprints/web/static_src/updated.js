@@ -23,6 +23,10 @@ import PostListComp from './post/ListComp';
 import PostDetailComp from './post/DetailComp';
 import ProfileComp from './profile/ProfileComp';
 
+import MyBlogListComp from './blog/MyListComp';
+import BlogEditComp from './blog/EditComp';
+import MyPostListComp from './post/MyListComp';
+
 
 const store = configureStore(/* provide initial state if any */)
 
@@ -38,21 +42,30 @@ render(
 
                     <Route 
                         exact path="/login" 
-                        component={ 
-                            layout({comp: LoginComp, forNotAuth: true}) 
-                        }
+                        component={ layout({comp: LoginComp, forNotAuth: true}) }
                     />
                     <Route 
                         exact path="/registration" 
-                        component={ 
-                            layout({comp: RegistrationComp, forNotAuth: true}) 
-                        }
+                        component={ layout({comp: RegistrationComp, forNotAuth: true}) }
                     />
                     <Route 
                         exact path="/profile" 
-                        component={ 
-                            layout({comp: ProfileComp, forAuth: true}) 
-                        }
+                        component={ layout({comp: ProfileComp, forAuth: true}) }
+                    />
+
+                    <Route 
+                        exact path="/my-blogs" 
+                        component={ layout({comp: MyBlogListComp, forAuth: true}) }
+                    />
+                    
+                    <Route 
+                        exact path="/blog-edit/:blogId" 
+                        component={ layout({comp: BlogEditComp, forAuth: true}) }
+                    />
+
+                    <Route 
+                        exact path="/my-blog-detail/:blogId" 
+                        component={ layout({comp: MyPostListComp, forAuth: true}) }
                     />
 
 
@@ -68,13 +81,17 @@ render(
 )
 /*
 
-# @web.route('/profile')
-# def profile():
-#     params = [
-#         {'name': 'page', 'val': 'profile'}
-#     ]
-#     return render_template('view.html', scripts=['profile'], params=params)
+# @web.route('/my-blog-detail/<blogId>')
+# def myBlogDetail(blogId):
+#     params = getParams(['start', 'perpage'], request.args)
+#     params.append({'name': 'page', 'val': 'blog'})
+#     params.append({'name': 'blogId', 'val': blogId})
 
+#     return render_template(
+#         'view.html',
+#         scripts = ['myBlogDetail'],
+#         params = params
+#     )
 
 
 */
@@ -92,38 +109,11 @@ render(
 
 
 
-# @web.route('/my-blogs')
-# def myBlogList():
-#     params = getParams(['start', 'perpage'], request.args)
-#     params.append({'name': 'page', 'val': 'blog'})
-#     return render_template(
-#         'view.html',
-#         scripts = ['myBlogList'],
-#         params = params
-#     )
 
-# @web.route('/blog-edit/<blogId>')
-# def blogEdit(blogId):
-#     return render_template(
-#         'view.html',
-#         scripts = ['blogEdit'],
-#         params = [
-#             {'name': 'blogId', 'val': blogId},
-#             {'name': 'page', 'val': 'blog'}
-#         ]
-#     )
 
-# @web.route('/my-blog-detail/<blogId>')
-# def myBlogDetail(blogId):
-#     params = getParams(['start', 'perpage'], request.args)
-#     params.append({'name': 'page', 'val': 'blog'})
-#     params.append({'name': 'blogId', 'val': blogId})
 
-#     return render_template(
-#         'view.html',
-#         scripts = ['myBlogDetail'],
-#         params = params
-#     )
+
+
 
 # @web.route('/post-edit/<blogId>/<postId>')
 # def postEdit(blogId, postId):

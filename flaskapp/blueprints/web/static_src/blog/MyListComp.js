@@ -1,32 +1,30 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { graphql } from '../helpers/action';
-import {forEach, chunk, map} from 'lodash';
-import {AlertMessage, PaginatorLayout} from '../helpers/component';
+import {chunk, map} from 'lodash';
+import { AlertMessage, PaginatorLayout } from '../helpers/component';
+import {Link} from 'react-router-dom'
+import queryString from 'query-string';
 
-class BlogListComp extends React.Component {
+class MyBlogListComp extends React.Component {
     constructor(props) {
         super(props);
-
+        let search = queryString.parse(this.props.router.location.search);
         this.state = {
-            start: this.props.myBlogList.start,
-            blogs: this.props.myBlogList.blogs,
+            start: search.start || 0,
+            perpage: search.perpage || 9
         }
     }
 
     componentWillMount () {
-        this.props.dispatch(graphql({
-            type: 'MY_BLOG_LIST',
-            start: this.props.myBlogList.start,
-            perpage: this.props.myBlogList.perpage,
-        }));
+        this.changePage();
     }
 
-    changePage (start = 0) {
+    changePage (start = this.state.start) {
         this.props.dispatch(graphql({
             type: 'MY_BLOG_LIST',
             start: start,
-            perpage: this.props.myBlogList.perpage,
+            perpage: this.state.perpage,
         }));
     }
     /**
@@ -71,9 +69,9 @@ class BlogListComp extends React.Component {
                     <div className="card">
                         <div className="card-header">
                             <h5>
-                                <a href = {"/my-blog-detail/" + blog.id}>
+                                <Link to = {"/my-blog-detail/" + blog.id}>
                                     {blog.title}
-                                </a>
+                                </Link>
                             </h5>
                         </div>
                         <div className="card-body">
@@ -89,17 +87,17 @@ class BlogListComp extends React.Component {
                                 {blog.date}
                             </p>
                             <p>
-                                <a href={"/blog-edit/" + blog.id} className="btn btn-primary">
+                                <Link to={"/blog-edit/" + blog.id} className="btn btn-primary">
                                     <i class="fa fa-pencil"></i>&nbsp;
                                     Edit
-                                </a>
+                                </Link>
                                 &nbsp;
                                 {hideBtn}
                                 &nbsp;
-                                <a href={"/post-edit/" + blog.id + "/-1"} className="btn btn-primary">
+                                <Link to={"/post-edit/" + blog.id + "/-1"} className="btn btn-primary">
                                     <i class="fa fa-plus"></i>&nbsp;
                                     Add post
-                                </a>
+                                </Link>
                             </p>
                         </div>
                     </div>
@@ -134,8 +132,8 @@ class BlogListComp extends React.Component {
         }
 
         let pagerParam = {
-            start: this.props.myBlogList.start,
-            perpage: this.props.myBlogList.perpage,
+            start: this.state.start,
+            perpage: this.state.perpage,
             count: this.props.myBlogList.count,
             items: this.getBlogItems(),
             changePage: ::this.changePage,
@@ -146,7 +144,7 @@ class BlogListComp extends React.Component {
             <AlertMessage opts={alertOpts} />
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
-                    <li className="breadcrumb-item"><a href="/profile">Profile</a></li>
+                    <li className="breadcrumb-item"><Link to="/profile">Profile</Link></li>
                     <li className="breadcrumb-item active">My blogs</li>
                 </ol>
             </nav>
@@ -156,8 +154,12 @@ class BlogListComp extends React.Component {
     }
 }
 const mapStateToProps = (state) => {
-    return {...state}
+    return Object.assign({
+        router: state.router,
+        auth: state.auth,
+        myBlogList: state.myBlogList,
+    });
 }
-BlogListComp = connect(mapStateToProps)(BlogListComp)
+MyBlogListComp = connect(mapStateToProps)(MyBlogListComp)
 
-export default BlogListComp
+export default MyBlogListComp

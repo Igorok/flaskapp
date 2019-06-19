@@ -1,6 +1,6 @@
-let blogId = window.localParams.blogId || '-1';
+
 let initState = {
-    id: parseInt(blogId),
+    id: null,
     user_id: 0,
     user_name: '',
     title: '',

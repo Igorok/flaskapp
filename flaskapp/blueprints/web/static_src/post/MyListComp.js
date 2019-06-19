@@ -1,68 +1,73 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { graphql } from '../helpers/action';
-import {forEach, chunk, map} from 'lodash';
+import { chunk, map } from 'lodash';
 import {AlertMessage, PaginatorLayout} from '../helpers/component';
+import { Link } from 'react-router-dom';
+import queryString from 'query-string';
 
 class BlogComp extends React.Component {
     render () {
-        var self = this;
         var tpl = null;
-        if (this.props.blog) {
-            let hideBtn = null;
-            function pubBlog (e) {
-                e.preventDefault();
-                return self.props.publicBlog({
-                    id: self.props.blog.id,
-                    public: ! self.props.blog.public
-                });
-            }
-            if (this.props.blog.public) {
-                hideBtn = <btn className="btn btn-primary" onClick={pubBlog} data-id={this.props.blog.id}>
-                    <i class="fa fa-eye-slash"></i>&nbsp;
-                    Hide
-                </btn>
-            } else {
-                hideBtn = <btn className="btn btn-primary" onClick={pubBlog} data-id={this.props.blog.id}>
-                    <i class="fa fa-eye"></i>&nbsp;
-                    Show
-                </btn>
-            }
-
-            tpl = <div>
-                <div className="card">
-                    <div className="card-header">
-                        <h5>{this.props.blog.title}</h5>
-                    </div>
-                    <div className="card-body">
-                        <div dangerouslySetInnerHTML={{__html: this.props.blog.text}} />
-                    </div>
-                    <div className="card-footer">
-                        <p>
-                            <i class="fa fa-user"></i>&nbsp;
-                            {this.props.blog.userName}
-                            &nbsp;|&nbsp;
-                            <i class="fa fa-clock-o"></i>&nbsp;
-                            {this.props.blog.date}
-                        </p>
-                        <p>
-                            <a href={"/blog-edit/" + this.props.blog.id} className="btn btn-primary">
-                                <i class="fa fa-pencil"></i>&nbsp;
-                                Edit
-                            </a>
-                            &nbsp;
-                            {hideBtn}
-                            &nbsp;
-                            <a href={"/post-edit/" + this.props.blog.id + "/-1"} className="btn btn-primary">
-                                <i class="fa fa-plus"></i>&nbsp;
-                                Add post
-                            </a>
-                        </p>
-                    </div>
-                </div>
-                <br />
-            </div>
+        if (! this.props.blog) {
+            return null;
         }
+
+        let hideBtn = null;
+        function pubBlog (e) {
+            e.preventDefault();
+            return this.props.publicBlog({
+                id: this.props.blog.id,
+                public: ! this.props.blog.public
+            });
+        }
+
+        if (this.props.blog.public) {
+            hideBtn = <btn className="btn btn-primary" onClick={pubBlog} data-id={this.props.blog.id}>
+                <i class="fa fa-eye-slash"></i>&nbsp;
+                Hide
+            </btn>
+        } else {
+            hideBtn = <btn className="btn btn-primary" onClick={pubBlog} data-id={this.props.blog.id}>
+                <i class="fa fa-eye"></i>&nbsp;
+                Show
+            </btn>
+        }
+
+        tpl = <div>
+            <div className="card">
+                <div className="card-header">
+                    <h5>{this.props.blog.title}</h5>
+                </div>
+                <div className="card-body">
+                    <div dangerouslySetInnerHTML={{__html: this.props.blog.text}} />
+                </div>
+                <div className="card-footer">
+                    <p>
+                        <i class="fa fa-user"></i>&nbsp;
+                        {this.props.blog.userName}
+                        &nbsp;|&nbsp;
+                        <i class="fa fa-clock-o"></i>&nbsp;
+                        {this.props.blog.date}
+                    </p>
+                    <p>
+                        <Link to={"/blog-edit/" + this.props.blog.id} className="btn btn-primary">
+                            <i class="fa fa-pencil"></i>&nbsp;
+                            Edit
+                        </Link>
+                        &nbsp;
+                        {hideBtn}
+                        &nbsp;
+                        <Link to={"/post-edit/" + this.props.blog.id + "/-1"} className="btn btn-primary">
+                            <i class="fa fa-plus"></i>&nbsp;
+                            Add post
+                        </Link>
+                    </p>
+                </div>
+            </div>
+            <br />
+        </div>
+
         return tpl;
     }
 }
@@ -71,14 +76,14 @@ class BlogComp extends React.Component {
 
 
 
-class MyListComp extends React.Component {
+class MyPostListComp extends React.Component {
     constructor(props) {
         super(props);
 
+        let search = queryString.parse(this.props.router.location.search);
         this.state = {
-            start: this.props.myPostList.start,
-            blog: this.props.myPostList.blog,
-            posts: this.props.myPostList.posts,
+            start: search.start || 0,
+            perpage: search.perpage || 9
         }
     }
 
@@ -86,12 +91,12 @@ class MyListComp extends React.Component {
         this.changePage();
     }
 
-    changePage (start = 0) {
+    changePage (start = this.state.start) {
         this.props.dispatch(graphql({
             type: 'MY_BLOG_DETAIL',
             start: start,
-            perpage: this.props.myPostList.perpage,
-            blogId: this.props.myPostList.blogId,
+            perpage: this.state.perpage || 9,
+            blogId: this.props.blogId,
         }));
     }
 
@@ -109,10 +114,9 @@ class MyListComp extends React.Component {
     }
 
     getPostItems () {
-        var self = this;
         if (
-            ! self.props.myPostList.posts ||
-            ! self.props.myPostList.posts.length
+            ! this.props.myPostList.posts ||
+            ! this.props.myPostList.posts.length
         ) {
             return null;
         }
@@ -124,9 +128,9 @@ class MyListComp extends React.Component {
                     <div className="card">
                         <div className="card-header">
                             <h5>
-                                <a href = {"/post-edit/" + self.props.myPostList.blog.id + "/" + post.id}>
+                                <Link to = {"/post-edit/" + this.props.myPostList.blog.id + "/" + post.id}>
                                     {post.title}
-                                </a>
+                                </Link>
                             </h5>
                         </div>
                         <div className="card-body">
@@ -170,8 +174,8 @@ class MyListComp extends React.Component {
         }
 
        let pagerParam = {
-            start: this.props.myPostList.start,
-            perpage: this.props.myPostList.perpage,
+            start: this.state.start || 0,
+            perpage: this.state.perpage || 9,
             count: this.props.myPostList.count,
             items: this.getPostItems(),
             changePage: ::this.changePage,
@@ -181,8 +185,8 @@ class MyListComp extends React.Component {
             <AlertMessage opts={alertOpts} />
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
-                    <li className="breadcrumb-item"><a href="/profile">Profile</a></li>
-                    <li className="breadcrumb-item"><a href="/my-blogs">My blogs</a></li>
+                    <li className="breadcrumb-item"><Link to="/profile">Profile</Link></li>
+                    <li className="breadcrumb-item"><Link to="/my-blogs">My blogs</Link></li>
                     <li className="breadcrumb-item active">{this.props.myPostList.blog ? this.props.myPostList.blog.title : null}</li>
                 </ol>
             </nav>
@@ -193,8 +197,12 @@ class MyListComp extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-    return {...state}
+    return Object.assign({
+        router: state.router,
+        auth: state.auth,
+        myPostList: state.myPostList,
+    });
 }
-MyListComp = connect(mapStateToProps)(MyListComp)
+MyPostListComp = connect(mapStateToProps)(MyPostListComp)
 
-export default MyListComp
+export default MyPostListComp

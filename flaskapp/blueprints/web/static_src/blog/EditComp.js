@@ -1,18 +1,25 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import {api, graphql} from '../helpers/action'
-import {AlertMessage} from '../helpers/component'
+import { graphql } from '../helpers/action'
+import { AlertMessage } from '../helpers/component'
+import { Link } from 'react-router-dom';
 
 
-class EditComp extends React.Component {
+class BlogEditComp extends React.Component {
     constructor(props) {
         super(props);
         this.state = {...props.blogEdit};
+        this.state.id = this.props.blogId;
     }
 
     componentWillMount () {
-        if (this.state.id === -1) {
-            return;
+        if (parseInt(this.state.id) === -1) {
+            return this.setState({
+                title: null,
+                text: null,
+                public: null,
+                date: null
+            });
         }
 
         this.props.dispatch(graphql({
@@ -77,16 +84,13 @@ class EditComp extends React.Component {
                 className: 'success',
                 text: 'Blog saved successfully',
             }
-            setTimeout(() => {
-                window.location = '/blog-edit/' + this.props.blogEdit.id;
-            }, 1000)
         }
 
         return <div>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
-                    <li className="breadcrumb-item"><a href="/profile">Profile</a></li>
-                    <li className="breadcrumb-item"><a href="/my-blogs">My blogs</a></li>
+                    <li className="breadcrumb-item"><Link to="/profile">Profile</Link></li>
+                    <li className="breadcrumb-item"><Link to="/my-blogs">My blogs</Link></li>
                     <li className="breadcrumb-item active">{this.state.title ? this.state.title : 'Edit blog'}</li>
                 </ol>
             </nav>
@@ -151,7 +155,10 @@ class EditComp extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-    return {...state}
+    return Object.assign({
+        auth: state.auth,
+        blogEdit: state.blogEdit,
+    });
 }
-EditComp = connect(mapStateToProps)(EditComp)
-export default EditComp
+BlogEditComp = connect(mapStateToProps)(BlogEditComp)
+export default BlogEditComp

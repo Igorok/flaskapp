@@ -1,8 +1,9 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
-import {api, graphql} from '../helpers/action'
-import {AlertMessage} from '../helpers/component'
+import { graphql } from '../helpers/action'
+import { AlertMessage } from '../helpers/component'
+import { Link } from 'react-router-dom';
 
 
 class NumInfo extends React.Component {
@@ -11,7 +12,7 @@ class NumInfo extends React.Component {
             <div className="col-sm">
                 <div className="card">
                     <div className="card-header">
-                        <a href="/my-blogs">My blogs</a>
+                        <Link to="/my-blogs">My blogs</Link>
                     </div>
                     <div className="card-body">
                         {this.props.profile.countBlogs}
@@ -22,7 +23,7 @@ class NumInfo extends React.Component {
             <div className="col-sm">
                 <div className="card">
                     <div className="card-header">
-                        <a href="/friends">My friends</a>
+                        <Link to="/friends">My friends</Link>
                     </div>
                     <div className="card-body">
                         Friends : {this.props.profile.friends}
@@ -38,7 +39,7 @@ class NumInfo extends React.Component {
             <div className="col-sm">
                 <div className="card">
                     <div className="card-header">
-                        <a href="/chat-list">My chats</a>
+                        <Link to="/chat-list">My chats</Link>
                     </div>
                     <div className="card-body">
                         {this.props.profile.countChats}
@@ -201,10 +202,10 @@ class ProfileComp extends React.Component {
     }
 }
 const mapStateToProps = (state) => {
-    return {
+    return Object.assign({
         auth: state.auth,
         profile: state.profile
-    }
+    });
 }
 ProfileComp = connect(mapStateToProps)(ProfileComp)
 
