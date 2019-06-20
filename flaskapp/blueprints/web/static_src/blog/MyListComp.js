@@ -12,7 +12,7 @@ class MyBlogListComp extends React.Component {
         let search = queryString.parse(this.props.router.location.search);
         this.state = {
             start: search.start || 0,
-            perpage: search.perpage || 9
+            perpage: search.perpage || 3
         }
     }
 
@@ -26,6 +26,7 @@ class MyBlogListComp extends React.Component {
             start: start,
             perpage: this.state.perpage,
         }));
+        this.setState({start: start})
     }
     /**
      * make the blog public or hidden

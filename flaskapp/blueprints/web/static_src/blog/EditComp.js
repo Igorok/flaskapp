@@ -62,7 +62,7 @@ class BlogEditComp extends React.Component {
             id: this.state.id,
             title: this.state.title,
             text: this.state.text,
-            public: this.state.public,
+            public: !! this.state.public,
         }));
     }
 
