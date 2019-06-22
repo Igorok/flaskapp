@@ -28,6 +28,7 @@ class BlogEditComp extends React.Component {
         }));
 
     }
+
     componentWillReceiveProps(nextProps) {
         if (nextProps.blogEdit.status == 'success_get') {
             this.setState({
@@ -36,8 +37,9 @@ class BlogEditComp extends React.Component {
                 public: nextProps.blogEdit.public,
                 date: nextProps.blogEdit.date,
             });
+        } else if (nextProps.blogEdit.status == 'success_edit') {
+            this.setState({id: nextProps.blogEdit.id})
         }
-
     }
 
     fieldChange (e) {
@@ -68,7 +70,6 @@ class BlogEditComp extends React.Component {
 
     render () {
         let alertOpts = null;
-
         if (this.props.blogEdit.status === 'error') {
             alertOpts = {
                 className: 'danger',
@@ -155,10 +156,10 @@ class BlogEditComp extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-    return Object.assign({
+    return {
         auth: state.auth,
         blogEdit: state.blogEdit,
-    });
+    };
 }
 BlogEditComp = connect(mapStateToProps)(BlogEditComp)
 export default BlogEditComp

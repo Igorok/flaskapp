@@ -26,6 +26,7 @@ import ProfileComp from './profile/ProfileComp';
 import MyBlogListComp from './blog/MyListComp';
 import BlogEditComp from './blog/EditComp';
 import MyPostListComp from './post/MyListComp';
+import PostEditComp from './post/EditComp';
 
 
 const store = configureStore(/* provide initial state if any */)
@@ -68,6 +69,11 @@ render(
                         component={ layout({comp: MyPostListComp, forAuth: true}) }
                     />
 
+                    <Route 
+                        exact path="/post-edit/:blogId/:postId" 
+                        component={ layout({comp: PostEditComp, forAuth: true}) }
+                    />
+
 
                     
                     <Route render={ () => {
@@ -80,18 +86,6 @@ render(
     document.getElementById('root')
 )
 /*
-
-# @web.route('/my-blog-detail/<blogId>')
-# def myBlogDetail(blogId):
-#     params = getParams(['start', 'perpage'], request.args)
-#     params.append({'name': 'page', 'val': 'blog'})
-#     params.append({'name': 'blogId', 'val': blogId})
-
-#     return render_template(
-#         'view.html',
-#         scripts = ['myBlogDetail'],
-#         params = params
-#     )
 
 
 */
@@ -115,17 +109,7 @@ render(
 
 
 
-# @web.route('/post-edit/<blogId>/<postId>')
-# def postEdit(blogId, postId):
-#     return render_template(
-#         'view.html',
-#         scripts = ['postEdit'],
-#         params = [
-#             {'name': 'blogId', 'val': blogId},
-#             {'name': 'postId', 'val': postId},
-#             {'name': 'page', 'val': 'blog'}
-#         ]
-#     )
+
 
 
 

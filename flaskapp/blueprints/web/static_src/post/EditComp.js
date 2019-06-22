@@ -1,18 +1,23 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import {api, graphql} from '../helpers/action'
+import { graphql} from '../helpers/action'
 import {AlertMessage} from '../helpers/component'
 
 import { EditorState, convertToRaw, ContentState } from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
 import htmlToDraft from 'html-to-draftjs';
 import { Editor } from 'react-draft-wysiwyg';
+import { Link } from 'react-router-dom';
 
+import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 
-class EditComp extends React.Component {
+class PostEditComp extends React.Component {
     constructor(props) {
         super(props);
         this.state = {...props.postEdit};
+        this.state.blogId = this.props.blogId;
+        this.state.id = this.props.postId;
+
         this.state.editorState = EditorState.createEmpty();
     }
 
@@ -46,6 +51,10 @@ class EditComp extends React.Component {
                 date: nextProps.postEdit.date,
                 public: nextProps.postEdit.public,
                 editorState: EditorState.createWithContent(content),
+            });
+        } else if (nextProps.postEdit.status == 'success_edit') {
+            this.setState({
+                id: nextProps.postEdit.id
             });
         }
     }
@@ -96,17 +105,14 @@ class EditComp extends React.Component {
                 className: 'success',
                 text: 'Post saved successfully',
             }
-            setTimeout(() => {
-                window.location = `/post-edit/${this.props.postEdit.blogId}/${this.props.postEdit.id}`;
-            }, 1000)
         }
 
         return <div>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
-                    <li className="breadcrumb-item"><a href="/profile">Profile</a></li>
-                    <li className="breadcrumb-item"><a href="/my-blogs">My blogs</a></li>
-                    <li className="breadcrumb-item"><a href={"/my-blog-detail/" + this.props.postEdit.blogId}>Blog</a></li>
+                    <li className="breadcrumb-item"><Link to="/profile">Profile</Link></li>
+                    <li className="breadcrumb-item"><Link to="/my-blogs">My blogs</Link></li>
+                    <li className="breadcrumb-item"><Link to={"/my-blog-detail/" + this.state.blogId}>Blog</Link></li>
                     <li className="breadcrumb-item active">{this.state.title || 'Edit post'}</li>
                 </ol>
             </nav>
@@ -181,7 +187,11 @@ class EditComp extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-    return {...state}
+    return {
+        postEdit: state.postEdit,
+        auth: state.auth,
+        router: state.router
+    }
 }
-EditComp = connect(mapStateToProps)(EditComp)
-export default EditComp
+PostEditComp = connect(mapStateToProps)(PostEditComp)
+export default PostEditComp

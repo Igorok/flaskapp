@@ -9,12 +9,11 @@
 "date" timestamp DEFAULT NULL
 
 */
+import { LOCATION_CHANGE } from 'connected-react-router';
 
-let blogId = window.localParams.blogId;
-let postId = window.localParams.postId || '-1';
 let initState = {
-    id: parseInt(postId),
-    blogId: parseInt(blogId),
+    id: 0,
+    blogId: 0,
     userId: 0,
     userName: '',
     userEmail: '',
@@ -30,17 +29,14 @@ let initState = {
 
 
 const postEdit = (state = initState, action) => {
-    let data = null;
+    let data = Object.assign({state});
 
     switch (action.type) {
         case 'MY_POST_GET_SEND':
-            return {
-                status: 'send',
-                ...state
-            };
+            data.status = 'send';
+            return data;
 
         case 'MY_POST_GET_SUCCESS':
-            data = {...state};
             data.status = 'success_get';
             data.id = action.data.getMyPost.id;
             data.blogId = action.data.getMyPost.blogId;
@@ -55,14 +51,11 @@ const postEdit = (state = initState, action) => {
             return data;
 
         case 'MY_POST_GET_ERROR':
-            return {
-                status: 'error',
-                error: action.error,
-                ...state,
-            };
+            data.status = 'error';
+            data.error = action.error;
+            return data;
 
         case 'POST_EDIT_SEND':
-            data = {...state};
             data.status = 'send';
             data.id = action.id;
             data.blogId = action.blogId;
@@ -73,7 +66,6 @@ const postEdit = (state = initState, action) => {
             return data;
 
         case 'POST_EDIT_SUCCESS':
-            data = {...state};
             data.status = 'success_edit';
             data.id = action.data.editPost.id;
             data.blogId = action.data.editPost.blogId;
@@ -85,14 +77,14 @@ const postEdit = (state = initState, action) => {
             return data;
             
         case 'POST_EDIT_ERROR':
-            data = {...state};
             data.status = 'error';
             data.error = action.error;
             return data;
 
-
+        case LOCATION_CHANGE:
+            return Object.assign({initState});
         default:
-            return state
+            return data;
     }
 }
 

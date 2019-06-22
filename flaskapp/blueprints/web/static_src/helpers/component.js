@@ -191,7 +191,7 @@ export const layout = opts => {
         render() {
             return <div class='container-fluid'>
                 <Header auth={this.props.auth} logout={::this.logout} />
-                <Component {...this.props.match.params} />
+                <Component {...this.props.match.params} history={ this.props.history } />
             </div>
         }
     }
