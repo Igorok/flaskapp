@@ -102,38 +102,3 @@ render(
     </Provider>,
     document.getElementById('root')
 );
-
-
-/*
-
-# @web.route('/chat-private/<friendId>')
-# def chatPrivate(friendId):
-#     params = [
-#         {'name': 'page', 'val': 'chatList'},
-#         {'name': 'friendId', 'val': friendId}
-#     ]
-#     return render_template(
-#         'view.html',
-#         scripts = ['chatPrivate'],
-#         params = params
-#     )
-
-# @web.route('/chat-list')
-# def chatList():
-#     params = [
-#         {'name': 'page', 'val': 'chatList'}
-#     ]
-#     return render_template(
-#         'view.html',
-#         scripts = ['chatList'],
-#         params = params
-#     )
-
-
-*/
-
-
-
-
-
-

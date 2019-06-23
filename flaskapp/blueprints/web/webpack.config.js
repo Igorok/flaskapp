@@ -45,7 +45,7 @@ module.exports = {
                     loader: 'babel-loader',
                     options: {
                         presets: [
-                            '@babel/preset-env', 
+                            '@babel/preset-env',
                             '@babel/preset-react',
                         ],
                         plugins: [
@@ -61,7 +61,7 @@ module.exports = {
     plugins: [
         new webpack.optimize.OccurrenceOrderPlugin(),
         new webpack.NoEmitOnErrorsPlugin(),
-        
+
         new webpack.ProvidePlugin({
             $: "jquery",
             jQuery: "jquery",
@@ -84,11 +84,10 @@ module.exports = {
         //     sourceMap: true
         // })
     ],
-    // devtool: cfg.prod ? 'source-map' : 'cheap-module-eval-source-map',
-    // watch: ! cfg.prod,
+    devtool: 'source-map',
 
-    devtool: 'eval-source-map',
-    watch: true,
+    // devtool: 'eval-source-map',
+    // watch: true,
 
 
     watchOptions: {

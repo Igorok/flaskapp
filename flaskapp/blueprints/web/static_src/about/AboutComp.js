@@ -1,6 +1,4 @@
 import React from 'react';
-import 'jquery';
-import 'bootstrap/dist/js/bootstrap';
 
 class AboutComp extends React.Component {
     constructor(props) {
