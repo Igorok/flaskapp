@@ -8,6 +8,8 @@ def getChat(socketio):
 
     @socketio.on('joinPrivateGroup')
     def joinPrivateGroup(data):
+        print('joinPrivateGroup', data)
+
         cm = ChatModel()
         prGr = cm.joinPrivateGroup(**data)
         join_room(prGr['id'])

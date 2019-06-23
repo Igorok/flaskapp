@@ -12,7 +12,7 @@ class MyBlogListComp extends React.Component {
         let search = queryString.parse(this.props.router.location.search);
         this.state = {
             start: search.start || 0,
-            perpage: search.perpage || 3
+            perpage: search.perpage || 6
         }
     }
 

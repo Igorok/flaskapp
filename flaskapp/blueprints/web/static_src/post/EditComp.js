@@ -22,7 +22,7 @@ class PostEditComp extends React.Component {
     }
 
     componentWillMount () {
-        if (this.state.id === -1) {
+        if (this.state.id == -1) {
             return;
         }
 

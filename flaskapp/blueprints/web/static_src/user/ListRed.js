@@ -1,15 +1,15 @@
 import {forEach} from 'lodash';
 let initState = {
-    userId: window.localParams.userId ? parseInt(window.localParams.userId) : null,
-    start: window.localParams.start ? parseInt(window.localParams.start) : 0,
-    perpage: window.localParams.perpage ? parseInt(window.localParams.perpage) : 9,
+    userId: 0,
+    start: 0,
+    perpage: 0,
     users: [],
     count: 0,
     status: null,
     error: null,
 };
 const userList = (state = initState, action) => {
-    let data = {...state};
+    let data = Object.assign({...state});
     switch (action.type) {
         case 'USER_LIST_SEND':
             data.start = action.start;
@@ -56,7 +56,7 @@ const userList = (state = initState, action) => {
             return data;
 
         default:
-            return state
+            return data
     }
 }
 

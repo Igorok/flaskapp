@@ -29,7 +29,7 @@ let initState = {
 
 
 const postEdit = (state = initState, action) => {
-    let data = Object.assign({state});
+    let data = Object.assign({...state});
 
     switch (action.type) {
         case 'MY_POST_GET_SEND':
@@ -75,14 +75,14 @@ const postEdit = (state = initState, action) => {
             data.date = action.data.editPost.date;
             data.public = action.data.editPost.public;
             return data;
-            
+
         case 'POST_EDIT_ERROR':
             data.status = 'error';
             data.error = action.error;
             return data;
 
         case LOCATION_CHANGE:
-            return Object.assign({initState});
+            return Object.assign({...initState});
         default:
             return data;
     }

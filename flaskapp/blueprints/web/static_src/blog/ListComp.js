@@ -13,7 +13,7 @@ class BlogListComp extends React.Component {
         let search = queryString.parse(this.props.router.location.search);
         this.state = {
             start: search.start || 0,
-            perpage: search.perpage || 9
+            perpage: search.perpage || 6
         }
     }
 
@@ -21,12 +21,13 @@ class BlogListComp extends React.Component {
         this.changePage();
     }
 
-    changePage () {
+    changePage (start = this.state.start) {
         this.props.dispatch(graphql({
             type: 'BLOG_LIST',
-            start: this.state.start,
+            start: start,
             perpage: this.state.perpage,
         }));
+        this.setState({start: start});
     }
 
     getBlogItems () {

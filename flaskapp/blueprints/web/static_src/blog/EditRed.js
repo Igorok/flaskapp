@@ -12,7 +12,7 @@ let initState = {
 };
 
 const blogEdit = (state = initState, action) => {
-    let data = Object.assign({state});
+    let data = Object.assign({...state});
 
     switch (action.type) {
         case 'BLOG_GET_SEND':
@@ -57,7 +57,7 @@ const blogEdit = (state = initState, action) => {
             return data;
 
         case LOCATION_CHANGE:
-            return Object.assign({initState});
+            return Object.assign({...initState});
 
         default:
             return data;

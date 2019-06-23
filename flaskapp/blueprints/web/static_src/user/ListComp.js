@@ -3,7 +3,9 @@ import { connect } from 'react-redux';
 import { graphql } from '../helpers/action';
 import {map, isNumber} from 'lodash';
 import {AlertMessage, PaginatorLayout} from '../helpers/component';
-import {UserRemoveModal, UserApproveModal} from './UserModal';
+import { UserRemoveModal, UserApproveModal } from './UserModal';
+import queryString from 'query-string';
+import { Link } from 'react-router-dom';
 
 // one user row
 class UserItemComp extends React.Component {
@@ -39,11 +41,11 @@ class UserItemComp extends React.Component {
                 &nbsp;
                 Remove from friends
             </button>
-            msgBtn = <a className="btn btn-primary" href={"/chat-private/" + this.props.user.id}>
+            msgBtn = <Link to={"/chat-private/" + this.props.user.id} className="btn btn-primary" >
                 <i class="fa fa-envelope"></i>
                 &nbsp;
                 Send message
-            </a>
+            </Link>
         }
         // if this row sended request to current user
         else if (this.props.user.selfFriendId !== null) {
@@ -86,7 +88,7 @@ class UserItemComp extends React.Component {
             </td>
         </tr>
     }
-}
+};
 
 // list of users
 class UserListComp extends React.Component {
@@ -94,23 +96,27 @@ class UserListComp extends React.Component {
         super(props);
 
         this.state = {
-            start: this.props.userList.start,
             users: this.props.userList.users,
             addUsr: null,
             rmUsr: null
         }
+
+        let search = queryString.parse(this.props.router.location.search);
+        this.state.start = search.start || 0;
+        this.state.perpage = search.perpage || 6;
     }
 
     componentWillMount () {
-        this.changePage(this.props.userList.start);
+        this.changePage();
     }
 
-    changePage (start = 0) {
+    changePage (start = this.state.start) {
         this.props.dispatch(graphql({
             type: 'USER_LIST',
             start: start,
-            perpage: this.props.userList.perpage,
+            perpage: this.state.perpage,
         }));
+        this.setState({start})
     }
 
     showAdd (u) {
@@ -144,29 +150,19 @@ class UserListComp extends React.Component {
     }
 
     getUserItems () {
-        const items = map(this.props.userList.users, user => {
-            return <UserItemComp
-                user={user}
-                showAdd={::this.showAdd}
-                showRemove={::this.showRemove}
-                />
-        });
-
-        return <div>
-            <div className="card">
-                <div className="card-header">
-                    <h5>Users</h5>
-                </div>
-                <div className="card-body">
-                    <table className="table table-hover user-table">
-                        <tbody>
-                            {items}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <br />
-        </div>
+        return <table className="table table-hover user-table">
+            <tbody>
+            {
+                map(this.props.userList.users, user => {
+                    return <UserItemComp
+                        user={user}
+                        showAdd={::this.showAdd}
+                        showRemove={::this.showRemove}
+                    />
+                })
+            }
+            </tbody>
+        </table>
     }
 
     render () {
@@ -186,16 +182,26 @@ class UserListComp extends React.Component {
         }
 
         let pagerParam = {
-            start: this.props.userList.start,
-            perpage: this.props.userList.perpage,
+            start: this.state.start,
+            perpage: this.state.perpage,
             count: this.props.userList.count,
             items: this.getUserItems(),
             changePage: ::this.changePage,
         };
 
         return <div>
-            <AlertMessage opts={alertOpts} />
-            <PaginatorLayout param={pagerParam} />
+            <div className="card">
+                <div className="card-header">
+                    <h5>Users</h5>
+                </div>
+                <div className="card-body" style={{minHeight: '500px'}}>
+                    <AlertMessage opts={alertOpts} />
+
+                    <PaginatorLayout param={pagerParam} />
+                </div>
+            </div>
+            <br />
+
             <UserApproveModal
                 user={this.state.addUsr}
                 cancelAdd={::this.cancelAdd}
@@ -211,7 +217,11 @@ class UserListComp extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-    return {...state}
+    return {
+        auth: state.auth,
+        userList: state.userList,
+        router: state.router
+    }
 }
 UserListComp = connect(mapStateToProps)(UserListComp)
 

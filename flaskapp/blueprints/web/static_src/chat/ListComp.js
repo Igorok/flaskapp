@@ -4,49 +4,53 @@ import { graphql } from '../helpers/action';
 import { map } from 'lodash';
 import { AlertMessage, PaginatorLayout } from '../helpers/component';
 
+import { Link } from 'react-router-dom';
+import queryString from 'query-string';
+
 class ChatListComp extends React.Component {
-    componentWillMount () {
-        this.changePage(this.props.chatList.start)
+    constructor(props) {
+        super(props);
+
+        let search = queryString.parse(this.props.router.location.search);
+        this.state = {
+            start: search.start || 0,
+            perpage: search.perpage || 6
+        }
     }
 
-    changePage (start = 0) {
+    componentWillMount () {
+        this.changePage()
+    }
+
+    changePage (start = this.state.start) {
         this.props.dispatch(graphql({
             type: 'CHAT_LIST',
             start: start,
-            perpage: this.props.chatList.perpage,
+            perpage: this.state.perpage,
         }));
+        this.setState({start})
     }
 
     getChatItems() {
-        let items = map(this.props.chatList.chatPrivate, (chat) => {
-            return <tr>
-                <td>
-                    {chat.userLogin}, {chat.friendLogin}
-                </td>
-                <td className="text-right">
-                    <a href={"/chat-private/" + chat.linkId} className="btn btn-primary" >
-                        <i class="fa fa-envelope"></i>&nbsp;
-                        Send message
-                    </a>
-                </td>
-            </tr>
-        });
-
-        return <div>
-            <div className="card">
-                <div className="card-header">
-                    <h5>Chats</h5>
-                </div>
-                <div className="card-body">
-                    <table className="table">
-                        <tbody>
-                            {items}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <br />
-        </div>
+        return <table className="table">
+            <tbody>
+            {
+                map(this.props.chatList.chatPrivate, (chat) => {
+                    return <tr>
+                        <td>
+                            {chat.userLogin}, {chat.friendLogin}
+                        </td>
+                        <td className="text-right">
+                            <Link to={"/chat-private/" + chat.linkId} className="btn btn-primary" >
+                                <i class="fa fa-envelope"></i>&nbsp;
+                                Send message
+                            </Link>
+                        </td>
+                    </tr>
+                })
+            }
+            </tbody>
+        </table>
     }
 
     render () {
@@ -64,24 +68,41 @@ class ChatListComp extends React.Component {
             }
         }
 
-
         let pagerParam = {
-            start: this.props.chatList.start,
-            perpage: this.props.chatList.perpage,
+            start: this.state.start,
+            perpage: this.state.perpage,
             count: this.props.chatList.count,
             items: this.getChatItems(),
             changePage: ::this.changePage,
         };
 
         return <div>
-            <AlertMessage opts={alertOpts} />
-            <PaginatorLayout param={pagerParam} />
+            <div className="card">
+                <div className="card-header">
+                    <h5>Chats</h5>
+                </div>
+                <div className="card-body" style={{ minHeight: '500px' }}>
+                    <AlertMessage opts={alertOpts} />
+                    <table className="table">
+                        <tbody>
+                            <PaginatorLayout param={pagerParam} />
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <br />
+
+
         </div>
     }
 }
 
 const mapStateToProps = (state) => {
-    return {...state}
+    return {
+        chatList: state.chatList,
+        auth: state.auth,
+        router: state.router
+    }
 }
 ChatListComp = connect(mapStateToProps)(ChatListComp)
 

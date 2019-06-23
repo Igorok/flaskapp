@@ -1,7 +1,7 @@
 import {remove} from 'lodash';
 let initState = {
-    start: window.localParams.start ? parseInt(window.localParams.start) : 0,
-    perpage: window.localParams.perpage ? parseInt(window.localParams.perpage) : 9,
+    start: 0,
+    perpage: 0,
     friends: [],
     count: 0,
     status: null,
@@ -10,7 +10,7 @@ let initState = {
 
 const friendList = (state = initState, action) => {
 
-    let data = {...state};
+    let data = Object.assign({...state});
     switch (action.type) {
         case 'FRIEND_LIST_SEND':
             data.start = action.start;
@@ -38,9 +38,9 @@ const friendList = (state = initState, action) => {
         case 'FRIEND_REMOVE_ERROR':
             data.status = 'error';
             return data;
-            
+
         default:
-            return state
+            return data
     }
 }
 

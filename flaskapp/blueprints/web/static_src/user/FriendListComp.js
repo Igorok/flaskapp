@@ -4,7 +4,8 @@ import { graphql } from '../helpers/action';
 import {map, isNumber} from 'lodash';
 import {AlertMessage, PaginatorLayout} from '../helpers/component';
 import {UserRemoveModal, UserApproveModal} from './UserModal';
-
+import queryString from 'query-string';
+import { Link } from 'react-router-dom';
 
 // one user row
 class UserItemComp extends React.Component {
@@ -27,11 +28,11 @@ class UserItemComp extends React.Component {
                 &nbsp;
                 Remove from friends
             </button>
-            msgBtn = <a className="btn btn-primary" href={"/chat-private/" + this.props.user.id}>
+            msgBtn = <Link to={"/chat-private/" + this.props.user.id} className="btn btn-primary" >
                 <i class="fa fa-envelope"></i>
                 &nbsp;
                 Send message
-            </a>
+            </Link>
         } else {
             friendBtn = <button className="btn btn-primary" >
                 <i class="fa fa-plus"></i>
@@ -66,21 +67,24 @@ class FriendListComp extends React.Component {
         super(props);
 
         this.state = {
-            start: this.props.friendList.start,
             friends: this.props.friendList.friends,
             rmUsr: null
         }
+
+        let search = queryString.parse(this.props.router.location.search);
+        this.state.start = search.start || 0;
+        this.state.perpage = search.perpage || 6;
     }
 
     componentWillMount () {
-        this.changePage(this.props.friendList.start);
+        this.changePage();
     }
 
-    changePage (start = 0) {
+    changePage (start = this.state.start) {
         this.props.dispatch(graphql({
             type: 'FRIEND_LIST',
             start: start,
-            perpage: this.props.friendList.perpage,
+            perpage: this.state.perpage,
         }));
     }
 
@@ -100,28 +104,18 @@ class FriendListComp extends React.Component {
     }
 
     getUserItems () {
-        const items = map(this.props.friendList.friends, user => {
-            return <UserItemComp
-                user={user}
-                showRemove={::this.showRemove}
-            />
-        });
-
-        return <div>
-            <div className="card">
-                <div className="card-header">
-                    <h5>Friends</h5>
-                </div>
-                <div className="card-body">
-                    <table className="table table-hover user-table">
-                        <tbody>
-                            {items}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <br />
-        </div>
+        return <table className="table table-hover user-table">
+            <tbody>
+            {
+                map(this.props.friendList.friends, user => {
+                    return <UserItemComp
+                        user={user}
+                        showRemove={::this.showRemove}
+                    />
+                })
+            }
+            </tbody>
+        </table>
     }
 
     render () {
@@ -141,16 +135,25 @@ class FriendListComp extends React.Component {
         }
 
         let pagerParam = {
-            start: this.props.friendList.start,
-            perpage: this.props.friendList.perpage,
+            start: this.state.start,
+            perpage: this.state.perpage,
             count: this.props.friendList.count,
             items: this.getUserItems(),
             changePage: ::this.changePage,
         };
 
         return <div>
-            <AlertMessage opts={alertOpts} />
-            <PaginatorLayout param={pagerParam} />
+            <div className="card">
+                <div className="card-header">
+                    <h5>Friends</h5>
+                </div>
+                <div className="card-body" style={{minHeight: '500px'}}>
+                    <AlertMessage opts={alertOpts} />
+                    <PaginatorLayout param={pagerParam} />
+                </div>
+            </div>
+            <br />
+
             <UserRemoveModal
                 user={this.state.rmUsr}
                 cancelRemove={::this.cancelRemove}
@@ -163,7 +166,11 @@ class FriendListComp extends React.Component {
 
 
 const mapStateToProps = (state) => {
-    return {...state}
+    return {
+        auth: state.auth,
+        friendList: state.friendList,
+        router: state.router
+    }
 }
 FriendListComp = connect(mapStateToProps)(FriendListComp)
 

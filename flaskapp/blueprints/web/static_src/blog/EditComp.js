@@ -13,7 +13,7 @@ class BlogEditComp extends React.Component {
     }
 
     componentWillMount () {
-        if (parseInt(this.state.id) === -1) {
+        if (parseInt(this.state.id) == -1) {
             return this.setState({
                 title: null,
                 text: null,

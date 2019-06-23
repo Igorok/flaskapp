@@ -27,6 +27,10 @@ import MyBlogListComp from './blog/MyListComp';
 import BlogEditComp from './blog/EditComp';
 import MyPostListComp from './post/MyListComp';
 import PostEditComp from './post/EditComp';
+import UserListComp from './user/ListComp'
+import FriendListComp from './user/FriendListComp'
+import ChatPrivateComp from './chat/PrivateComp';
+import ChatListComp from './chat/ListComp';
 
 
 const store = configureStore(/* provide initial state if any */)
@@ -41,41 +45,54 @@ render(
                     <Route exact path="/blog/:blogId" component={ layout({comp: PostListComp})} />
                     <Route exact path="/post/:blogId/:postId" component={ layout({comp: PostDetailComp})} />
 
-                    <Route 
-                        exact path="/login" 
+                    <Route
+                        exact path="/login"
                         component={ layout({comp: LoginComp, forNotAuth: true}) }
                     />
-                    <Route 
-                        exact path="/registration" 
+                    <Route
+                        exact path="/registration"
                         component={ layout({comp: RegistrationComp, forNotAuth: true}) }
                     />
-                    <Route 
-                        exact path="/profile" 
+                    <Route
+                        exact path="/profile"
                         component={ layout({comp: ProfileComp, forAuth: true}) }
                     />
-
-                    <Route 
-                        exact path="/my-blogs" 
+                    <Route
+                        exact path="/my-blogs"
                         component={ layout({comp: MyBlogListComp, forAuth: true}) }
                     />
-                    
-                    <Route 
-                        exact path="/blog-edit/:blogId" 
+                    <Route
+                        exact path="/blog-edit/:blogId"
                         component={ layout({comp: BlogEditComp, forAuth: true}) }
                     />
-
-                    <Route 
-                        exact path="/my-blog-detail/:blogId" 
+                    <Route
+                        exact path="/my-blog-detail/:blogId"
                         component={ layout({comp: MyPostListComp, forAuth: true}) }
                     />
-
-                    <Route 
-                        exact path="/post-edit/:blogId/:postId" 
+                    <Route
+                        exact path="/post-edit/:blogId/:postId"
                         component={ layout({comp: PostEditComp, forAuth: true}) }
                     />
 
 
-                    
+                    <Route
+                        exact path="/users"
+                        component={ layout({comp: UserListComp, forAuth: true}) }
+                    />
+                    <Route
+                        exact path="/friends"
+                        component={ layout({comp: FriendListComp, forAuth: true}) }
+                    />
+                    <Route
+                        exact path="/chat-list"
+                        component={ layout({comp: ChatListComp, forAuth: true}) }
+                    />
+                    <Route
+                        exact path="/chat-private/:friendId"
+                        component={ layout({comp: ChatPrivateComp, forAuth: true}) }
+                    />
+
+
                     <Route render={ () => {
                         return <p>Not found</p>
                     }} />
@@ -84,54 +101,10 @@ render(
         </ConnectedRouter>
     </Provider>,
     document.getElementById('root')
-)
-/*
-
-
-*/
-
-
-
-
+);
 
 
 /*
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# @web.route('/users')
-# def userList():
-#     params = getParams(['start', 'perpage'], request.args)
-#     params.append({'name': 'page', 'val': 'user'})
-#     return render_template(
-#         'view.html',
-#         scripts = ['userList'],
-#         params = params
-#     )
-
-# @web.route('/friends')
-# def friendList():
-#     params = getParams(['start', 'perpage'], request.args)
-#     params.append({'name': 'page', 'val': 'friend'})
-#     return render_template(
-#         'view.html',
-#         scripts = ['friendList'],
-#         params = params
-#     )
 
 # @web.route('/chat-private/<friendId>')
 # def chatPrivate(friendId):
@@ -155,12 +128,6 @@ render(
 #         scripts = ['chatList'],
 #         params = params
 #     )
-
-
-
-
-
-
 
 
 */

@@ -15,6 +15,15 @@ class RegistrationComp extends React.Component {
         };
     }
 
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.registration.status == 'success') {
+            window.redirect = setInterval(() => {
+                clearTimeout(window.redirect);
+                return this.props.history.push('/login');
+            }, 3000);
+        }
+    }
+
     formSubmit (e) {
         e.preventDefault();
         if (

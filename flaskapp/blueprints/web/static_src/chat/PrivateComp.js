@@ -1,12 +1,10 @@
-import React from 'react'
-import { connect } from 'react-redux'
-import { map } from 'lodash'
-import 'jquery'
-import {api, graphql} from '../helpers/action'
-import {AlertMessage} from '../helpers/component'
-
-
-import io from 'socket.io-client'
+import React from 'react';
+import { connect } from 'react-redux';
+import { map } from 'lodash';
+import 'jquery';
+import {AlertMessage} from '../helpers/component';
+import io from 'socket.io-client';
+import { Link } from 'react-router-dom';
 
 class UsersComp extends React.Component {
     render () {
@@ -89,26 +87,32 @@ class MessagesComp extends React.Component {
     }
 }
 
-class PrivateComp extends React.Component {
+class ChatPrivateComp extends React.Component {
     constructor(props) {
         super(props);
-        let self = this;
-        self.props = self.props || {};
-        self.socket = io.connect(window.location.origin);
-
-        self.state = {
+        this.props = this.props || {};
+        this.state = {
             msg: null
         };
+    }
 
-        self.socket.on('connect', () => {
-            self.socket.emit('joinPrivateGroup', {
-                token: self.props.auth.token,
-                friendId: self.props.chatPrivate.friendId
+    componentWillMount () {
+        if (! window.socketio) {
+            window.socketio = io.connect(window.location.origin);
+        } else {
+            window.socketio.open();
+        }
+
+
+        window.socketio.on('connect', () => {
+            window.socketio.emit('joinPrivateGroup', {
+                token: this.props.auth.token,
+                friendId: this.props.friendId
             });
         });
 
-        self.socket.on('joinPrivateGroup', (r) => {
-            self.props.dispatch({
+        window.socketio.on('joinPrivateGroup', (r) => {
+            this.props.dispatch({
                 type: 'PRIVATE_JOIN_SUCCESS',
                 id: r.id,
                 userId: r.userId,
@@ -119,23 +123,28 @@ class PrivateComp extends React.Component {
             });
         });
 
-        self.socket.on('messagePrivate', (r) => {
-            self.setState({msg: ''});
+        window.socketio.on('messagePrivate', (r) => {
+            this.setState({msg: ''});
             if (! r) {
                 return;
             }
-            self.props.dispatch({
+            this.props.dispatch({
                 type: 'PRIVATE_MSG_SUCCESS',
                 ...r
             });
         });
 
-        self.socket.on('error', (e) => {
-            self.props.dispatch({
+        window.socketio.on('error', (e) => {
+            this.props.dispatch({
                 type: 'ERROR',
                 error: e && e.error ? e.error : 'Shit happened!'
             });
         });
+    }
+
+    componentWillUnmount () {
+        window.socketio.close();
+        window.socketio = null;
     }
 
     sendMsg (e) {
@@ -144,7 +153,7 @@ class PrivateComp extends React.Component {
         }
 
         if (e.which === 13 && this.state.msg) {
-            this.socket.emit('messagePrivate', {
+            window.socketio.emit('messagePrivate', {
                 token: this.props.auth.token,
                 chatId: this.props.chatPrivate.id,
                 text: this.state.msg
@@ -187,7 +196,7 @@ class PrivateComp extends React.Component {
         return <div className='chat-page'>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
-                    <li className="breadcrumb-item"><a href="/users">Users</a></li>
+                    <li className="breadcrumb-item"><Link to="/users">Users</Link></li>
                     <li className="breadcrumb-item active">Chat</li>
                 </ol>
             </nav>
@@ -211,8 +220,11 @@ class PrivateComp extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-    return {...state}
+    return {
+        chatPrivate: state.chatPrivate,
+        auth: state.auth
+    }
 }
-PrivateComp = connect(mapStateToProps)(PrivateComp);
+ChatPrivateComp = connect(mapStateToProps)(ChatPrivateComp);
 
-export default PrivateComp;
+export default ChatPrivateComp;
