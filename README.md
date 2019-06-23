@@ -43,3 +43,6 @@ echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo s
 cd flaskapp/flaskapp/blueprints/web
 npm run-script build
 ```
+
+### test hosting
+test-web-application.herokuapp.com
